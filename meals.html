@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Planner - Greg's Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+            padding: 1.5rem;
+        }
+        a { color: #667eea; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* Layout */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+        .back-link { font-size: 0.9rem; }
+        header { margin-bottom: 1.25rem; }
+        header h1 {
+            font-size: 1.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .subtitle { color: #888; font-size: 0.9rem; margin-top: 0.25rem; }
+
+        /* Stats bar */
+        .stats-bar {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .stat-pill {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .stat-pill .val { color: #4ecdc4; font-weight: 600; }
+        .stat-pill .val.cal { color: #ef4444; }
+
+        /* Main grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: 1.25rem;
+            min-height: calc(100vh - 180px);
+        }
+        @media (max-width: 1100px) {
+            .main-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ─── Recipe Catalog (Left) ─── */
+        .catalog-panel {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            max-height: calc(100vh - 180px);
+            overflow: hidden;
+        }
+        .catalog-header {
+            padding: 0.9rem 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .catalog-header h2 {
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .catalog-search {
+            width: 100%;
+            margin-top: 0.6rem;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 0.5rem 0.7rem;
+            color: #fff;
+            font-size: 0.85rem;
+        }
+        .catalog-search:focus { outline: none; border-color: #667eea; }
+        .catalog-search::placeholder { color: #555; }
+        .catalog-filters {
+            display: flex;
+            gap: 0.4rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 0.25rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.72rem;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: transparent;
+            color: #999;
+            transition: all 0.2s;
+        }
+        .filter-btn:hover { border-color: #667eea; color: #ccc; }
+        .filter-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-color: transparent;
+            color: #fff;
+        }
+
+        .catalog-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+        .catalog-list::-webkit-scrollbar { width: 5px; }
+        .catalog-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+        /* Recipe Card (in catalog) */
+        .recipe-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 0.7rem 0.8rem;
+            margin-bottom: 0.5rem;
+            cursor: grab;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .recipe-card:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.18);
+            transform: translateY(-1px);
+        }
+        .recipe-card.sortable-ghost { opacity: 0.4; background: rgba(102, 126, 234, 0.2); }
+        .recipe-card .rc-title {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.3rem;
+            cursor: pointer;
+        }
+        .recipe-card .rc-meta {
+            display: flex;
+            gap: 0.6rem;
+            font-size: 0.72rem;
+            color: #888;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .rc-cat {
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        .rc-cat.breakfast { color: #fbbf24; }
+        .rc-cat.lunch { color: #4ecdc4; }
+        .rc-cat.dinner { color: #ef4444; }
+        .rc-cal { color: #ef4444; }
+        .rc-protein { color: #4ecdc4; }
+        .rc-tag {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.15);
+            color: #a78bfa;
+            padding: 0.1rem 0.35rem;
+            border-radius: 4px;
+            font-size: 0.65rem;
+        }
+
+        /* Expanded recipe detail */
+        .recipe-detail {
+            display: none;
+            margin-top: 0.6rem;
+            padding-top: 0.6rem;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            font-size: 0.8rem;
+            color: #bbb;
+            line-height: 1.5;
+        }
+        .recipe-detail.open { display: block; }
+        .recipe-detail h4 {
+            color: #fbbf24;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 0.6rem 0 0.3rem;
+        }
+        .recipe-detail h4:first-child { margin-top: 0; }
+        .recipe-detail ul {
+            padding-left: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+        .recipe-detail li { margin-bottom: 0.15rem; }
+        .recipe-detail ol {
+            padding-left: 1.2rem;
+            margin-bottom: 0.3rem;
+        }
+        .recipe-detail ol li { margin-bottom: 0.2rem; }
+        .recipe-detail .rd-link {
+            display: inline-block;
+            margin-top: 0.4rem;
+            padding: 0.3rem 0.7rem;
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            text-decoration: none;
+        }
+        .recipe-detail .rd-link:hover { background: rgba(251, 191, 36, 0.3); color: #fff; text-decoration: none; }
+        .recipe-detail .rd-times {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.72rem;
+            color: #888;
+        }
+        .recipe-detail .rd-notes {
+            font-style: italic;
+            color: #888;
+            font-size: 0.75rem;
+        }
+
+        /* ─── Weekly Plan (Right) ─── */
+        .plan-panel {
+            display: flex;
+            flex-direction: column;
+        }
+        .week-nav {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .week-nav-btn {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: #ccc;
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .week-nav-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+        .week-label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+        }
+        .week-nav-today {
+            margin-left: auto;
+            padding: 0.3rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            border: 1px solid rgba(102, 126, 234, 0.4);
+            background: rgba(102, 126, 234, 0.1);
+            color: #a78bfa;
+            transition: all 0.2s;
+        }
+        .week-nav-today:hover { background: rgba(102, 126, 234, 0.25); }
+
+        .week-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            flex: 1;
+        }
+        @media (max-width: 1400px) {
+            .week-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+        @media (max-width: 900px) {
+            .week-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 550px) {
+            .week-grid { grid-template-columns: 1fr; }
+        }
+
+        .day-col {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            min-height: 340px;
+        }
+        .day-col.today { border-color: rgba(102, 126, 234, 0.4); }
+        .day-col-header {
+            padding: 0.6rem 0.7rem;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            text-align: center;
+        }
+        .day-col-name {
+            font-weight: 600;
+            font-size: 0.82rem;
+            color: #fff;
+        }
+        .day-col-date {
+            font-size: 0.7rem;
+            color: #888;
+            margin-top: 0.15rem;
+        }
+        .day-col-totals {
+            font-size: 0.68rem;
+            color: #4ecdc4;
+            margin-top: 0.2rem;
+        }
+
+        /* Day color accents */
+        .day-col[data-dow="0"] .day-col-header { border-left: 3px solid #ef4444; }
+        .day-col[data-dow="1"] .day-col-header { border-left: 3px solid #f59e0b; }
+        .day-col[data-dow="2"] .day-col-header { border-left: 3px solid #eab308; }
+        .day-col[data-dow="3"] .day-col-header { border-left: 3px solid #22c55e; }
+        .day-col[data-dow="4"] .day-col-header { border-left: 3px solid #3b82f6; }
+        .day-col[data-dow="5"] .day-col-header { border-left: 3px solid #ec4899; }
+        .day-col[data-dow="6"] .day-col-header { border-left: 3px solid #8b5cf6; }
+
+        /* Meal slots inside each day */
+        .day-slots {
+            flex: 1;
+            padding: 0.4rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+        .meal-slot {
+            border-radius: 8px;
+            min-height: 50px;
+            position: relative;
+        }
+        .slot-label {
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            padding: 0.3rem 0.5rem 0.15rem;
+            font-weight: 600;
+        }
+        .slot-label.breakfast { color: #fbbf24; }
+        .slot-label.lunch { color: #4ecdc4; }
+        .slot-label.dinner { color: #ef4444; }
+        .slot-dropzone {
+            min-height: 36px;
+            padding: 0.15rem 0.3rem 0.3rem;
+            border-radius: 6px;
+            border: 1px dashed rgba(255,255,255,0.06);
+            transition: all 0.2s;
+        }
+        .slot-dropzone.sortable-drag-over,
+        .slot-dropzone:has(.sortable-ghost) {
+            border-color: rgba(102, 126, 234, 0.4);
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        /* Meal card in plan */
+        .plan-meal {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            padding: 0.4rem 0.5rem;
+            cursor: grab;
+            transition: all 0.15s;
+            position: relative;
+        }
+        .plan-meal:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.2);
+        }
+        .plan-meal.sortable-ghost { opacity: 0.4; background: rgba(102, 126, 234, 0.2); }
+        .plan-meal .pm-title {
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: #fff;
+            line-height: 1.2;
+        }
+        .plan-meal .pm-macros {
+            font-size: 0.66rem;
+            color: #888;
+            margin-top: 0.15rem;
+        }
+        .plan-meal .pm-macros .cal { color: #ef4444; }
+        .plan-meal .pm-macros .protein { color: #4ecdc4; }
+        .plan-meal .pm-remove {
+            position: absolute;
+            top: 2px;
+            right: 4px;
+            background: none;
+            border: none;
+            color: #555;
+            font-size: 0.8rem;
+            cursor: pointer;
+            line-height: 1;
+            padding: 2px;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+        .plan-meal:hover .pm-remove { opacity: 1; }
+        .plan-meal .pm-remove:hover { color: #ef4444; }
+
+        /* Empty slot hint */
+        .slot-empty {
+            color: #444;
+            font-size: 0.68rem;
+            text-align: center;
+            padding: 0.5rem 0;
+            font-style: italic;
+        }
+
+        /* Week totals row */
+        .week-totals {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.75rem;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+        .wt-item {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 0.5rem 1rem;
+            text-align: center;
+        }
+        .wt-item .wt-val {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .wt-item .wt-val.cal { color: #ef4444; }
+        .wt-item .wt-val.protein { color: #4ecdc4; }
+        .wt-item .wt-label {
+            font-size: 0.65rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .loading .spinner {
+            display: inline-block;
+            width: 24px; height: 24px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 0.5rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: #444;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-bar">
+    <a href="hub-tony.html" class="back-link">← Back to Dashboard Hub</a>
+    <a href="kanban-meals.html" class="back-link">📋 Kanban View</a>
+</div>
+
+<header>
+    <h1>🍽️ Meal Planner</h1>
+    <p class="subtitle">Browse recipes · Drag into your week · Track macros</p>
+    <div class="stats-bar" id="stats-bar">
+        <div class="stat-pill">🔥 Avg <span class="val cal" id="stat-avg-cal">—</span> cal/day</div>
+        <div class="stat-pill">💪 Avg <span class="val" id="stat-avg-protein">—</span>g protein/day</div>
+        <div class="stat-pill">📅 <span class="val" id="stat-meals-count">—</span> meals planned</div>
+    </div>
+</header>
+
+<div class="main-grid">
+    <!-- Left: Recipe Catalog -->
+    <div class="catalog-panel">
+        <div class="catalog-header">
+            <h2>📖 Recipe Catalog</h2>
+            <input type="text" class="catalog-search" id="catalog-search" placeholder="Search recipes...">
+            <div class="catalog-filters" id="catalog-filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="breakfast">🍳 Breakfast</button>
+                <button class="filter-btn" data-filter="lunch">🥗 Lunch</button>
+                <button class="filter-btn" data-filter="dinner">🍖 Dinner</button>
+            </div>
+        </div>
+        <div class="catalog-list" id="catalog-list">
+            <div class="loading"><div class="spinner"></div><br>Loading recipes…</div>
+        </div>
+    </div>
+
+    <!-- Right: Weekly Plan -->
+    <div class="plan-panel">
+        <div class="week-nav">
+            <button class="week-nav-btn" id="prev-week" title="Previous week">◀</button>
+            <span class="week-label" id="week-label">—</span>
+            <button class="week-nav-btn" id="next-week" title="Next week">▶</button>
+            <button class="week-nav-today" id="today-btn">Today</button>
+        </div>
+        <div class="week-grid" id="week-grid">
+            <div class="loading" style="grid-column:1/-1"><div class="spinner"></div><br>Loading meal plan…</div>
+        </div>
+        <div class="week-totals" id="week-totals"></div>
+    </div>
+</div>
+
+<footer>Meal Planner Dashboard · Greg's Dashboard · 2026</footer>
+
+<script>
+// ─── Supabase ───
+const SUPABASE_URL = 'https://mmwbiogqmgmtxboipyko.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_r6q0-iEnygKZiZkaOuY-hg_Tvlb-66U';
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ─── State ───
+let recipes = [];          // from board='recipes'
+let mealPlanItems = [];    // from board='meal-plan'
+let currentWeekStart = getWeekStart(new Date()); // Sunday
+const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MEAL_TYPES = ['breakfast','lunch','dinner'];
+const MEAL_ICONS = { breakfast: '🍳', lunch: '🥗', dinner: '🍖' };
+
+// ─── Helpers ───
+function getWeekStart(d) {
+    const dt = new Date(d);
+    dt.setHours(0,0,0,0);
+    dt.setDate(dt.getDate() - dt.getDay()); // Sunday
+    return dt;
+}
+
+function addDays(d, n) {
+    const dt = new Date(d);
+    dt.setDate(dt.getDate() + n);
+    return dt;
+}
+
+function fmtDate(d) {
+    return d.toISOString().split('T')[0]; // YYYY-MM-DD
+}
+
+function fmtShort(d) {
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function escHtml(s) {
+    if (!s) return '';
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+}
+
+function weekDates() {
+    return Array.from({ length: 7 }, (_, i) => addDays(currentWeekStart, i));
+}
+
+// ─── Data Loading ───
+async function loadRecipes() {
+    try {
+        const { data, error } = await db
+            .from('kanban_items')
+            .select('*')
+            .eq('board', 'recipes')
+            .order('position', { ascending: true });
+        if (error) throw error;
+        recipes = (data || []).map(row => {
+            const d = typeof row.data === 'string' ? JSON.parse(row.data) : (row.data || {});
+            return { id: row.id, item_id: row.item_id, ...d };
+        });
+        console.log(`📖 Loaded ${recipes.length} recipes`);
+    } catch (e) {
+        console.error('Failed to load recipes:', e);
+        recipes = [];
+    }
+}
+
+async function loadMealPlan() {
+    const dates = weekDates();
+    const startDate = fmtDate(dates[0]);
+    const endDate = fmtDate(dates[6]);
+    try {
+        const { data, error } = await db
+            .from('kanban_items')
+            .select('*')
+            .eq('board', 'meal-plan')
+            .gte('column_id', startDate)
+            .lte('column_id', endDate)
+            .order('position', { ascending: true });
+        if (error) throw error;
+        mealPlanItems = (data || []).map(row => {
+            const d = typeof row.data === 'string' ? JSON.parse(row.data) : (row.data || {});
+            return { id: row.id, item_id: row.item_id, column_id: row.column_id, position: row.position, ...d };
+        });
+        console.log(`📅 Loaded ${mealPlanItems.length} meal plan items for ${startDate} → ${endDate}`);
+    } catch (e) {
+        console.error('Failed to load meal plan:', e);
+        mealPlanItems = [];
+    }
+}
+
+// ─── Render Catalog ───
+function renderCatalog(filter = 'all', search = '') {
+    const list = document.getElementById('catalog-list');
+    let filtered = recipes;
+    if (filter !== 'all') {
+        filtered = filtered.filter(r => (r.category || '').toLowerCase() === filter);
+    }
+    if (search) {
+        const q = search.toLowerCase();
+        filtered = filtered.filter(r =>
+            (r.title || '').toLowerCase().includes(q) ||
+            (r.tags || []).some(t => t.toLowerCase().includes(q)) ||
+            (r.category || '').toLowerCase().includes(q)
+        );
+    }
+
+    if (!filtered.length) {
+        list.innerHTML = '<div class="slot-empty" style="padding:2rem">No recipes found</div>';
+        return;
+    }
+
+    list.innerHTML = filtered.map(r => {
+        const tags = (r.tags || []).map(t => `<span class="rc-tag">${escHtml(t)}</span>`).join(' ');
+        const cat = (r.category || 'dinner').toLowerCase();
+        return `
+        <div class="recipe-card" data-recipe-id="${r.id}" data-recipe='${JSON.stringify({
+            recipe_id: r.id,
+            title: r.title,
+            calories: r.calories || 0,
+            protein: r.protein || 0,
+            meal_type: cat
+        }).replace(/'/g, '&#39;')}'>
+            <div class="rc-title" onclick="toggleDetail(this)">${escHtml(r.title)}</div>
+            <div class="rc-meta">
+                <span class="rc-cat ${cat}">${cat}</span>
+                <span class="rc-cal">${r.calories || '?'} cal</span>
+                <span class="rc-protein">${r.protein || '?'}g</span>
+                ${tags}
+            </div>
+            <div class="recipe-detail" id="detail-${r.id}">
+                ${r.prep_time || r.cook_time ? `<div class="rd-times">
+                    ${r.prep_time ? `<span>⏱ Prep: ${escHtml(r.prep_time)}</span>` : ''}
+                    ${r.cook_time ? `<span>🔥 Cook: ${escHtml(r.cook_time)}</span>` : ''}
+                </div>` : ''}
+                ${r.ingredients && r.ingredients.length ? `<h4>Ingredients</h4><ul>${r.ingredients.map(i => `<li>${escHtml(i)}</li>`).join('')}</ul>` : ''}
+                ${r.instructions && r.instructions.length ? `<h4>Instructions</h4><ol>${r.instructions.map(i => `<li>${escHtml(i)}</li>`).join('')}</ol>` : ''}
+                ${r.notes ? `<h4>Notes</h4><p class="rd-notes">${escHtml(r.notes)}</p>` : ''}
+                ${r.source_url ? `<a href="${escHtml(r.source_url)}" target="_blank" class="rd-link">📖 ${escHtml(r.source || 'View Recipe')}</a>` : (r.source ? `<p style="font-size:0.72rem;color:#888;margin-top:0.3rem">Source: ${escHtml(r.source)}</p>` : '')}
+            </div>
+        </div>`;
+    }).join('');
+
+    initCatalogSortable();
+}
+
+function toggleDetail(el) {
+    const detail = el.parentElement.querySelector('.recipe-detail');
+    if (detail) detail.classList.toggle('open');
+}
+
+// ─── Render Week ───
+function renderWeek() {
+    const grid = document.getElementById('week-grid');
+    const dates = weekDates();
+    const today = fmtDate(new Date());
+
+    // Update week label
+    document.getElementById('week-label').textContent =
+        `${fmtShort(dates[0])} – ${fmtShort(dates[6])}, ${dates[0].getFullYear()}`;
+
+    grid.innerHTML = dates.map((d, i) => {
+        const dateStr = fmtDate(d);
+        const isToday = dateStr === today;
+        const dayMeals = mealPlanItems.filter(m => m.column_id === dateStr);
+
+        const slotsHtml = MEAL_TYPES.map(mt => {
+            const slotMeals = dayMeals.filter(m => (m.meal_type || '').toLowerCase() === mt);
+            const mealsHtml = slotMeals.length
+                ? slotMeals.map(m => `
+                    <div class="plan-meal" data-meal-id="${m.id}" data-item-id="${m.item_id}">
+                        <div class="pm-title">${escHtml(m.title)}</div>
+                        <div class="pm-macros">
+                            <span class="cal">${m.calories || 0} cal</span> ·
+                            <span class="protein">${m.protein || 0}g</span>
+                        </div>
+                        <button class="pm-remove" onclick="removeMeal(event, ${m.id})" title="Remove">×</button>
+                    </div>`).join('')
+                : '';
+            return `
+            <div class="meal-slot">
+                <div class="slot-label ${mt}">${MEAL_ICONS[mt]} ${mt}</div>
+                <div class="slot-dropzone" data-date="${dateStr}" data-meal-type="${mt}">
+                    ${mealsHtml}
+                </div>
+            </div>`;
+        }).join('');
+
+        // Day totals
+        const dayCal = dayMeals.reduce((s, m) => s + (m.calories || 0), 0);
+        const dayPro = dayMeals.reduce((s, m) => s + (m.protein || 0), 0);
+
+        return `
+        <div class="day-col ${isToday ? 'today' : ''}" data-dow="${i}">
+            <div class="day-col-header">
+                <div class="day-col-name">${DAYS[i]}</div>
+                <div class="day-col-date">${fmtShort(d)}</div>
+                <div class="day-col-totals">${dayCal} cal · ${dayPro}g</div>
+            </div>
+            <div class="day-slots">${slotsHtml}</div>
+        </div>`;
+    }).join('');
+
+    updateWeekTotals();
+    initPlanSortable();
+}
+
+function updateWeekTotals() {
+    const dates = weekDates();
+    let totalCal = 0, totalPro = 0, mealCount = 0;
+
+    dates.forEach(d => {
+        const dateStr = fmtDate(d);
+        const dayMeals = mealPlanItems.filter(m => m.column_id === dateStr);
+        dayMeals.forEach(m => {
+            totalCal += m.calories || 0;
+            totalPro += m.protein || 0;
+            mealCount++;
+        });
+    });
+
+    const days = 7;
+    document.getElementById('stat-avg-cal').textContent = Math.round(totalCal / days).toLocaleString();
+    document.getElementById('stat-avg-protein').textContent = Math.round(totalPro / days);
+    document.getElementById('stat-meals-count').textContent = mealCount;
+
+    document.getElementById('week-totals').innerHTML = `
+        <div class="wt-item">
+            <div class="wt-val cal">${totalCal.toLocaleString()}</div>
+            <div class="wt-label">Week Calories</div>
+        </div>
+        <div class="wt-item">
+            <div class="wt-val protein">${totalPro}g</div>
+            <div class="wt-label">Week Protein</div>
+        </div>
+        <div class="wt-item">
+            <div class="wt-val" style="color:#a78bfa">${Math.round(totalCal / days).toLocaleString()}</div>
+            <div class="wt-label">Daily Avg Cal</div>
+        </div>
+        <div class="wt-item">
+            <div class="wt-val" style="color:#a78bfa">${Math.round(totalPro / days)}g</div>
+            <div class="wt-label">Daily Avg Protein</div>
+        </div>
+    `;
+}
+
+// ─── Drag & Drop ───
+let catalogSortables = [];
+let planSortables = [];
+
+function initCatalogSortable() {
+    catalogSortables.forEach(s => s.destroy());
+    catalogSortables = [];
+
+    const list = document.getElementById('catalog-list');
+    catalogSortables.push(new Sortable(list, {
+        group: { name: 'meals', pull: 'clone', put: false },
+        sort: false,
+        animation: 150,
+        ghostClass: 'sortable-ghost',
+        filter: '.recipe-detail, .rd-link',
+        onStart(evt) {
+            // Close any open details during drag
+            document.querySelectorAll('.recipe-detail.open').forEach(d => d.classList.remove('open'));
+        }
+    }));
+}
+
+function initPlanSortable() {
+    planSortables.forEach(s => s.destroy());
+    planSortables = [];
+
+    document.querySelectorAll('.slot-dropzone').forEach(zone => {
+        planSortables.push(new Sortable(zone, {
+            group: { name: 'meals', pull: true, put: true },
+            animation: 150,
+            ghostClass: 'sortable-ghost',
+            async onAdd(evt) {
+                const el = evt.item;
+                const dropzone = evt.to;
+                const date = dropzone.dataset.date;
+                const mealType = dropzone.dataset.mealType;
+
+                // From catalog (recipe card)?
+                if (el.classList.contains('recipe-card')) {
+                    const recipeDataStr = el.getAttribute('data-recipe');
+                    let recipeData;
+                    try {
+                        recipeData = JSON.parse(recipeDataStr.replace(/&#39;/g, "'"));
+                    } catch (e) {
+                        console.error('Failed to parse recipe data:', e);
+                        el.remove();
+                        return;
+                    }
+
+                    // Remove the cloned catalog card from the dropzone
+                    el.remove();
+
+                    // Create meal plan entry in Supabase
+                    await addMealToplan(date, mealType, recipeData);
+                } else if (el.classList.contains('plan-meal')) {
+                    // Moved from another slot
+                    const mealId = parseInt(el.dataset.mealId);
+                    await moveMeal(mealId, date, mealType);
+                }
+            },
+            async onUpdate(evt) {
+                // Reorder within same slot — not critical, just re-render
+            },
+            async onRemove(evt) {
+                // Item was moved to another slot — handled by onAdd in the target
+            }
+        }));
+    });
+}
+
+async function addMealToplan(date, mealType, recipeData) {
+    const itemId = `mp-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+    const mealData = {
+        recipe_id: recipeData.recipe_id,
+        meal_type: mealType,
+        title: recipeData.title,
+        calories: recipeData.calories || 0,
+        protein: recipeData.protein || 0,
+    };
+
+    try {
+        const { data, error } = await db
+            .from('kanban_items')
+            .insert({
+                board: 'meal-plan',
+                column_id: date,
+                item_id: itemId,
+                position: mealPlanItems.filter(m => m.column_id === date).length,
+                data: mealData
+            })
+            .select();
+        if (error) throw error;
+        console.log(`✅ Added ${mealData.title} to ${date} ${mealType}`);
+    } catch (e) {
+        console.error('Failed to add meal:', e);
+    }
+
+    // Reload and re-render
+    await loadMealPlan();
+    renderWeek();
+}
+
+async function moveMeal(mealId, newDate, newMealType) {
+    try {
+        // Find the current item
+        const item = mealPlanItems.find(m => m.id === mealId);
+        if (!item) return;
+
+        const updatedData = {
+            recipe_id: item.recipe_id,
+            meal_type: newMealType,
+            title: item.title,
+            calories: item.calories || 0,
+            protein: item.protein || 0,
+        };
+        if (item.time) updatedData.time = item.time;
+
+        const { error } = await db
+            .from('kanban_items')
+            .update({ column_id: newDate, data: updatedData })
+            .eq('id', mealId);
+        if (error) throw error;
+        console.log(`✅ Moved meal ${mealId} to ${newDate} ${newMealType}`);
+    } catch (e) {
+        console.error('Failed to move meal:', e);
+    }
+
+    await loadMealPlan();
+    renderWeek();
+}
+
+async function removeMeal(evt, mealId) {
+    evt.stopPropagation();
+    if (!confirm('Remove this meal from the plan?')) return;
+    try {
+        const { error } = await db
+            .from('kanban_items')
+            .delete()
+            .eq('id', mealId);
+        if (error) throw error;
+        console.log(`🗑 Removed meal ${mealId}`);
+    } catch (e) {
+        console.error('Failed to remove meal:', e);
+    }
+    await loadMealPlan();
+    renderWeek();
+}
+
+// ─── Week Navigation ───
+document.getElementById('prev-week').addEventListener('click', async () => {
+    currentWeekStart = addDays(currentWeekStart, -7);
+    await loadMealPlan();
+    renderWeek();
+});
+document.getElementById('next-week').addEventListener('click', async () => {
+    currentWeekStart = addDays(currentWeekStart, 7);
+    await loadMealPlan();
+    renderWeek();
+});
+document.getElementById('today-btn').addEventListener('click', async () => {
+    currentWeekStart = getWeekStart(new Date());
+    await loadMealPlan();
+    renderWeek();
+});
+
+// ─── Catalog Filters ───
+document.getElementById('catalog-filters').addEventListener('click', (e) => {
+    if (!e.target.classList.contains('filter-btn')) return;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    renderCatalog(e.target.dataset.filter, document.getElementById('catalog-search').value);
+});
+
+document.getElementById('catalog-search').addEventListener('input', (e) => {
+    const activeFilter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+    renderCatalog(activeFilter, e.target.value);
+});
+
+// ─── Init ───
+async function init() {
+    console.log('🍽️ Meal Planner initializing...');
+    await Promise.all([loadRecipes(), loadMealPlan()]);
+    renderCatalog();
+    renderWeek();
+    console.log('✅ Meal Planner ready');
+}
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "raw": "This whole process, this whole product is the new high performer workflow when paired with an 'Exec AI' like Greg.",
+      "type": "note",
+      "category": "Product Vision",
+      "reviewed": false,
+      "timestamp": "2026-02-06T07:02:00-10:00"
+    },
+    {
+      "id": 2,
+      "raw": "Set up a LLM model fallback in Greg in addition to Anthropic Claude to avoid the gateway context limit.",
+      "type": "task",
+      "category": "Technical Setup",
+      "reviewed": false,
+      "timestamp": "2026-02-06T07:02:00-10:00",
+      "note": "Waiting on Victor for OpenAI API key - Greg will configure when received"
+    },
+    {
+      "id": 9,
+      "raw": "Make sure to monitor gateway bloat and save data as we go to avoid data loss.",
+      "type": "task",
+      "category": "Process",
+      "reviewed": false,
+      "timestamp": "2026-02-06T07:02:00-10:00"
+    },
+    {
+      "id": 10,
+      "raw": "Asked Greg same questions I asked Grok about how multi-agent systems like Akira (AI-driven PMO) works, compared responses.",
+      "type": "note",
+      "category": "Architecture Understanding",
+      "reviewed": false,
+      "timestamp": "2026-02-06T07:08:00-10:00"
+    },
+    {
+      "id": 13,
+      "raw": "This entire session is hypnagogic work for the high performer. All this stuff, all this clarity took 3 hours from 3am to 6am - now documenting with Greg because he can execute a lot of this from here.",
+      "type": "note",
+      "category": "Product Vision",
+      "reviewed": false,
+      "timestamp": "2026-02-06T07:08:00-10:00"
+    },
+    {
+      "id": 29,
+      "raw": "Add 2026 actions into Greg's to-do list. This is the basis for the prioritizer.",
+      "type": "task",
+      "category": "Process",
+      "reviewed": false,
+      "timestamp": "2026-02-06T07:19:00-10:00"
+    },
+    {
+      "id": 30,
+      "raw": "Share links to all my session tabs and groups, ask Greg to organize and prioritize on one of my dashboards.",
+      "type": "task",
+      "category": "Process",
+      "reviewed": false,
+      "timestamp": "2026-02-06T07:19:00-10:00"
+    }
+  ],
+  "lastUpdated": "2026-02-06T10:15:00-10:00"
+}

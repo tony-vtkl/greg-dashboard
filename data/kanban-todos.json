@@ -1,0 +1,185 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "[SEAN] Basis Partnership Proposal",
+      "description": "Tell Sean: I'll give you requirements, deliver code, and you get 10-15% margin. Just send clients a link to a webpage that reads 'upload your Google Doc here'. VALUE PROP: Basis gets 15% profit margin PLUS all of Sean's hours back (~80 hrs/month).",
+      "status": "backlog",
+      "priority": "high",
+      "agent": "tony",
+      "category": "partnerships",
+      "source": "Stream #21"
+    },
+    {
+      "id": 2,
+      "title": "[CHARLIE] First Mover Partnership Strategy",
+      "description": "Talk to Charlie about partnership strategy: First mover advantage, leverage each other's progress, brand that quickly produces working software. KEY INSIGHT: AI sells fastest when it doesn't require humans to change.",
+      "status": "done",
+      "priority": "high",
+      "agent": "tony",
+      "category": "partnerships",
+      "source": "Stream #14-20"
+    },
+    {
+      "id": 3,
+      "title": "Gartner Research Papers Workflow",
+      "description": "Work session with Greg: how to download Gartner research papers and have Greg read through them. Download and put on Google Drive?",
+      "status": "backlog",
+      "priority": "medium",
+      "agent": "greg",
+      "category": "research",
+      "source": "Stream #38"
+    },
+    {
+      "id": 4,
+      "title": "Tony Wong Case Studies & History",
+      "description": "Create case study links for Greg to build Tony Wong history: enterprise software, executive coaching, zen, biohacking, podcasting. Feeds marketing and social media.",
+      "status": "backlog",
+      "priority": "medium",
+      "agent": "analyst",
+      "category": "research",
+      "source": "Stream #31"
+    },
+    {
+      "id": 5,
+      "title": "Akira PMO Access for Greg",
+      "description": "✅ COMPLETED: Files downloaded from Joana's Google Drive. Agents built and deployed.",
+      "status": "done",
+      "priority": "high",
+      "agent": "greg",
+      "category": "development",
+      "source": "Stream #34"
+    },
+    {
+      "id": 6,
+      "title": "Vercel Hosting Cost Analysis",
+      "description": "As dashboards increase, Vercel costs go up. Consider alternate hosting options.",
+      "status": "backlog",
+      "priority": "low",
+      "agent": "coder",
+      "category": "operations",
+      "source": "Stream #39"
+    },
+    {
+      "id": 7,
+      "title": "Connect Greg to Kendo Slack",
+      "description": "Connect Greg to Kendo Slack so he can read it. Much of data from Kendo Slack becomes news dashboard.",
+      "status": "backlog",
+      "priority": "medium",
+      "agent": "greg",
+      "category": "operations",
+      "source": "Stream #36, #37"
+    },
+    {
+      "id": 8,
+      "title": "Export Multicity Living Chat from Grok",
+      "description": "✅ COMPLETED: Chat exported and saved. Dashboard built: https://greg-dashboard.vercel.app/multi-city-living.html",
+      "status": "done",
+      "priority": "medium",
+      "agent": "greg",
+      "category": "development",
+      "source": "Stream #27"
+    },
+    {
+      "id": 9,
+      "title": "Set Up Greg-Context Folder in Google Drive",
+      "description": "Create a 'Greg-Context' folder in Drive for docs you want Greg to reference. Greg can then search/read via the gog skill.",
+      "status": "backlog",
+      "priority": "medium",
+      "agent": "tony",
+      "category": "operations",
+      "source": "Stream #12"
+    },
+    {
+      "id": 10,
+      "title": "Explain Profiler & Multi-Agent Distribution Product Customizer",
+      "description": "Need to explain the profiler and multi-agent distribution product customizer to Greg. This is the MISSING PIECE for value prioritization (Pareto Engine).",
+      "status": "today",
+      "priority": "medium",
+      "agent": "tony",
+      "category": "design",
+      "source": "Stream #18"
+    },
+    {
+      "id": 11,
+      "title": "Learn Local Unconstrained Models on Mac Studio",
+      "description": "Have Greg teach how to use unconstrained models locally on 512GB Mac Studio. Ollama setup, recommended models (Llama, Mistral, etc.).",
+      "status": "backlog",
+      "priority": "medium",
+      "agent": "greg",
+      "category": "research",
+      "source": "Stream #40"
+    },
+    {
+      "id": 12,
+      "title": "Review Estimator & Requirements MD",
+      "description": "Review the Akira Estimator source code and requirements documentation. Files in /akira-analysis/ and /ai-pmo-docs/",
+      "status": "today",
+      "priority": "high",
+      "agent": "greg",
+      "category": "research",
+      "source": "Deferred from Feb 6"
+    },
+    {
+      "id": 13,
+      "title": "Review Multi-City Living Dashboard Output",
+      "description": "Review the multi-city living dashboard built from Grok chat export. Dashboard: https://greg-dashboard.vercel.app/multi-city-living.html",
+      "status": "today",
+      "priority": "high",
+      "agent": "tony",
+      "category": "research",
+      "source": "Deferred from Feb 6"
+    },
+    {
+      "id": 14,
+      "title": "Build Kanban dashboard with SortableJS",
+      "description": "Implement drag-and-drop Kanban for To-Do list using SortableJS.",
+      "status": "done",
+      "priority": "high",
+      "agent": "coder",
+      "category": "development",
+      "source": "Standup Feb 7"
+    },
+    {
+      "id": 15,
+      "title": "Migrate dashboards to Tony's Personal Hub",
+      "description": "✅ COMPLETED: All 10 dashboards migrated to Supabase backend.",
+      "status": "done",
+      "priority": "high",
+      "agent": "coder",
+      "category": "development",
+      "source": "Standup Feb 7"
+    },
+    {
+      "id": 16,
+      "title": "Design Technical Analyst agent spec",
+      "description": "Pending Multi-City Living review. Agent to research/design/implement agents from Grok .md outputs.",
+      "status": "waiting",
+      "priority": "medium",
+      "agent": "analyst",
+      "category": "design",
+      "source": "Standup Feb 7"
+    },
+    {
+      "id": 17,
+      "title": "Supabase backend for dashboard persistence",
+      "description": "✅ COMPLETED: All dashboards now use Supabase for persistent data.",
+      "status": "done",
+      "priority": "medium",
+      "agent": "coder",
+      "category": "development",
+      "source": "Standup Feb 7"
+    },
+    {
+      "id": 18,
+      "title": "Define Personal OS agent scope",
+      "description": "Tony to explain requirements for Personal OS agent.",
+      "status": "waiting",
+      "priority": "low",
+      "agent": "greg",
+      "category": "design",
+      "source": "Standup Feb 7"
+    }
+  ],
+  "lastUpdated": "2026-02-08T16:17:00-10:00"
+}

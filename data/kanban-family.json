@@ -1,0 +1,113 @@
+{
+  "version": "2026-02-07-v2",
+  "tasks": [
+    {
+      "id": 1,
+      "title": "First VtKl task assignment",
+      "description": "Awaiting assignment from Tony - define scope and deliverables",
+      "status": "backlog",
+      "priority": "high",
+      "assignee": "dukane",
+      "category": "vtkl-work"
+    },
+    {
+      "id": 2,
+      "title": "Weekly check-in on Dukane's professional progress",
+      "description": "Recurring weekly sync between Tony and Dukane",
+      "status": "today",
+      "priority": "medium",
+      "assignee": "both",
+      "category": "shared"
+    },
+    {
+      "id": 3,
+      "title": "Define Dukane's first VtKl project scope",
+      "description": "Tony to identify appropriate starter project",
+      "status": "today",
+      "priority": "high",
+      "assignee": "tony",
+      "category": "vtkl-work"
+    },
+    {
+      "id": 4,
+      "title": "Set up Dukane's professional email signature",
+      "description": "Create VtKl-branded email signature",
+      "status": "backlog",
+      "priority": "low",
+      "assignee": "dukane",
+      "category": "professional-dev"
+    },
+    {
+      "id": 5,
+      "title": "Complete first paid project",
+      "description": "Deliver real work for VtKl or external client",
+      "status": "backlog",
+      "priority": "high",
+      "assignee": "dukane",
+      "category": "goals"
+    },
+    {
+      "id": 6,
+      "title": "Build professional communication skills",
+      "description": "Email etiquette, meeting participation, status updates",
+      "status": "progress",
+      "priority": "medium",
+      "assignee": "dukane",
+      "category": "professional-dev"
+    },
+    {
+      "id": 7,
+      "title": "Understand business operations",
+      "description": "Shadow Tony on client calls, learn project management",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "dukane",
+      "category": "professional-dev"
+    },
+    {
+      "id": 8,
+      "title": "Attend first client meeting",
+      "description": "Milestone: Mar 2026 - observe or participate in client call",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "dukane",
+      "category": "milestones"
+    },
+    {
+      "id": 9,
+      "title": "High school graduation",
+      "description": "Milestone: May 2026 🎓",
+      "status": "backlog",
+      "priority": "high",
+      "assignee": "dukane",
+      "category": "milestones"
+    },
+    {
+      "id": 10,
+      "title": "Maintain 4.0+ GPA",
+      "description": "Ongoing academic excellence",
+      "status": "progress",
+      "priority": "high",
+      "assignee": "dukane",
+      "category": "goals"
+    },
+    {
+      "id": 11,
+      "title": "First VtKl task completed",
+      "description": "Milestone: Feb 2026 - complete first assigned project",
+      "status": "backlog",
+      "priority": "high",
+      "assignee": "dukane",
+      "category": "milestones"
+    },
+    {
+      "id": 12,
+      "title": "Full-time VtKl contributor",
+      "description": "Milestone: Summer 2026 - transition to full contributor role",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "dukane",
+      "category": "milestones"
+    }
+  ]
+}

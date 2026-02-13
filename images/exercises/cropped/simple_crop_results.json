@@ -1,0 +1,122 @@
+[
+  {
+    "name": "arm-circles",
+    "source": "workout-cards-1.jpg",
+    "file": "sample_arm-circles.jpg",
+    "position": [
+      0,
+      0
+    ],
+    "success": true
+  },
+  {
+    "name": "dive-bomb-push-up",
+    "source": "workout-cards-1.jpg",
+    "file": "sample_dive-bomb-push-up.jpg",
+    "position": [
+      1,
+      0
+    ],
+    "success": true
+  },
+  {
+    "name": "plank-jack",
+    "source": "workout-cards-1.jpg",
+    "file": "sample_plank-jack.jpg",
+    "position": [
+      4,
+      0
+    ],
+    "success": true
+  },
+  {
+    "name": "bird-dog",
+    "source": "workout-cards-1.jpg",
+    "file": "sample_bird-dog.jpg",
+    "position": [
+      5,
+      0
+    ],
+    "success": true
+  },
+  {
+    "name": "butt-lift",
+    "source": "workout-cards-1.jpg",
+    "file": "sample_butt-lift.jpg",
+    "position": [
+      0,
+      3
+    ],
+    "success": true
+  },
+  {
+    "name": "squat-hold",
+    "source": "workout-cards-1.jpg",
+    "file": "sample_squat-hold.jpg",
+    "position": [
+      1,
+      3
+    ],
+    "success": true
+  },
+  {
+    "name": "farmers-walk",
+    "source": "workout-cards-2.jpg",
+    "file": "sample_farmers-walk.jpg",
+    "position": [
+      1,
+      0
+    ],
+    "success": true
+  },
+  {
+    "name": "romanian-deadlift",
+    "source": "workout-cards-2.jpg",
+    "file": "sample_romanian-deadlift.jpg",
+    "position": [
+      3,
+      0
+    ],
+    "success": true
+  },
+  {
+    "name": "deadlift",
+    "source": "workout-cards-2.jpg",
+    "file": "sample_deadlift.jpg",
+    "position": [
+      1,
+      1
+    ],
+    "success": true
+  },
+  {
+    "name": "calf-raises",
+    "source": "workout-cards-2.jpg",
+    "file": "sample_calf-raises.jpg",
+    "position": [
+      2,
+      1
+    ],
+    "success": true
+  },
+  {
+    "name": "lunge",
+    "source": "workout-cards-2.jpg",
+    "file": "sample_lunge.jpg",
+    "position": [
+      4,
+      1
+    ],
+    "success": true
+  },
+  {
+    "name": "bent-over-row",
+    "source": "workout-cards-2.jpg",
+    "file": "sample_bent-over-row.jpg",
+    "position": [
+      5,
+      2
+    ],
+    "success": true
+  }
+]

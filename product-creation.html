@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Creation Dashboard</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface-elevated: #21262d;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --text-muted: #8b949e;
+      --accent: #58a6ff;
+      --accent-hover: #79b8ff;
+      --success: #3fb950;
+      --warning: #d29922;
+      --danger: #f85149;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    h1::before {
+      content: '📦';
+      font-size: 1.5rem;
+    }
+    
+    .timestamp {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    
+    @media (max-width: 800px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+    
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+    
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    
+    label {
+      display: block;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 0.375rem;
+    }
+    
+    input, textarea, select {
+      width: 100%;
+      padding: 0.625rem 0.875rem;
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 0.875rem;
+      font-family: inherit;
+    }
+    
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
+    }
+    
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .btn {
+      padding: 0.625rem 1.25rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+    }
+    
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+    }
+    
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+    
+    .btn-secondary {
+      background: var(--surface-elevated);
+      border-color: var(--border);
+      color: var(--text);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--border);
+    }
+    
+    .btn-group {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+    
+    .session-info {
+      background: var(--surface-elevated);
+      border-radius: 6px;
+      padding: 1rem;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    
+    .session-info code {
+      color: var(--accent);
+    }
+    
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.25rem 0.625rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    
+    .status-draft {
+      background: rgba(210, 153, 34, 0.15);
+      color: var(--warning);
+    }
+    
+    .status-active {
+      background: rgba(63, 185, 80, 0.15);
+      color: var(--success);
+    }
+    
+    .checklist {
+      list-style: none;
+    }
+    
+    .checklist li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .checklist li:last-child {
+      border-bottom: none;
+    }
+    
+    .checklist input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+    }
+    
+    .full-width {
+      grid-column: 1 / -1;
+    }
+    
+    .meta-row {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .meta-row .form-group {
+      flex: 1;
+    }
+    
+    #output {
+      background: var(--surface-elevated);
+      border-radius: 6px;
+      padding: 1rem;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 0.8rem;
+      white-space: pre-wrap;
+      max-height: 300px;
+      overflow-y: auto;
+      display: none;
+    }
+    
+    #output.show {
+      display: block;
+    }
+    
+    .tag-input {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      min-height: 42px;
+    }
+    
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      background: var(--accent);
+      color: #000;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    
+    .tag button {
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+      opacity: 0.7;
+    }
+    
+    .tag button:hover {
+      opacity: 1;
+    }
+    
+    .tag-input input {
+      flex: 1;
+      min-width: 100px;
+      border: none;
+      background: transparent;
+      padding: 0.25rem;
+    }
+    
+    .tag-input input:focus {
+      outline: none;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Product Creation Dashboard</h1>
+      <div>
+        <span class="status-badge status-draft">● Draft</span>
+        <span class="timestamp" id="timestamp"></span>
+      </div>
+    </header>
+    
+    <div class="grid">
+      <!-- Product Info Card -->
+      <div class="card">
+        <h2 class="card-title">🏷️ Product Info</h2>
+        <div class="form-group">
+          <label for="productName">Product Name</label>
+          <input type="text" id="productName" placeholder="e.g., OpenClaw Session Exporter">
+        </div>
+        <div class="form-group">
+          <label for="productSlug">Slug</label>
+          <input type="text" id="productSlug" placeholder="e.g., session-exporter">
+        </div>
+        <div class="form-group">
+          <label for="productDesc">Description</label>
+          <textarea id="productDesc" placeholder="What does this product do?"></textarea>
+        </div>
+        <div class="meta-row">
+          <div class="form-group">
+            <label for="productVersion">Version</label>
+            <input type="text" id="productVersion" value="0.1.0">
+          </div>
+          <div class="form-group">
+            <label for="productType">Type</label>
+            <select id="productType">
+              <option value="skill">Skill</option>
+              <option value="agent">Agent</option>
+              <option value="template">Template</option>
+              <option value="dashboard">Dashboard</option>
+              <option value="tool">Tool</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Session Capture Card -->
+      <div class="card">
+        <h2 class="card-title">💾 Session Capture</h2>
+        <div class="session-info">
+Session ID: <code>main</code>
+Channel: <code>webchat</code>
+Started: <code id="sessionStart">2026-02-06 06:22 HST</code>
+Model: <code>claude-opus-4-5</code>
+
+This session will be saved as the product's source material.
+        </div>
+        <div class="form-group">
+          <label for="sessionNotes">Session Notes</label>
+          <textarea id="sessionNotes" placeholder="Key decisions, context, or notes about this session..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="includeHistory" checked> Include full message history
+          </label>
+        </div>
+      </div>
+      
+      <!-- Tags Card -->
+      <div class="card">
+        <h2 class="card-title">🏷️ Tags</h2>
+        <div class="form-group">
+          <label>Add tags (press Enter)</label>
+          <div class="tag-input" id="tagContainer">
+            <input type="text" id="tagInput" placeholder="Type and press Enter...">
+          </div>
+        </div>
+      </div>
+      
+      <!-- Checklist Card -->
+      <div class="card">
+        <h2 class="card-title">✅ Pre-flight Checklist</h2>
+        <ul class="checklist">
+          <li>
+            <input type="checkbox" id="check1">
+            <label for="check1">Product name and description defined</label>
+          </li>
+          <li>
+            <input type="checkbox" id="check2">
+            <label for="check2">Session notes captured</label>
+          </li>
+          <li>
+            <input type="checkbox" id="check3">
+            <label for="check3">Files and assets identified</label>
+          </li>
+          <li>
+            <input type="checkbox" id="check4">
+            <label for="check4">Ready to export</label>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- Akira AI Driven PMO - Product in Progress -->
+      <div class="card full-width" style="border-color: var(--accent); background: linear-gradient(135deg, var(--surface) 0%, rgba(88, 166, 255, 0.05) 100%);">
+        <h2 class="card-title">🤖 Akira AI Driven PMO — Next Steps</h2>
+        <div style="margin-bottom: 1.5rem; padding: 1rem; background: var(--surface-elevated); border-radius: 6px;">
+          <strong style="color: var(--accent);">Goal:</strong> Rebuild Estimator & Portfolio Manager inside OpenClaw
+        </div>
+        
+        <details open style="margin-bottom: 1rem;">
+          <summary style="cursor: pointer; font-weight: 600; color: var(--text); padding: 0.5rem 0;">📁 How to Modify SOUL.md, USER.md, AGENTS.md</summary>
+          <div style="padding: 1rem; background: var(--surface-elevated); border-radius: 6px; margin-top: 0.5rem; font-size: 0.9rem; line-height: 1.6;">
+            <p><strong>Location:</strong> <code>/Users/greg/.openclaw/workspace/</code></p>
+            <ul style="margin: 0.75rem 0; padding-left: 1.5rem;">
+              <li><code>SOUL.md</code> — Who Greg is (personality, style, boundaries)</li>
+              <li><code>USER.md</code> — Who you are (name, preferences, context)</li>
+              <li><code>AGENTS.md</code> — How Greg behaves (memory protocol, heartbeats, safety)</li>
+              <li><code>TOOLS.md</code> — Local notes (contacts, device names)</li>
+            </ul>
+            <p><strong>How to modify:</strong></p>
+            <ul style="margin: 0.75rem 0; padding-left: 1.5rem;">
+              <li>Direct edit in any text editor — changes take effect next turn</li>
+              <li>Ask Greg: "Update SOUL.md to be more concise"</li>
+              <li>Any file write method works</li>
+            </ul>
+          </div>
+        </details>
+        
+        <details style="margin-bottom: 1rem;">
+          <summary style="cursor: pointer; font-weight: 600; color: var(--text); padding: 0.5rem 0;">💾 JSON Files & File-Based Memory</summary>
+          <div style="padding: 1rem; background: var(--surface-elevated); border-radius: 6px; margin-top: 0.5rem; font-size: 0.9rem; line-height: 1.6;">
+            <p><strong>Location:</strong> <code>/Users/greg/.openclaw/workspace/memory/</code></p>
+            <ul style="margin: 0.75rem 0; padding-left: 1.5rem;">
+              <li><code>YYYY-MM-DD.md</code> — Daily logs (what happened each day)</li>
+              <li><code>MEMORY.md</code> — Curated long-term insights</li>
+            </ul>
+            <p><strong>How Greg uses them:</strong></p>
+            <ul style="margin: 0.75rem 0; padding-left: 1.5rem;">
+              <li>Every session: Load today + yesterday's logs</li>
+              <li>Main sessions: Also load MEMORY.md</li>
+              <li><code>memory_search</code> — Semantic search across all memory files</li>
+            </ul>
+            <p><strong>You can:</strong> Read/edit directly, ask Greg to update, they persist across sessions/restarts</p>
+          </div>
+        </details>
+        
+        <details style="margin-bottom: 1rem;">
+          <summary style="cursor: pointer; font-weight: 600; color: var(--text); padding: 0.5rem 0;">📂 Drive Folder Access — How to Use It</summary>
+          <div style="padding: 1rem; background: var(--surface-elevated); border-radius: 6px; margin-top: 0.5rem; font-size: 0.9rem; line-height: 1.6;">
+            <p><strong>Best uses for your workflow:</strong></p>
+            <ul style="margin: 0.75rem 0; padding-left: 1.5rem;">
+              <li><strong>Akira documentation</strong> — Estimator/Portfolio Manager specs</li>
+              <li><strong>Chat exports</strong> — ChatGPT/Claude as text files</li>
+              <li><strong>Research papers</strong> — Gartner PDFs for summarization</li>
+              <li><strong>Reference docs</strong> — Anything for Greg's context</li>
+            </ul>
+            <p><strong>How:</strong> Use <code>gog</code> skill to search/read Drive files, or tell Greg "read the doc at [link]"</p>
+            <p><strong>Recommendation:</strong> Create a <code>Greg-Context</code> folder in Drive for docs you want Greg to reference.</p>
+            <p style="margin-top: 0.75rem; color: var(--warning);"><strong>Current:</strong> Joana shared folder at <a href="https://drive.google.com/drive/folders/1DLCKPnj_NR13_3A4qTmmlUM3f1xyZpuB" target="_blank" style="color: var(--accent);">Akira PMO: Rebuilding Estimator & Portfolio Manager</a></p>
+          </div>
+        </details>
+        
+        <details style="margin-bottom: 1rem;">
+          <summary style="cursor: pointer; font-weight: 600; color: var(--text); padding: 0.5rem 0;">🔀 Sub-Agents vs Multiple OpenClaw Instances</summary>
+          <div style="padding: 1rem; background: var(--surface-elevated); border-radius: 6px; margin-top: 0.5rem; font-size: 0.9rem; line-height: 1.6;">
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 1rem;">
+              <tr style="border-bottom: 1px solid var(--border);">
+                <th style="text-align: left; padding: 0.5rem;">Approach</th>
+                <th style="text-align: left; padding: 0.5rem;">Pros</th>
+                <th style="text-align: left; padding: 0.5rem;">Cons</th>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 0.5rem;"><strong>Sub-agents</strong> (within Greg)</td>
+                <td style="padding: 0.5rem;">Shared memory, Greg orchestrates, simpler</td>
+                <td style="padding: 0.5rem;">Less isolation</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.5rem;"><strong>Multiple instances</strong> (Greg + Akira)</td>
+                <td style="padding: 0.5rem;">Full isolation, separate identities</td>
+                <td style="padding: 0.5rem;">More setup, no shared context</td>
+              </tr>
+            </table>
+            <p><strong>Recommendation for Akira:</strong></p>
+            <ul style="margin: 0.75rem 0; padding-left: 1.5rem;">
+              <li><strong>Short-term:</strong> Use sub-agents within Greg for Estimator/Portfolio Manager tasks</li>
+              <li><strong>Long-term:</strong> If Akira becomes a product for others, spin out to its own instance</li>
+            </ul>
+            <p style="color: var(--warning);"><strong>📅 Reminder set:</strong> Revisit sub-agents decision in 24 hours (Feb 7, 2026 ~9:22 AM)</p>
+          </div>
+        </details>
+      </div>
+
+      <!-- Output Card -->
+      <div class="card full-width">
+        <h2 class="card-title">📤 Output</h2>
+        <div id="output"></div>
+        <div class="btn-group">
+          <button class="btn btn-primary" onclick="generateManifest()">Generate Manifest</button>
+          <button class="btn btn-secondary" onclick="saveToWorkspace()">Save to Workspace</button>
+          <button class="btn btn-secondary" onclick="exportJSON()">Export JSON</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Initialize timestamp
+    document.getElementById('timestamp').textContent = new Date().toLocaleString('en-US', {
+      timeZone: 'Pacific/Honolulu',
+      dateStyle: 'medium',
+      timeStyle: 'short'
+    }) + ' HST';
+    
+    // Tags functionality
+    const tags = [];
+    const tagContainer = document.getElementById('tagContainer');
+    const tagInput = document.getElementById('tagInput');
+    
+    tagInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && tagInput.value.trim()) {
+        e.preventDefault();
+        addTag(tagInput.value.trim());
+        tagInput.value = '';
+      }
+    });
+    
+    function addTag(text) {
+      if (tags.includes(text)) return;
+      tags.push(text);
+      renderTags();
+    }
+    
+    function removeTag(text) {
+      const idx = tags.indexOf(text);
+      if (idx > -1) tags.splice(idx, 1);
+      renderTags();
+    }
+    
+    function renderTags() {
+      const existing = tagContainer.querySelectorAll('.tag');
+      existing.forEach(el => el.remove());
+      
+      tags.forEach(tag => {
+        const el = document.createElement('span');
+        el.className = 'tag';
+        el.innerHTML = `${tag} <button onclick="removeTag('${tag}')">&times;</button>`;
+        tagContainer.insertBefore(el, tagInput);
+      });
+    }
+    
+    // Generate manifest
+    function generateManifest() {
+      const manifest = {
+        name: document.getElementById('productName').value || 'Untitled Product',
+        slug: document.getElementById('productSlug').value || 'untitled',
+        description: document.getElementById('productDesc').value || '',
+        version: document.getElementById('productVersion').value || '0.1.0',
+        type: document.getElementById('productType').value,
+        tags: tags,
+        session: {
+          id: 'main',
+          channel: 'webchat',
+          started: '2026-02-06T06:22:00-10:00',
+          includeHistory: document.getElementById('includeHistory').checked,
+          notes: document.getElementById('sessionNotes').value
+        },
+        created: new Date().toISOString(),
+        author: 'Tony Wong'
+      };
+      
+      const output = document.getElementById('output');
+      output.textContent = JSON.stringify(manifest, null, 2);
+      output.classList.add('show');
+    }
+    
+    // Save to workspace (would need backend integration)
+    function saveToWorkspace() {
+      generateManifest();
+      alert('Manifest generated! Copy to workspace or use OpenClaw to save.');
+    }
+    
+    // Export JSON
+    function exportJSON() {
+      generateManifest();
+      const output = document.getElementById('output').textContent;
+      const blob = new Blob([output], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = (document.getElementById('productSlug').value || 'product') + '-manifest.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    
+    // Auto-generate slug from name
+    document.getElementById('productName').addEventListener('input', (e) => {
+      const slug = e.target.value
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
+      document.getElementById('productSlug').value = slug;
+    });
+  </script>
+</body>
+</html>

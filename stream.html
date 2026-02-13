@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream of Consciousness - Greg's Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .back-link {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .back-link:hover { text-decoration: underline; }
+        .refresh-btn {
+            background: rgba(78, 205, 196, 0.2);
+            border: 1px solid #4ecdc4;
+            color: #4ecdc4;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+        .refresh-btn:hover {
+            background: rgba(78, 205, 196, 0.3);
+        }
+        .refresh-btn.loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .refresh-btn .icon {
+            transition: transform 0.3s;
+        }
+        .refresh-btn.loading .icon {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        h1::before { content: '🧠'; }
+        .subtitle {
+            color: #888;
+            font-size: 0.95rem;
+        }
+        .stats-bar {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: #888;
+        }
+        .stat-value {
+            color: #fff;
+            font-weight: 600;
+        }
+        .stat.notes .stat-value { color: #fbbf24; }
+        .stat.tasks .stat-value { color: #10b981; }
+        .stat.pending .stat-value { color: #f97316; }
+
+        /* Bulk Action Bar */
+        .bulk-action-bar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            animation: slideDown 0.2s ease;
+        }
+        .bulk-action-bar.visible {
+            display: flex;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .bulk-count {
+            font-weight: 600;
+            font-size: 0.95rem;
+            min-width: 120px;
+        }
+        .bulk-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .bulk-select {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            padding: 0.5rem 0.75rem;
+            color: #fff;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .bulk-select:focus {
+            outline: none;
+            border-color: #fff;
+        }
+        .bulk-select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+        .bulk-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            transition: all 0.2s;
+        }
+        .bulk-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .bulk-btn-clear {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            margin-left: auto;
+        }
+        .bulk-btn-clear:hover {
+            color: #fff;
+        }
+
+        /* Capture Section */
+        .capture-section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .capture-title {
+            font-size: 1rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+        .capture-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            color: #fff;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+        .capture-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .capture-input::placeholder { color: #555; }
+        .capture-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 0.6rem 1.25rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+        }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.15); }
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+        }
+        .btn-success:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+
+        /* Category Filter */
+        .category-filter {
+            margin-bottom: 1rem;
+        }
+        .category-select {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+        .category-select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* Items List */
+        .items-section {
+            margin-bottom: 2rem;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .section-title {
+            font-size: 1.1rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .select-all-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: #888;
+        }
+        .select-all-container input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+        .filter-tabs {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .filter-tab {
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            background: transparent;
+            color: #888;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+        .filter-tab:hover { color: #fff; }
+        .filter-tab.active {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .item-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            transition: all 0.2s;
+        }
+        .item-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+        .item-card.selected {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+        .item-card.reviewed {
+            opacity: 0.6;
+        }
+        .item-card.reviewed .item-text {
+            text-decoration: line-through;
+        }
+        .item-checkbox {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+        .item-content {
+            flex: 1;
+        }
+        .item-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+        }
+        .item-meta {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .item-type {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .type-note {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+        }
+        .type-task {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+        }
+        .type-uncategorized {
+            background: rgba(156, 163, 175, 0.15);
+            color: #9ca3af;
+        }
+        .item-category {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            background: rgba(102, 126, 234, 0.15);
+            color: #667eea;
+        }
+        .item-reviewed-badge {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+        }
+        .item-note {
+            font-size: 0.8rem;
+            color: #10b981;
+            font-style: italic;
+            margin-top: 0.25rem;
+        }
+        .item-destination {
+            font-size: 0.75rem;
+            color: #667eea;
+        }
+        .item-timestamp {
+            font-size: 0.75rem;
+            color: #555;
+        }
+        .item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .item-btn {
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.05);
+            color: #888;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s;
+        }
+        .item-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #555;
+        }
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        .empty-state-text {
+            font-size: 1rem;
+        }
+
+        /* Workflow Guide */
+        .workflow-guide {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+        }
+        .workflow-title {
+            font-size: 0.9rem;
+            color: #667eea;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+        .workflow-steps {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .workflow-step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+        .step-num {
+            width: 22px;
+            height: 22px;
+            background: rgba(102, 126, 234, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: #fff;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #444;
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 2rem;
+        }
+
+        .hidden-input {
+            display: none;
+        }
+
+        /* New Category Input */
+        .new-category-input {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            padding: 0.5rem 0.75rem;
+            color: #fff;
+            font-size: 0.85rem;
+            width: 150px;
+        }
+        .new-category-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .new-category-input:focus {
+            outline: none;
+            border-color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            h1 { font-size: 1.5rem; }
+            .stats-bar { gap: 1rem; }
+            .workflow-steps { flex-direction: column; gap: 0.75rem; }
+            .bulk-action-bar { padding: 1rem; }
+        }
+    </style>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="top-bar">
+            <a href="hub-tony.html" class="back-link">← Back to Tony's Dashboard Hub</a>
+            <button class="refresh-btn" onclick="hardRefresh()">
+                <span class="icon">🔄</span> Refresh
+            </button>
+        </div>
+        <header>
+            <h1>Stream of Consciousness</h1>
+            <p class="subtitle">Capture thoughts freely, organize later. Brain dump → categorize → route.</p>
+            <div class="stats-bar">
+                <div class="stat pending">
+                    <span>Pending Review:</span>
+                    <span class="stat-value" id="pending-count">0</span>
+                </div>
+                <div class="stat notes">
+                    <span>Notes:</span>
+                    <span class="stat-value" id="notes-count">0</span>
+                </div>
+                <div class="stat tasks">
+                    <span>Tasks:</span>
+                    <span class="stat-value" id="tasks-count">0</span>
+                </div>
+                <div class="stat">
+                    <span>Total Captured:</span>
+                    <span class="stat-value" id="total-count">0</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Bulk Action Bar -->
+        <div class="bulk-action-bar" id="bulk-action-bar">
+            <span class="bulk-count"><span id="selected-count">0</span> selected</span>
+            <div class="bulk-actions">
+                <select class="bulk-select" id="bulk-category-select" onchange="bulkAssignCategory(this.value)">
+                    <option value="">Assign Category...</option>
+                </select>
+                <input type="text" class="new-category-input" id="new-category-input" placeholder="New category..." onkeydown="handleNewCategory(event)">
+                <select class="bulk-select" id="bulk-type-select" onchange="bulkAssignType(this.value)">
+                    <option value="">Set Type...</option>
+                    <option value="note">💡 Note</option>
+                    <option value="task">✅ Task</option>
+                </select>
+                <button class="bulk-btn" onclick="bulkMarkReviewed()">✓ Mark Reviewed</button>
+                <button class="bulk-btn" onclick="bulkUnmarkReviewed()">↩ Unmark Reviewed</button>
+                <button class="bulk-btn" onclick="bulkDelete()">🗑️ Delete</button>
+            </div>
+            <button class="bulk-btn bulk-btn-clear" onclick="clearSelection()">✕ Clear</button>
+        </div>
+
+        <div class="workflow-guide">
+            <div class="workflow-title">📋 Workflow</div>
+            <div class="workflow-steps">
+                <div class="workflow-step">
+                    <span class="step-num">1</span>
+                    <span>Capture raw thoughts</span>
+                </div>
+                <div class="workflow-step">
+                    <span class="step-num">2</span>
+                    <span>Categorize (Note vs Task)</span>
+                </div>
+                <div class="workflow-step">
+                    <span class="step-num">3</span>
+                    <span>Review together</span>
+                </div>
+                <div class="workflow-step">
+                    <span class="step-num">4</span>
+                    <span>Route to destination</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="capture-section">
+            <div class="capture-title">💭 Capture New Thought</div>
+            <textarea class="capture-input" id="capture-input" placeholder="Type or paste a thought, idea, task... (Shift+Enter for new line, Enter to add)"></textarea>
+            <div class="capture-actions">
+                <button class="btn btn-primary" onclick="addItem()">Add Item</button>
+                <button class="btn btn-secondary" onclick="addAsNote()">Add as Note 💡</button>
+                <button class="btn btn-secondary" onclick="addAsTask()">Add as Task ✅</button>
+            </div>
+        </div>
+
+        <div class="items-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    Captured Items
+                    <label class="select-all-container">
+                        <input type="checkbox" id="select-all" onchange="toggleSelectAll(this.checked)">
+                        <span>Select All</span>
+                    </label>
+                </h2>
+                <div class="category-filter">
+                    <select class="category-select" id="category-filter" onchange="setCategory(this.value)">
+                        <option value="all">All Categories</option>
+                    </select>
+                </div>
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all" onclick="setFilter('all')">All</button>
+                    <button class="filter-tab" data-filter="uncategorized" onclick="setFilter('uncategorized')">Uncategorized</button>
+                    <button class="filter-tab" data-filter="note" onclick="setFilter('note')">Notes</button>
+                    <button class="filter-tab" data-filter="task" onclick="setFilter('task')">Tasks</button>
+                    <button class="filter-tab" data-filter="reviewed" onclick="setFilter('reviewed')">Reviewed</button>
+                </div>
+            </div>
+            <div class="items-list" id="items-list">
+                <div class="empty-state">
+                    <div class="empty-state-icon">🧠</div>
+                    <div class="empty-state-text">No items captured yet. Start your brain dump!</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="capture-actions" style="justify-content: center; margin-top: 2rem;">
+            <button class="btn btn-success" onclick="exportToJSON()">📥 Export JSON</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('import-file').click()">📤 Import JSON</button>
+            <button class="btn btn-secondary" onclick="syncFromServer()">🔄 Sync from Server</button>
+            <button class="btn btn-secondary" onclick="routeReviewed()">🚀 Route Reviewed Items</button>
+            <button class="btn btn-secondary" onclick="clearReviewed()">🗑️ Clear Reviewed</button>
+        </div>
+        <input type="file" id="import-file" class="hidden-input" accept=".json" onchange="importJSON(event)">
+
+        <footer>
+            Stream of Consciousness Dashboard • Greg Tasker (AI Assistant) • February 2026
+        </footer>
+    </div>
+
+    <script>
+        // EMBEDDED DATA - Updated by Greg
+        const EMBEDDED_DATA = [
+  {
+    "id": 1,
+    "text": "This whole process, this whole product is the new high performer workflow when paired with an 'Exec AI' like Greg.",
+    "type": "note",
+    "category": "Product Vision",
+    "reviewed": false,
+    "timestamp": "2026-02-06T07:02:00-10:00",
+    "note": null
+  },
+  {
+    "id": 2,
+    "text": "Set up a LLM model fallback in Greg in addition to Anthropic Claude to avoid the gateway context limit.",
+    "type": "task",
+    "category": "Technical Setup",
+    "reviewed": false,
+    "timestamp": "2026-02-06T07:02:00-10:00",
+    "note": "Waiting on Victor for OpenAI API key - Greg will configure when received"
+  },
+  {
+    "id": 9,
+    "text": "Make sure to monitor gateway bloat and save data as we go to avoid data loss.",
+    "type": "task",
+    "category": "Process",
+    "reviewed": false,
+    "timestamp": "2026-02-06T07:02:00-10:00",
+    "note": null
+  },
+  {
+    "id": 10,
+    "text": "Asked Greg same questions I asked Grok about how multi-agent systems like Akira (AI-driven PMO) works, compared responses.",
+    "type": "note",
+    "category": "Architecture Understanding",
+    "reviewed": false,
+    "timestamp": "2026-02-06T07:08:00-10:00",
+    "note": null
+  },
+  {
+    "id": 13,
+    "text": "This entire session is hypnagogic work for the high performer. All this stuff, all this clarity took 3 hours from 3am to 6am - now documenting with Greg because he can execute a lot of this from here.",
+    "type": "note",
+    "category": "Product Vision",
+    "reviewed": false,
+    "timestamp": "2026-02-06T07:08:00-10:00",
+    "note": null
+  },
+  {
+    "id": 29,
+    "text": "Add 2026 actions into Greg's to-do list. This is the basis for the prioritizer.",
+    "type": "task",
+    "category": "Process",
+    "reviewed": false,
+    "timestamp": "2026-02-06T07:19:00-10:00",
+    "note": null
+  },
+  {
+    "id": 30,
+    "text": "Share links to all my session tabs and groups, ask Greg to organize and prioritize on one of my dashboards.",
+    "type": "task",
+    "category": "Process",
+    "reviewed": false,
+    "timestamp": "2026-02-06T07:19:00-10:00",
+    "note": null
+  }
+];
+
+        // Supabase config
+        const SUPABASE_URL = 'https://mmwbiogqmgmtxboipyko.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_r6q0-iEnygKZiZkaOuY-hg_Tvlb-66U';
+        const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let items = [];
+        let selectedIds = new Set();
+        let currentFilter = 'all';
+        let currentCategory = 'all';
+
+        // Load items from Supabase (fallback to EMBEDDED_DATA)
+        async function loadItems() {
+            try {
+                const { data: streamItems, error } = await db
+                    .from('stream_items')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                if (streamItems && streamItems.length > 0) {
+                    items = streamItems.map(s => {
+                        const stored = s.data ? JSON.parse(s.data) : {};
+                        return {
+                            id: s.id,
+                            text: s.content,
+                            raw: s.content,
+                            category: s.category,
+                            status: s.status,
+                            reviewed: s.status === 'reviewed',
+                            ...stored
+                        };
+                    });
+                } else {
+                    // Fallback to embedded data
+                    items = EMBEDDED_DATA.slice();
+                }
+            } catch (err) {
+                console.error('Supabase error, using embedded data:', err);
+                items = EMBEDDED_DATA.slice();
+            }
+            
+            populateCategoryFilter();
+            populateBulkCategorySelect();
+            renderItems();
+            updateStats();
+        }
+        
+        // Hard refresh - clear cache and reload from EMBEDDED_DATA
+        function hardRefresh() {
+            const btn = document.querySelector('.refresh-btn');
+            if (btn) btn.classList.add('loading');
+            
+            localStorage.removeItem('stream-of-consciousness-items');
+            localStorage.removeItem('stream-data-timestamp');
+            localStorage.setItem('stream-force-refresh', 'true');
+            
+            // Force page reload to get fresh EMBEDDED_DATA from server
+            location.reload(true);
+        }
+
+        function saveItems() {
+            localStorage.setItem('stream-of-consciousness-items', JSON.stringify(items));
+        }
+
+        // Populate filter dropdown
+        function populateCategoryFilter() {
+            const categories = [...new Set(items.map(i => i.category).filter(Boolean))].sort();
+            const select = document.getElementById('category-filter');
+            select.innerHTML = '<option value="all">All Categories</option>';
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat;
+                option.textContent = cat;
+                select.appendChild(option);
+            });
+        }
+
+        // Populate bulk category select
+        function populateBulkCategorySelect() {
+            const categories = [...new Set(items.map(i => i.category).filter(Boolean))].sort();
+            const select = document.getElementById('bulk-category-select');
+            select.innerHTML = '<option value="">Assign Category...</option>';
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat;
+                option.textContent = cat;
+                select.appendChild(option);
+            });
+        }
+
+        function setCategory(cat) {
+            currentCategory = cat;
+            renderItems();
+        }
+
+        // Selection management
+        function toggleSelect(id) {
+            if (selectedIds.has(id)) {
+                selectedIds.delete(id);
+            } else {
+                selectedIds.add(id);
+            }
+            updateBulkBar();
+            renderItems();
+        }
+
+        function toggleSelectAll(checked) {
+            const visibleItems = getFilteredItems();
+            if (checked) {
+                visibleItems.forEach(item => selectedIds.add(item.id));
+            } else {
+                visibleItems.forEach(item => selectedIds.delete(item.id));
+            }
+            updateBulkBar();
+            renderItems();
+        }
+
+        function clearSelection() {
+            selectedIds.clear();
+            document.getElementById('select-all').checked = false;
+            updateBulkBar();
+            renderItems();
+        }
+
+        function updateBulkBar() {
+            const bar = document.getElementById('bulk-action-bar');
+            const count = selectedIds.size;
+            document.getElementById('selected-count').textContent = count;
+            if (count > 0) {
+                bar.classList.add('visible');
+            } else {
+                bar.classList.remove('visible');
+            }
+            // Reset dropdowns
+            document.getElementById('bulk-category-select').value = '';
+            document.getElementById('bulk-type-select').value = '';
+        }
+
+        // Bulk actions
+        function bulkAssignCategory(category) {
+            if (!category || selectedIds.size === 0) return;
+            selectedIds.forEach(id => {
+                const item = items.find(i => i.id === id);
+                if (item) item.category = category;
+            });
+            saveItems();
+            populateCategoryFilter();
+            populateBulkCategorySelect();
+            renderItems();
+            document.getElementById('bulk-category-select').value = '';
+        }
+
+        function handleNewCategory(event) {
+            if (event.key === 'Enter') {
+                const input = document.getElementById('new-category-input');
+                const newCat = input.value.trim();
+                if (newCat && selectedIds.size > 0) {
+                    bulkAssignCategory(newCat);
+                    input.value = '';
+                }
+            }
+        }
+
+        function bulkAssignType(type) {
+            if (!type || selectedIds.size === 0) return;
+            selectedIds.forEach(id => {
+                const item = items.find(i => i.id === id);
+                if (item) item.type = type;
+            });
+            saveItems();
+            renderItems();
+            updateStats();
+            document.getElementById('bulk-type-select').value = '';
+        }
+
+        function bulkMarkReviewed() {
+            if (selectedIds.size === 0) return;
+            selectedIds.forEach(id => {
+                const item = items.find(i => i.id === id);
+                if (item) item.reviewed = true;
+            });
+            saveItems();
+            renderItems();
+            updateStats();
+        }
+
+        function bulkUnmarkReviewed() {
+            if (selectedIds.size === 0) return;
+            selectedIds.forEach(id => {
+                const item = items.find(i => i.id === id);
+                if (item) item.reviewed = false;
+            });
+            saveItems();
+            renderItems();
+            updateStats();
+        }
+
+        function bulkDelete() {
+            if (selectedIds.size === 0) return;
+            if (!confirm(`Delete ${selectedIds.size} selected items?`)) return;
+            items = items.filter(i => !selectedIds.has(i.id));
+            selectedIds.clear();
+            saveItems();
+            populateCategoryFilter();
+            populateBulkCategorySelect();
+            updateBulkBar();
+            renderItems();
+            updateStats();
+        }
+
+        // Add item
+        function addItem(type = 'uncategorized') {
+            const input = document.getElementById('capture-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const item = {
+                id: Date.now(),
+                text: text,
+                type: type,
+                category: null,
+                destination: null,
+                reviewed: false,
+                timestamp: new Date().toISOString()
+            };
+
+            items.unshift(item);
+            saveItems();
+            populateCategoryFilter();
+            populateBulkCategorySelect();
+            renderItems();
+            updateStats();
+            input.value = '';
+            input.focus();
+        }
+
+        function addAsNote() { addItem('note'); }
+        function addAsTask() { addItem('task'); }
+
+        // Single item actions
+        function setItemType(id, type) {
+            const item = items.find(i => i.id === id);
+            if (item) {
+                item.type = type;
+                saveItems();
+                renderItems();
+                updateStats();
+            }
+        }
+
+        function toggleReviewed(id) {
+            const item = items.find(i => i.id === id);
+            if (item) {
+                item.reviewed = !item.reviewed;
+                saveItems();
+                renderItems();
+                updateStats();
+            }
+        }
+
+        function deleteItem(id) {
+            if (!confirm('Delete this item?')) return;
+            items = items.filter(i => i.id !== id);
+            selectedIds.delete(id);
+            saveItems();
+            populateCategoryFilter();
+            populateBulkCategorySelect();
+            updateBulkBar();
+            renderItems();
+            updateStats();
+        }
+
+        // Filters
+        function setFilter(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
+            clearSelection();
+            renderItems();
+        }
+
+        function getFilteredItems() {
+            let filtered = items;
+            if (currentFilter === 'uncategorized') filtered = filtered.filter(i => i.type === 'uncategorized' || !i.category);
+            else if (currentFilter === 'note') filtered = filtered.filter(i => i.type === 'note');
+            else if (currentFilter === 'task') filtered = filtered.filter(i => i.type === 'task');
+            else if (currentFilter === 'reviewed') filtered = filtered.filter(i => i.reviewed);
+
+            if (currentCategory !== 'all') {
+                filtered = filtered.filter(i => i.category === currentCategory);
+            }
+            return filtered;
+        }
+
+        // Render
+        function renderItems() {
+            const list = document.getElementById('items-list');
+            const filtered = getFilteredItems();
+
+            if (filtered.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🧠</div>
+                        <div class="empty-state-text">${currentFilter === 'all' && currentCategory === 'all' ? 'No items captured yet.' : 'No items match this filter.'}</div>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = filtered.map(item => `
+                <div class="item-card ${item.reviewed ? 'reviewed' : ''} ${selectedIds.has(item.id) ? 'selected' : ''}">
+                    <input type="checkbox" class="item-checkbox" ${selectedIds.has(item.id) ? 'checked' : ''} onchange="toggleSelect(${item.id})">
+                    <div class="item-content">
+                        <div class="item-text">${escapeHtml(item.text)}</div>
+                        ${item.note ? `<div class="item-note">📝 ${escapeHtml(item.note)}</div>` : ''}
+                        <div class="item-meta">
+                            <span class="item-type type-${item.type}">${item.type}</span>
+                            ${item.category ? `<span class="item-category">${escapeHtml(item.category)}</span>` : '<span class="item-category" style="opacity:0.5">uncategorized</span>'}
+                            ${item.reviewed ? '<span class="item-reviewed-badge">✓ reviewed</span>' : ''}
+                            <span class="item-timestamp">${new Date(item.timestamp).toLocaleString()}</span>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="item-btn" onclick="setItemType(${item.id}, 'note')" title="Note">💡</button>
+                        <button class="item-btn" onclick="setItemType(${item.id}, 'task')" title="Task">✅</button>
+                        <button class="item-btn" onclick="toggleReviewed(${item.id})" title="Toggle Reviewed">✓</button>
+                        <button class="item-btn" onclick="deleteItem(${item.id})" title="Delete">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Update select-all checkbox state
+            const allVisible = filtered.every(item => selectedIds.has(item.id));
+            document.getElementById('select-all').checked = filtered.length > 0 && allVisible;
+        }
+
+        function updateStats() {
+            document.getElementById('total-count').textContent = items.length;
+            document.getElementById('pending-count').textContent = items.filter(i => !i.reviewed).length;
+            document.getElementById('notes-count').textContent = items.filter(i => i.type === 'note').length;
+            document.getElementById('tasks-count').textContent = items.filter(i => i.type === 'task').length;
+        }
+
+        function exportToJSON() {
+            const data = JSON.stringify(items, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `stream-of-consciousness-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+        }
+
+        function syncFromServer() {
+            if (!confirm('Reset to server data? This will overwrite any local changes.')) return;
+            localStorage.removeItem('stream-of-consciousness-items');
+            items = EMBEDDED_DATA.slice(); // Clone embedded data
+            saveItems();
+            selectedIds.clear();
+            populateCategoryFilter();
+            populateBulkCategorySelect();
+            updateBulkBar();
+            renderItems();
+            updateStats();
+            alert('Synced from server! ' + items.length + ' items loaded.');
+        }
+
+        function importJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    let data = JSON.parse(e.target.result);
+                    if (data.items) data = data.items;
+                    data = data.map(item => ({
+                        ...item,
+                        text: item.text || item.raw,
+                        id: item.id || Date.now() + Math.random()
+                    }));
+                    items = data;
+                    saveItems();
+                    populateCategoryFilter();
+                    populateBulkCategorySelect();
+                    renderItems();
+                    updateStats();
+                    alert(`Imported ${data.length} items!`);
+                } catch (err) {
+                    alert('Error: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        function routeReviewed() {
+            const reviewed = items.filter(i => i.reviewed);
+            if (reviewed.length === 0) {
+                alert('No reviewed items to route.');
+                return;
+            }
+            alert(`Ready to route ${reviewed.length} items.`);
+        }
+
+        function clearReviewed() {
+            const count = items.filter(i => i.reviewed).length;
+            if (count === 0) { alert('No reviewed items.'); return; }
+            if (confirm(`Clear ${count} reviewed items?`)) {
+                items = items.filter(i => !i.reviewed);
+                saveItems();
+                populateCategoryFilter();
+                populateBulkCategorySelect();
+                renderItems();
+                updateStats();
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        document.getElementById('capture-input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                addItem();
+            }
+        });
+
+        loadItems();
+    </script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+{
+  "version": "2026-02-07-v2",
+  "items": [
+    {
+      "id": 1,
+      "title": "Psilocybin Microdose",
+      "type": "intervention",
+      "status": "active",
+      "details": "0.75mg dose, 7-day cycle (last: Feb 6)",
+      "lastDate": "2026-02-06",
+      "effects": "Complete rest, RHR dropped to 57, body battery 85. This is the way.",
+      "priority": "high"
+    },
+    {
+      "id": 2,
+      "title": "Celebrex",
+      "type": "intervention",
+      "status": "active",
+      "details": "Anti-inflammatory for leg",
+      "lastDate": "2026-02-03",
+      "effects": "Increased HRV, no stress markers",
+      "priority": "medium"
+    },
+    {
+      "id": 3,
+      "title": "Coffee Abstinence",
+      "type": "habit",
+      "status": "active",
+      "details": "Not drinking coffee",
+      "lastDate": null,
+      "effects": "May contribute to baseline HRV improvements",
+      "priority": "low"
+    },
+    {
+      "id": 4,
+      "title": "Leg Inflammation",
+      "type": "condition",
+      "status": "monitoring",
+      "details": "Ongoing inflammation issue",
+      "lastDate": null,
+      "effects": "Driving elevated Garmin stress scores",
+      "priority": "high"
+    },
+    {
+      "id": 5,
+      "title": "Track Celebrex duration",
+      "type": "question",
+      "status": "monitoring",
+      "details": "How long does effect last?",
+      "lastDate": null,
+      "effects": "",
+      "priority": "medium"
+    },
+    {
+      "id": 6,
+      "title": "Psilocybin/Celebrex similarity",
+      "type": "question",
+      "status": "monitoring",
+      "details": "Shared anti-inflammatory pathways?",
+      "lastDate": null,
+      "effects": "",
+      "priority": "medium"
+    },
+    {
+      "id": 7,
+      "title": "HRV Trend",
+      "type": "metric",
+      "status": "active",
+      "details": "Currently trending up",
+      "lastDate": "2026-02-07",
+      "effects": "Improving with interventions",
+      "priority": "high"
+    },
+    {
+      "id": 8,
+      "title": "Nightly Stress",
+      "type": "metric",
+      "status": "monitoring",
+      "details": "Garmin stress tracking",
+      "lastDate": "2026-02-07",
+      "effects": "None when inflammation controlled",
+      "priority": "medium"
+    }
+  ]
+}

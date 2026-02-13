@@ -1,0 +1,100 @@
+{
+  "cropped_cards_processed": 12,
+  "matches_found": 12,
+  "new_images_added": 4,
+  "exercises_without_matches": [],
+  "all_matches": [
+    {
+      "exerciseId": 1,
+      "exerciseName": "Arm Circles",
+      "cardName": "arm-circles",
+      "imageUrl": "images/exercises/cropped/sample_arm-circles.jpg",
+      "source": "card_crop"
+    },
+    {
+      "exerciseId": 25,
+      "exerciseName": "Hero Push-Up",
+      "cardName": "dive-bomb-push-up",
+      "imageUrl": "images/exercises/25-hero-push-up.png",
+      "source": "existing",
+      "note": "Already had image"
+    },
+    {
+      "exerciseId": 5,
+      "exerciseName": "Plank Jack",
+      "cardName": "plank-jack",
+      "imageUrl": "images/exercises/5-plank-jack.png",
+      "source": "existing",
+      "note": "Already had image"
+    },
+    {
+      "exerciseId": 6,
+      "exerciseName": "Bird Dog",
+      "cardName": "bird-dog",
+      "imageUrl": "images/exercises/6-bird-dog.png",
+      "source": "existing",
+      "note": "Already had image"
+    },
+    {
+      "exerciseId": 20,
+      "exerciseName": "Butt Lift",
+      "cardName": "butt-lift",
+      "imageUrl": "images/exercises/cropped/sample_butt-lift.jpg",
+      "source": "card_crop"
+    },
+    {
+      "exerciseId": 21,
+      "exerciseName": "Squat Hold",
+      "cardName": "squat-hold",
+      "imageUrl": "images/exercises/21-squat-hold.png",
+      "source": "existing",
+      "note": "Already had image"
+    },
+    {
+      "exerciseId": 34,
+      "exerciseName": "Farmer's Walk",
+      "cardName": "farmers-walk",
+      "imageUrl": "images/exercises/cropped/sample_farmers-walk.jpg",
+      "source": "card_crop"
+    },
+    {
+      "exerciseId": 37,
+      "exerciseName": "Romanian Deadlift",
+      "cardName": "romanian-deadlift",
+      "imageUrl": "images/exercises/37-romanian-deadlift.png",
+      "source": "existing",
+      "note": "Already had image"
+    },
+    {
+      "exerciseId": 41,
+      "exerciseName": "Deadlift",
+      "cardName": "deadlift",
+      "imageUrl": "images/exercises/41-deadlift.png",
+      "source": "existing",
+      "note": "Already had image"
+    },
+    {
+      "exerciseId": 42,
+      "exerciseName": "Calf Raises",
+      "cardName": "calf-raises",
+      "imageUrl": "images/exercises/42-calf-raises.png",
+      "source": "existing",
+      "note": "Already had image"
+    },
+    {
+      "exerciseId": 44,
+      "exerciseName": "Lunge",
+      "cardName": "lunge",
+      "imageUrl": "images/exercises/44-lunge.png",
+      "source": "existing",
+      "note": "Already had image"
+    },
+    {
+      "exerciseId": 54,
+      "exerciseName": "Bent Over Row",
+      "cardName": "bent-over-row",
+      "imageUrl": "images/exercises/cropped/sample_bent-over-row.jpg",
+      "source": "card_crop"
+    }
+  ]
+}

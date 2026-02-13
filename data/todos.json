@@ -1,0 +1,138 @@
+{
+  "todos": [
+    {
+      "id": 1,
+      "title": "[SEAN] Basis Partnership Proposal",
+      "description": "Tell Sean: I'll give you requirements, deliver code, and you get 10-15% margin. Just send clients a link to a webpage that reads 'upload your Google Doc here'.\n\nVALUE PROP: Basis gets 15% profit margin PLUS all of Sean's hours back (~80 hrs/month). This backlog output is from ONE Google Doc — with JIRA detail, you'd get much more.",
+      "category": "Partnerships",
+      "priority": "high",
+      "status": "pending",
+      "source": "Stream #21",
+      "createdAt": "2026-02-06T08:45:00-10:00"
+    },
+    {
+      "id": 2,
+      "title": "[CHARLIE] First Mover Partnership Strategy",
+      "description": "Talk to Charlie about partnership strategy:\n\n1. VALUE PROP: It's only a matter of time until others figure this out. Let's gain first mover advantage.\n\n2. APPROACH: Move forward faster by leveraging each other's progress. Goal: capture market share and solidify first mover advantage as a brand.\n\n3. BRAND VISION: A brand that quickly produces working software from obscure requirements. Also product verticals for executive coaching, biohacking, fitness, dating, etc.\n\n4. KENDO STRATEGY: They have delivery problems — we become their outsource solution for delivery. Don't introduce new workflow (causes resistance). Just deliver results.\n\nKEY INSIGHT: AI sells fastest when it doesn't require humans to change. Ron and Kendo will not change.",
+      "category": "Partnerships",
+      "priority": "high",
+      "status": "pending",
+      "source": "Stream #14, #15, #16, #17, #19, #20",
+      "createdAt": "2026-02-06T08:45:00-10:00"
+    },
+    {
+      "id": 3,
+      "title": "Gartner Research Papers Workflow",
+      "description": "Work session with Greg: how to download Gartner research papers and have Greg read through them. Just download and put on Google Drive somewhere?",
+      "category": "Research",
+      "priority": "medium",
+      "status": "pending",
+      "source": "Stream #38",
+      "createdAt": "2026-02-06T09:34:00-10:00"
+    },
+    {
+      "id": 4,
+      "title": "Tony Wong Case Studies & History",
+      "description": "Create case study links for Greg to build Tony Wong history of experience, skills, achievements: enterprise software development, executive coaching, zen, biohacking, podcasting. Feeds marketing and social media.",
+      "category": "Marketing",
+      "priority": "medium",
+      "status": "pending",
+      "source": "Stream #31",
+      "createdAt": "2026-02-06T09:34:00-10:00"
+    },
+    {
+      "id": 5,
+      "title": "Akira PMO Access for Greg",
+      "description": "Best way to get Greg access to Akira AI PMO agents Joana developed in Lovable and Vercel? Use her login or export code to GitHub for Greg to access? Goal: see if Greg can replicate her AI PMO agent results inside OpenClaw.\n\nEmail sent to Joana - waiting for response.",
+      "category": "Akira PMO",
+      "priority": "high",
+      "status": "waiting",
+      "source": "Stream #34",
+      "createdAt": "2026-02-06T09:34:00-10:00"
+    },
+    {
+      "id": 6,
+      "title": "Vercel Hosting Cost Analysis",
+      "description": "As dashboards increase, Vercel costs go up. Consider alternate hosting options.",
+      "category": "Infrastructure",
+      "priority": "low",
+      "status": "pending",
+      "source": "Stream #39",
+      "createdAt": "2026-02-06T09:34:00-10:00"
+    },
+    {
+      "id": 7,
+      "title": "Connect Greg to Kendo Slack",
+      "description": "Connect Greg to Kendo Slack so he can read it for me. Much of data from Kendo Slack becomes my news dashboard.\n\nFor replies: Greg tells me what to reply and I post from my account (or Greg replies directly - TBD).",
+      "category": "Integrations",
+      "priority": "medium",
+      "status": "pending",
+      "source": "Stream #36, #37",
+      "createdAt": "2026-02-06T09:34:00-10:00"
+    },
+    {
+      "id": 8,
+      "title": "Export Multicity Living Chat from Grok",
+      "description": "Download Multicity Living chat from grok.ai for Greg to prototype the Exec.AI Discussion Tracker dashboard.\n\n✅ COMPLETED: Chat exported and saved to /grok-data/multi-city-living.md\nDashboard built: https://greg-dashboard.vercel.app/multi-city-living.html",
+      "category": "Exec.AI",
+      "priority": "medium",
+      "status": "completed",
+      "source": "Stream #27",
+      "createdAt": "2026-02-06T10:05:00-10:00",
+      "completedAt": "2026-02-06T17:30:00-10:00"
+    },
+    {
+      "id": 9,
+      "title": "Set Up Greg-Context Folder in Google Drive",
+      "description": "Drop share links of documents in Chrome tabs into a Google Drive folder for Greg.\n\nRecommendation: Create a 'Greg-Context' folder in Drive for docs you want Greg to reference. Greg can then search/read via the gog skill.",
+      "category": "Technical Setup",
+      "priority": "medium",
+      "status": "pending",
+      "source": "Stream #12",
+      "createdAt": "2026-02-06T10:15:00-10:00"
+    },
+    {
+      "id": 10,
+      "title": "Explain Profiler & Multi-Agent Distribution Product Customizer",
+      "description": "Need to explain the profiler and multi-agent distribution product customizer to Greg, so we can set that up to distribute and market our products.\n\nTony needs to walk Greg through this concept.\n\n🔗 Related: This is the MISSING PIECE for value prioritization (Pareto Engine). See VALUE-PRIORITIZATION.md",
+      "category": "Technical Setup",
+      "priority": "medium",
+      "status": "pending",
+      "source": "Stream #18",
+      "createdAt": "2026-02-06T10:15:00-10:00"
+    },
+    {
+      "id": 11,
+      "title": "Learn Local Unconstrained Models on Mac Studio",
+      "description": "Have Greg teach me how to use unconstrained models locally on my 512GB Mac Studio.\n\nGreg can walk through: Ollama setup, recommended models (Llama, Mistral, etc.), and how to run them without API limits.",
+      "category": "Technical Setup",
+      "priority": "medium",
+      "status": "pending",
+      "source": "Stream #40",
+      "createdAt": "2026-02-06T10:15:00-10:00"
+    },
+    {
+      "id": 12,
+      "title": "Review Estimator & Requirements MD",
+      "description": "Review the Akira Estimator source code and requirements documentation.\n\nFiles:\n- /akira-analysis/estimator-lovable/\n- /akira-analysis/estimator-vercel/\n- /ai-pmo-docs/agent-prompts/ESTIMATOR.md",
+      "category": "Akira PMO",
+      "priority": "high",
+      "status": "pending",
+      "dueDate": "2026-02-07",
+      "source": "Deferred from Feb 6 evening",
+      "createdAt": "2026-02-06T18:25:00-10:00"
+    },
+    {
+      "id": 13,
+      "title": "Review Multi-City Living Dashboard Output",
+      "description": "Review the multi-city living dashboard built from Grok chat export.\n\nDashboard: https://greg-dashboard.vercel.app/multi-city-living.html\nSource: /grok-data/multi-city-living.md\n\nValidates Exec.AI discussion tracker concept.",
+      "category": "Exec.AI",
+      "priority": "high",
+      "status": "pending",
+      "dueDate": "2026-02-07",
+      "source": "Deferred from Feb 6 evening",
+      "createdAt": "2026-02-06T18:25:00-10:00"
+    }
+  ],
+  "lastUpdated": "2026-02-06T18:25:00-10:00"
+}

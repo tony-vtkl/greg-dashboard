@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List - Greg's Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1f2e 0%, #141821 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .back-link:hover {
+            color: #a78bfa;
+        }
+        .refresh-btn {
+            background: rgba(78, 205, 196, 0.2);
+            border: 1px solid #4ecdc4;
+            color: #4ecdc4;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+        .refresh-btn:hover {
+            background: rgba(78, 205, 196, 0.3);
+        }
+        .refresh-btn.loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .refresh-btn .icon {
+            transition: transform 0.3s;
+        }
+        .refresh-btn.loading .icon {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .header-left h1 {
+            font-size: 2rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .header-left .subtitle {
+            color: #888;
+            font-size: 1rem;
+            margin-top: 0.25rem;
+        }
+        .header-stats {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .stat-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            min-width: 100px;
+        }
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .stat-value.pending { color: #fbbf24; }
+        .stat-value.done { color: #10b981; }
+        .stat-value.waiting { color: #667eea; }
+        .stat-value.total { color: #4ecdc4; }
+        .stat-label {
+            font-size: 0.7rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.25rem;
+        }
+
+        .last-updated {
+            text-align: center;
+            color: #555;
+            font-size: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Category Sections */
+        .category {
+            margin-bottom: 2rem;
+        }
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .category-icon {
+            font-size: 1.5rem;
+        }
+        .category-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+        }
+        .category-count {
+            background: rgba(255, 255, 255, 0.1);
+            color: #888;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
+        }
+
+        /* Task Items */
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .task-item {
+            background: rgba(30, 36, 50, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            transition: all 0.2s;
+        }
+        .task-item:hover {
+            background: rgba(40, 46, 60, 0.8);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        .task-item.completed {
+            opacity: 0.5;
+        }
+        .task-item.completed .task-title {
+            text-decoration: line-through;
+            color: #666;
+        }
+        .task-checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid #4ecdc4;
+            border-radius: 6px;
+            cursor: pointer;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            margin-top: 2px;
+        }
+        .task-checkbox:hover {
+            background: rgba(78, 205, 196, 0.2);
+        }
+        .task-checkbox.checked {
+            background: #10b981;
+            border-color: #10b981;
+        }
+        .task-checkbox.checked::after {
+            content: '✓';
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        .task-content {
+            flex: 1;
+        }
+        .task-title {
+            font-size: 1rem;
+            color: #fff;
+            margin-bottom: 0.35rem;
+        }
+        .task-notes {
+            font-size: 0.85rem;
+            color: #888;
+            line-height: 1.5;
+            white-space: pre-line;
+        }
+        .task-notes strong {
+            color: #a78bfa;
+        }
+        .task-meta {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .task-tag {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .tag-high {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        .tag-medium {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+        .tag-low {
+            background: rgba(107, 114, 128, 0.2);
+            color: #9ca3af;
+        }
+        .tag-waiting {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+        }
+        .tag-source {
+            background: rgba(78, 205, 196, 0.15);
+            color: #4ecdc4;
+        }
+
+        .completed-section {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 2px dashed rgba(255, 255, 255, 0.1);
+        }
+        .completed-section .category-header {
+            opacity: 0.7;
+        }
+        .retention-note {
+            font-size: 0.7rem;
+            color: #666;
+            margin-left: auto;
+            font-style: italic;
+        }
+        .days-remaining {
+            font-size: 0.7rem;
+            color: #666;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            margin-left: 0.5rem;
+        }
+        .loading-state {
+            text-align: center;
+            padding: 3rem;
+            color: #888;
+        }
+        .loading-state .spinner {
+            font-size: 2rem;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 2rem 2rem;
+            color: #555;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            .header-stats {
+                width: 100%;
+            }
+        }
+    </style>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="top-bar">
+            <a href="hub-tony.html" class="back-link">← Back to Dashboard Hub</a>
+            <button class="refresh-btn" onclick="hardRefresh()">
+                <span class="icon">🔄</span> Refresh
+            </button>
+        </div>
+        
+        <header>
+            <div class="header-left">
+                <h1>✅ To-Do List</h1>
+                <p class="subtitle">Tasks, projects, and action items</p>
+            </div>
+            <div class="header-stats">
+                <div class="stat-box">
+                    <div class="stat-value pending" id="pending-count">-</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value waiting" id="waiting-count">-</div>
+                    <div class="stat-label">Waiting</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value done" id="done-count">-</div>
+                    <div class="stat-label">Done</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value total" id="total-count">-</div>
+                    <div class="stat-label">Total</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="last-updated" id="last-updated"></div>
+
+        <div id="todos-container">
+            <div class="loading-state">
+                <div class="spinner">⟳</div>
+                <p>Loading tasks...</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>To-Do List Dashboard • Greg Tasker (AI Assistant)</p>
+        </footer>
+    </div>
+
+    <script>
+        const CATEGORY_ICONS = {
+            'Partnerships': '🤝',
+            'Marketing': '📣',
+            'Research': '🔬',
+            'Akira PMO': '🤖',
+            'Infrastructure': '🏗️',
+            'Integrations': '🔗',
+            'Technical Setup': '⚙️',
+            'Personal': '📋',
+            'Business': '💼',
+            'default': '📌'
+        };
+
+        // Supabase config
+        const SUPABASE_URL = 'https://mmwbiogqmgmtxboipyko.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_r6q0-iEnygKZiZkaOuY-hg_Tvlb-66U';
+        const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let todosData = null;
+        let completedTasks = {}; // {id: completedTimestamp}
+        const RETENTION_DAYS = 14;
+
+        async function loadTodos() {
+            try {
+                // Load from Supabase
+                const { data: todos, error } = await db
+                    .from('todos')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                // Transform to expected format
+                todosData = {
+                    todos: todos.map(t => {
+                        const stored = t.data ? JSON.parse(t.data) : {};
+                        return {
+                            id: t.id,
+                            title: t.title,
+                            completed: t.completed,
+                            priority: t.priority,
+                            ...stored
+                        };
+                    }),
+                    lastUpdated: new Date().toISOString()
+                };
+                
+                // Load completed state from localStorage (with timestamps)
+                const saved = localStorage.getItem('todoCompletedV2');
+                if (saved) {
+                    completedTasks = JSON.parse(saved);
+                    // Clean up tasks older than 14 days
+                    const cutoff = Date.now() - (RETENTION_DAYS * 24 * 60 * 60 * 1000);
+                    Object.keys(completedTasks).forEach(id => {
+                        if (completedTasks[id] < cutoff) {
+                            delete completedTasks[id];
+                        }
+                    });
+                    saveCompletedState();
+                }
+                
+                // Migrate from old format if exists
+                const oldSaved = localStorage.getItem('todoCompleted');
+                if (oldSaved && !saved) {
+                    const oldSet = JSON.parse(oldSaved);
+                    oldSet.forEach(id => {
+                        completedTasks[id] = Date.now();
+                    });
+                    saveCompletedState();
+                    localStorage.removeItem('todoCompleted');
+                }
+                
+                renderTodos();
+                updateStats();
+                
+                if (todosData.lastUpdated) {
+                    const date = new Date(todosData.lastUpdated);
+                    document.getElementById('last-updated').textContent = 
+                        `Data last updated: ${date.toLocaleString('en-US', { 
+                            weekday: 'short', 
+                            month: 'short', 
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true
+                        })}`;
+                }
+            } catch (error) {
+                console.error('Error loading todos:', error);
+                document.getElementById('todos-container').innerHTML = 
+                    '<div class="loading-state"><p>Error loading tasks. Try refreshing.</p></div>';
+            }
+        }
+        
+        function saveCompletedState() {
+            localStorage.setItem('todoCompletedV2', JSON.stringify(completedTasks));
+        }
+        
+        function isCompleted(id) {
+            return completedTasks.hasOwnProperty(id);
+        }
+        
+        function getDaysUntilDeletion(id) {
+            if (!completedTasks[id]) return null;
+            const elapsed = Date.now() - completedTasks[id];
+            const remaining = RETENTION_DAYS - Math.floor(elapsed / (24 * 60 * 60 * 1000));
+            return Math.max(0, remaining);
+        }
+
+        function renderTodos() {
+            const container = document.getElementById('todos-container');
+            
+            if (!todosData || !todosData.todos || todosData.todos.length === 0) {
+                container.innerHTML = '<div class="loading-state"><p>No tasks found.</p></div>';
+                return;
+            }
+
+            // Separate active and completed tasks
+            const activeTodos = todosData.todos.filter(t => !isCompleted(t.id));
+            const completedTodos = todosData.todos.filter(t => isCompleted(t.id));
+
+            // Group active tasks by category
+            const byCategory = {};
+            activeTodos.forEach(todo => {
+                const cat = todo.category || 'Uncategorized';
+                if (!byCategory[cat]) byCategory[cat] = [];
+                byCategory[cat].push(todo);
+            });
+
+            let html = '';
+            
+            // Render active tasks by category
+            Object.entries(byCategory).forEach(([category, todos]) => {
+                const icon = CATEGORY_ICONS[category] || CATEGORY_ICONS['default'];
+                html += `
+                    <div class="category">
+                        <div class="category-header">
+                            <span class="category-icon">${icon}</span>
+                            <span class="category-title">${category}</span>
+                            <span class="category-count">${todos.length}</span>
+                        </div>
+                        <div class="task-list">
+                            ${todos.map(todo => renderTask(todo)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Render completed section at the bottom
+            if (completedTodos.length > 0) {
+                html += `
+                    <div class="category completed-section">
+                        <div class="category-header">
+                            <span class="category-icon">✅</span>
+                            <span class="category-title">Completed</span>
+                            <span class="category-count">${completedTodos.length}</span>
+                            <span class="retention-note">Auto-deletes after ${RETENTION_DAYS} days</span>
+                        </div>
+                        <div class="task-list">
+                            ${completedTodos.map(todo => renderTask(todo, true)).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        function renderTask(todo, inCompletedSection = false) {
+            const completed = isCompleted(todo.id);
+            const priorityClass = todo.priority === 'high' ? 'tag-high' : 
+                                  todo.priority === 'medium' ? 'tag-medium' : 'tag-low';
+            
+            // Format description with bold markers
+            let desc = todo.description || '';
+            desc = desc.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            // Show days remaining for completed tasks
+            const daysLeft = getDaysUntilDeletion(todo.id);
+            const daysLeftText = daysLeft !== null ? `<span class="days-remaining">${daysLeft}d left</span>` : '';
+            
+            return `
+                <div class="task-item ${completed ? 'completed' : ''}" data-id="${todo.id}">
+                    <span class="task-checkbox ${completed ? 'checked' : ''}" onclick="toggleTask(${todo.id})"></span>
+                    <div class="task-content">
+                        <div class="task-title">${todo.title} ${inCompletedSection ? daysLeftText : ''}</div>
+                        ${desc ? `<div class="task-notes">${desc}</div>` : ''}
+                        <div class="task-meta">
+                            <span class="task-tag ${priorityClass}">${todo.priority || 'normal'}</span>
+                            ${todo.status === 'waiting' ? '<span class="task-tag tag-waiting">Waiting</span>' : ''}
+                            ${todo.source ? `<span class="task-tag tag-source">${todo.source}</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleTask(id) {
+            if (isCompleted(id)) {
+                delete completedTasks[id];
+            } else {
+                completedTasks[id] = Date.now();
+            }
+            saveCompletedState();
+            renderTodos();
+            updateStats();
+        }
+
+        function updateStats() {
+            if (!todosData || !todosData.todos) return;
+            
+            const total = todosData.todos.length;
+            const done = Object.keys(completedTasks).length;
+            const waiting = todosData.todos.filter(t => t.status === 'waiting' && !isCompleted(t.id)).length;
+            const pending = total - done - waiting;
+            
+            document.getElementById('total-count').textContent = total;
+            document.getElementById('done-count').textContent = done;
+            document.getElementById('waiting-count').textContent = waiting;
+            document.getElementById('pending-count').textContent = pending;
+        }
+
+        function hardRefresh() {
+            const btn = document.querySelector('.refresh-btn');
+            btn.classList.add('loading');
+            
+            // Clear localStorage for this page
+            localStorage.removeItem('todoCompletedV2');
+            localStorage.removeItem('todoCompleted');
+            completedTasks = {};
+            
+            // Reload data
+            loadTodos().then(() => {
+                btn.classList.remove('loading');
+            });
+        }
+
+        // Load on page load
+        loadTodos();
+    </script>
+</body>
+</html>

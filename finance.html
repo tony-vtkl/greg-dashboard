@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Dashboard - Greg's Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1f2e 0%, #141821 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #667eea;
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .back-link:hover {
+            color: #a78bfa;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .header-left h1 {
+            font-size: 2rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .header-left .subtitle {
+            color: #888;
+            font-size: 1rem;
+            margin-top: 0.25rem;
+        }
+        .last-updated {
+            color: #666;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Total Net Worth Banner */
+        .net-worth-banner {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 148, 162, 0.1) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .net-worth-label {
+            font-size: 0.85rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+        .net-worth-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 0.5rem;
+        }
+        .net-worth-change {
+            font-size: 1rem;
+            color: #4ecdc4;
+        }
+        .net-worth-change.positive::before {
+            content: '↑ ';
+        }
+        .net-worth-change.negative {
+            color: #ef4444;
+        }
+        .net-worth-change.negative::before {
+            content: '↓ ';
+        }
+
+        /* Allocation Overview */
+        .allocation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .allocation-card {
+            background: rgba(30, 36, 50, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .allocation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+        .allocation-card.crypto::before {
+            background: linear-gradient(90deg, #f7931a, #627eea);
+        }
+        .allocation-card.equities::before {
+            background: linear-gradient(90deg, #10b981, #3b82f6);
+        }
+        .allocation-card.cash::before {
+            background: linear-gradient(90deg, #6b7280, #9ca3af);
+        }
+        .allocation-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+        .allocation-name {
+            font-size: 0.85rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+        .allocation-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
+        .allocation-percent {
+            font-size: 0.9rem;
+            color: #4ecdc4;
+        }
+
+        /* Portfolio Sections */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 1.5rem;
+        }
+        @media (max-width: 500px) {
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .portfolio-card {
+            background: rgba(30, 36, 50, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .portfolio-header {
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .portfolio-header.crypto {
+            background: linear-gradient(135deg, rgba(247, 147, 26, 0.2) 0%, rgba(98, 126, 234, 0.15) 100%);
+        }
+        .portfolio-header.equities {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(59, 130, 246, 0.15) 100%);
+        }
+        .portfolio-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+        }
+        .portfolio-total {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #10b981;
+        }
+        .portfolio-body {
+            padding: 1.25rem;
+        }
+
+        /* Asset Row */
+        .asset-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .asset-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        .asset-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+        .asset-icon.btc { background: linear-gradient(135deg, #f7931a, #e2761b); }
+        .asset-icon.eth { background: linear-gradient(135deg, #627eea, #3c3c3d); }
+        .asset-icon.sol { background: linear-gradient(135deg, #9945ff, #14f195); }
+        .asset-icon.stocks { background: linear-gradient(135deg, #10b981, #059669); }
+        .asset-icon.bonds { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .asset-info {
+            flex: 1;
+        }
+        .asset-name {
+            font-weight: 600;
+            color: #fff;
+            font-size: 0.95rem;
+        }
+        .asset-ticker {
+            font-size: 0.8rem;
+            color: #888;
+        }
+        .asset-values {
+            text-align: right;
+        }
+        .asset-amount {
+            font-weight: 600;
+            color: #fff;
+            font-size: 1rem;
+        }
+        .asset-change {
+            font-size: 0.8rem;
+        }
+        .asset-change.positive { color: #10b981; }
+        .asset-change.negative { color: #ef4444; }
+
+        /* Setup Notice */
+        .setup-notice {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+            border: 1px dashed rgba(251, 191, 36, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            text-align: center;
+        }
+        .setup-notice h3 {
+            color: #fbbf24;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+        .setup-notice p {
+            color: #888;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        .setup-notice code {
+            background: rgba(251, 191, 36, 0.2);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            color: #fbbf24;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 2rem 2rem;
+            color: #555;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="hub-tony.html" class="back-link">← Back to Tony's Dashboard Hub</a>
+        
+        <header>
+            <div class="header-left">
+                <h1>💰 Financial Dashboard</h1>
+                <p class="subtitle">Asset tracking and portfolio overview</p>
+                <p class="last-updated">Last updated: <span id="update-time">—</span></p>
+            </div>
+        </header>
+
+        <!-- Net Worth Banner -->
+        <div class="net-worth-banner">
+            <div class="net-worth-label">Total Net Worth</div>
+            <div class="net-worth-value">$—</div>
+            <div class="net-worth-change positive">Tell Greg your holdings to populate</div>
+        </div>
+
+        <!-- Allocation Cards -->
+        <div class="allocation-grid">
+            <div class="allocation-card crypto">
+                <div class="allocation-icon">₿</div>
+                <div class="allocation-name">Crypto</div>
+                <div class="allocation-value">$—</div>
+                <div class="allocation-percent">—% of portfolio</div>
+            </div>
+            <div class="allocation-card equities">
+                <div class="allocation-icon">📈</div>
+                <div class="allocation-name">Equities</div>
+                <div class="allocation-value">$—</div>
+                <div class="allocation-percent">—% of portfolio</div>
+            </div>
+            <div class="allocation-card cash">
+                <div class="allocation-icon">💵</div>
+                <div class="allocation-name">Cash & Other</div>
+                <div class="allocation-value">$—</div>
+                <div class="allocation-percent">—% of portfolio</div>
+            </div>
+        </div>
+
+        <!-- Portfolio Details -->
+        <div class="portfolio-grid">
+            <!-- Crypto Portfolio -->
+            <div class="portfolio-card">
+                <div class="portfolio-header crypto">
+                    <div class="portfolio-title">₿ Crypto Holdings</div>
+                    <div class="portfolio-total">$—</div>
+                </div>
+                <div class="portfolio-body">
+                    <div class="asset-list">
+                        <div class="asset-row">
+                            <div class="asset-icon btc">₿</div>
+                            <div class="asset-info">
+                                <div class="asset-name">Bitcoin</div>
+                                <div class="asset-ticker">BTC · — coins</div>
+                            </div>
+                            <div class="asset-values">
+                                <div class="asset-amount">$—</div>
+                                <div class="asset-change positive">—</div>
+                            </div>
+                        </div>
+                        <div class="asset-row">
+                            <div class="asset-icon eth">Ξ</div>
+                            <div class="asset-info">
+                                <div class="asset-name">Ethereum</div>
+                                <div class="asset-ticker">ETH · — coins</div>
+                            </div>
+                            <div class="asset-values">
+                                <div class="asset-amount">$—</div>
+                                <div class="asset-change positive">—</div>
+                            </div>
+                        </div>
+                        <div class="asset-row">
+                            <div class="asset-icon sol">◎</div>
+                            <div class="asset-info">
+                                <div class="asset-name">Solana</div>
+                                <div class="asset-ticker">SOL · — coins</div>
+                            </div>
+                            <div class="asset-values">
+                                <div class="asset-amount">$—</div>
+                                <div class="asset-change positive">—</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Equities Portfolio -->
+            <div class="portfolio-card">
+                <div class="portfolio-header equities">
+                    <div class="portfolio-title">📈 Equities (Advisor-Managed)</div>
+                    <div class="portfolio-total">$—</div>
+                </div>
+                <div class="portfolio-body">
+                    <div class="asset-list">
+                        <div class="asset-row">
+                            <div class="asset-icon stocks">📊</div>
+                            <div class="asset-info">
+                                <div class="asset-name">Stock Portfolio</div>
+                                <div class="asset-ticker">Managed by Financial Advisor</div>
+                            </div>
+                            <div class="asset-values">
+                                <div class="asset-amount">$—</div>
+                                <div class="asset-change positive">—</div>
+                            </div>
+                        </div>
+                        <div class="asset-row">
+                            <div class="asset-icon bonds">🏛️</div>
+                            <div class="asset-info">
+                                <div class="asset-name">Bonds & Fixed Income</div>
+                                <div class="asset-ticker">If applicable</div>
+                            </div>
+                            <div class="asset-values">
+                                <div class="asset-amount">$—</div>
+                                <div class="asset-change positive">—</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Setup Notice -->
+        <div class="setup-notice">
+            <h3>📝 How to Update Your Holdings</h3>
+            <p>
+                Tell Greg your portfolio details securely via chat. Example:<br><br>
+                <em>"Update my crypto: 2.5 BTC, 15 ETH, 100 SOL. Equities total around $500K."</em><br><br>
+                Greg will update this dashboard and can optionally set up automatic price tracking.
+            </p>
+        </div>
+
+        <footer>
+            <p>Financial Dashboard • Greg Tasker (AI Assistant) • February 2026</p>
+            <p style="margin-top: 0.5rem; color: #444;">🔒 Data stored locally · Not financial advice</p>
+        </footer>
+    </div>
+
+    <script>
+        // Update timestamp
+        document.getElementById('update-time').textContent = 'Not yet configured';
+    </script>
+</body>
+</html>

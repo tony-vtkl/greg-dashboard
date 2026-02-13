@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Journal - Greg's Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1f2e 0%, #141821 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #667eea;
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .back-link:hover {
+            color: #a78bfa;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .header-left h1 {
+            font-size: 2rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .header-left .subtitle {
+            color: #888;
+            font-size: 1rem;
+            margin-top: 0.25rem;
+        }
+        .header-stats {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .stat-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            text-align: center;
+            min-width: 90px;
+        }
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        .stat-value.hrv { color: #10b981; }
+        .stat-value.stress { color: #fbbf24; }
+        .stat-value.entries { color: #4ecdc4; }
+        .stat-label {
+            font-size: 0.65rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.25rem;
+        }
+
+        /* Quick Stats Banner */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .quick-stat-card {
+            background: rgba(30, 36, 50, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .quick-stat-icon {
+            font-size: 2rem;
+        }
+        .quick-stat-content {
+            flex: 1;
+        }
+        .quick-stat-label {
+            font-size: 0.75rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .quick-stat-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #fff;
+            margin-top: 0.25rem;
+        }
+        .quick-stat-value.good { color: #10b981; }
+        .quick-stat-value.warning { color: #fbbf24; }
+        .quick-stat-value.neutral { color: #4ecdc4; }
+
+        /* Journal Entry */
+        .entry-card {
+            background: rgba(30, 36, 50, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        .entry-header {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(6, 148, 162, 0.15) 100%);
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .entry-date {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #fff;
+        }
+        .entry-day {
+            font-size: 0.85rem;
+            color: #10b981;
+            margin-top: 0.25rem;
+        }
+        .entry-badges {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .entry-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .badge-hrv-up {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+        .badge-no-stress {
+            background: rgba(78, 205, 196, 0.2);
+            color: #4ecdc4;
+        }
+        .badge-intervention {
+            background: rgba(167, 139, 250, 0.2);
+            color: #a78bfa;
+        }
+        .entry-body {
+            padding: 1.5rem;
+        }
+
+        /* Section within entry */
+        .entry-section {
+            margin-bottom: 1.5rem;
+        }
+        .entry-section:last-child {
+            margin-bottom: 0;
+        }
+        .section-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #fbbf24;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .section-content {
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+        .metric-item {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+        .metric-label {
+            font-size: 0.75rem;
+            color: #888;
+            margin-bottom: 0.35rem;
+        }
+        .metric-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        .metric-value.good { color: #10b981; }
+        .metric-value.warning { color: #fbbf24; }
+        .metric-value.info { color: #4ecdc4; }
+
+        /* Intervention Cards */
+        .interventions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+        .intervention-card {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 1rem;
+            border-left: 3px solid #a78bfa;
+        }
+        .intervention-name {
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .intervention-details {
+            font-size: 0.85rem;
+            color: #aaa;
+            line-height: 1.6;
+        }
+        .intervention-details strong {
+            color: #4ecdc4;
+        }
+
+        /* Insights */
+        .insights-list {
+            list-style: none;
+        }
+        .insights-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        .insights-list li:last-child {
+            border-bottom: none;
+        }
+        .insight-number {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .insight-text {
+            flex: 1;
+        }
+        .insight-text strong {
+            color: #fff;
+        }
+
+        /* Add Entry Banner */
+        .add-entry {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(167, 139, 250, 0.1) 100%);
+            border: 1px dashed rgba(102, 126, 234, 0.4);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .add-entry-text {
+            color: #888;
+            margin-bottom: 0.5rem;
+        }
+        .add-entry-hint {
+            font-size: 0.85rem;
+            color: #667eea;
+        }
+        .add-entry-hint code {
+            background: rgba(102, 126, 234, 0.2);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 2rem 2rem;
+            color: #555;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="hub-tony.html" class="back-link">← Back to Tony's Dashboard Hub</a>
+        
+        <header>
+            <div class="header-left">
+                <h1>🏥 Health Journal</h1>
+                <p class="subtitle">Biometrics, interventions, and insights</p>
+            </div>
+            <div class="header-stats">
+                <div class="stat-box">
+                    <div class="stat-value hrv">↑</div>
+                    <div class="stat-label">HRV Trend</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value stress">Low</div>
+                    <div class="stat-label">Stress</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value entries">1</div>
+                    <div class="stat-label">Entries</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Quick Current Status -->
+        <div class="quick-stats">
+            <div class="quick-stat-card">
+                <span class="quick-stat-icon">🦵</span>
+                <div class="quick-stat-content">
+                    <div class="quick-stat-label">Current Issue</div>
+                    <div class="quick-stat-value warning">Leg Inflammation</div>
+                </div>
+            </div>
+            <div class="quick-stat-card">
+                <span class="quick-stat-icon">💊</span>
+                <div class="quick-stat-content">
+                    <div class="quick-stat-label">Active Intervention</div>
+                    <div class="quick-stat-value neutral">Celebrex</div>
+                </div>
+            </div>
+            <div class="quick-stat-card">
+                <span class="quick-stat-icon">☕</span>
+                <div class="quick-stat-content">
+                    <div class="quick-stat-label">Coffee</div>
+                    <div class="quick-stat-value good">Abstaining</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Entry Hint -->
+        <div class="add-entry">
+            <div class="add-entry-text">📝 Tell Greg about your health observations via chat</div>
+            <div class="add-entry-hint">Entries stored in <code>~/.openclaw/workspace/health-journal/</code></div>
+        </div>
+
+        <!-- Journal Entry: Feb 4, 2026 -->
+        <div class="entry-card">
+            <div class="entry-header">
+                <div>
+                    <div class="entry-date">February 4, 2026</div>
+                    <div class="entry-day">Wednesday</div>
+                </div>
+                <div class="entry-badges">
+                    <span class="entry-badge badge-hrv-up">↑ HRV</span>
+                    <span class="entry-badge badge-no-stress">No Stress Markers</span>
+                    <span class="entry-badge badge-intervention">Celebrex</span>
+                </div>
+            </div>
+            <div class="entry-body">
+                <!-- Biometrics -->
+                <div class="entry-section">
+                    <div class="section-title">📊 Biometrics</div>
+                    <div class="metrics-grid">
+                        <div class="metric-item">
+                            <div class="metric-label">HRV</div>
+                            <div class="metric-value good">Increased ↑</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Nightly Stress</div>
+                            <div class="metric-value good">None</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Sleep Quality</div>
+                            <div class="metric-value good">Good</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Inflammation</div>
+                            <div class="metric-value warning">Leg (ongoing)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interventions -->
+                <div class="entry-section">
+                    <div class="section-title">💊 Interventions</div>
+                    <div class="interventions">
+                        <div class="intervention-card">
+                            <div class="intervention-name">💊 Celebrex</div>
+                            <div class="intervention-details">
+                                <strong>Taken:</strong> Tuesday, Feb 3<br>
+                                <strong>Effect:</strong> Woke up Wednesday with increased HRV and no stress markers<br>
+                                <strong>Note:</strong> Anti-inflammatory effect significantly reduces stress markers
+                            </div>
+                        </div>
+                        <div class="intervention-card">
+                            <div class="intervention-name">🍄 Psilocybin (Previous)</div>
+                            <div class="intervention-details">
+                                <strong>Dose:</strong> 0.5 mg microdose<br>
+                                <strong>Dates:</strong> Sat Feb 1 & Sun Feb 2 nights<br>
+                                <strong>Effect:</strong> Similar HRV/stress improvement pattern as Celebrex
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lifestyle Factors -->
+                <div class="entry-section">
+                    <div class="section-title">☕ Lifestyle</div>
+                    <div class="section-content">
+                        <strong>Coffee:</strong> Not drinking (abstaining) — may be contributing to baseline improvements
+                    </div>
+                </div>
+
+                <!-- Key Insights -->
+                <div class="entry-section">
+                    <div class="section-title">💡 Key Insights</div>
+                    <ul class="insights-list">
+                        <li>
+                            <span class="insight-number">1</span>
+                            <span class="insight-text"><strong>Inflammation → Stress Connection:</strong> Leg inflammation is driving elevated Garmin stress scores</span>
+                        </li>
+                        <li>
+                            <span class="insight-number">2</span>
+                            <span class="insight-text"><strong>Celebrex Effect:</strong> Single dose produced measurable overnight improvement in HRV and eliminated stress markers</span>
+                        </li>
+                        <li>
+                            <span class="insight-number">3</span>
+                            <span class="insight-text"><strong>Psilocybin Parallel:</strong> 0.5mg microdose produces similar biometric improvements to Celebrex</span>
+                        </li>
+                        <li>
+                            <span class="insight-number">4</span>
+                            <span class="insight-text"><strong>Coffee Abstinence:</strong> Currently off coffee — may be contributing to baseline changes</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Questions to Track -->
+                <div class="entry-section">
+                    <div class="section-title">🔬 Questions to Track</div>
+                    <div class="section-content">
+                        <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                            <li>How long does Celebrex effect last?</li>
+                            <li>Is the psilocybin/Celebrex similarity due to shared anti-inflammatory pathways?</li>
+                            <li>What's the impact of coffee abstinence on baseline HRV?</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Health Journal Dashboard • Greg Tasker (AI Assistant) • February 2026</p>
+            <p style="margin-top: 0.5rem; color: #444;">⚠️ Personal health tracking — not medical advice</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>APP for Multi-Agent Orchestration</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #2c2c2c;
+      padding: 30px;
+      min-height: 100vh;
+    }
+    .board { 
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+    .title {
+      text-align: center;
+      font-size: 32px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 30px;
+    }
+    .section-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #aaa;
+      margin: 24px 0 16px 0;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .sticky-row { 
+      display: flex; 
+      gap: 16px; 
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .sticky {
+      width: 220px;
+      min-height: 180px;
+      padding: 16px;
+      border-radius: 4px;
+      box-shadow: 4px 4px 12px rgba(0,0,0,0.3);
+      transform: rotate(-1deg);
+      transition: transform 0.2s;
+    }
+    .sticky:nth-child(2) { transform: rotate(1deg); }
+    .sticky:nth-child(3) { transform: rotate(-0.5deg); }
+    .sticky:nth-child(4) { transform: rotate(1.5deg); }
+    .sticky:nth-child(5) { transform: rotate(-1.2deg); }
+    .sticky:nth-child(6) { transform: rotate(0.8deg); }
+    .sticky:hover { transform: rotate(0deg) scale(1.02); }
+    .sticky-green { background: #c8e6c9; }
+    .sticky-orange { background: #ffe0b2; }
+    .sticky-blue { background: #bbdefb; }
+    .sticky-yellow { background: #fff9c4; }
+    .sticky-pink { background: #f8bbd0; }
+    .sticky-purple { background: #e1bee7; }
+    .sticky h3 { 
+      font-size: 14px; 
+      font-weight: 700; 
+      margin-bottom: 10px; 
+      color: #333;
+      border-bottom: 2px solid rgba(0,0,0,0.1);
+      padding-bottom: 8px;
+    }
+    .sticky p { 
+      font-size: 12px; 
+      color: #444; 
+      line-height: 1.5;
+      margin-bottom: 6px;
+    }
+    .sticky .highlight {
+      background: rgba(0,0,0,0.08);
+      padding: 2px 4px;
+      border-radius: 2px;
+      font-weight: 600;
+    }
+    .sticky .arrow {
+      text-align: center;
+      font-size: 16px;
+      color: #666;
+      margin: 4px 0;
+    }
+    .cycle-box {
+      background: #1a1a2e;
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+      text-align: center;
+    }
+    .cycle-title {
+      color: #4fc3f7;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .cycle-flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .cycle-step {
+      background: #4fc3f7;
+      color: #1a1a2e;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .cycle-arrow {
+      color: #4fc3f7;
+      font-size: 24px;
+    }
+    .cycle-note {
+      color: #81c784;
+      font-size: 14px;
+      margin-top: 16px;
+    }
+    .cycle-note strong {
+      color: #a5d6a7;
+    }
+    .bottom-box {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 24px;
+      border-left: 4px solid #4fc3f7;
+    }
+    .bottom-box h3 {
+      color: #4fc3f7;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+    .bottom-box p {
+      color: #ccc;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .bottom-box ul {
+      color: #81c784;
+      font-size: 13px;
+      margin-left: 20px;
+      line-height: 1.8;
+    }
+    .bottom-box .conclusion {
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="board">
+    <div class="title">🤖 Why APP Works for Multi-Agent Orchestration</div>
+    
+    <div class="section-label">Why It Maps Well</div>
+    <div class="sticky-row">
+      <div class="sticky sticky-green">
+        <h3>👁️ SHOW ME DON'T TELL ME</h3>
+        <p><span class="highlight">PERFECT</span> for AI agents.</p>
+        <p>Agents hallucinate completion. Evidence-based verification catches this.</p>
+        <p style="margin-top:8px;font-size:11px;color:#666;">Requires: commits, deploys, screenshots</p>
+      </div>
+      <div class="sticky sticky-green">
+        <h3>⏱️ HOUR-BASED CYCLES</h3>
+        <p>AI works 24/7.</p>
+        <p>12-hour "sprints" make sense.</p>
+        <p style="margin-top:8px;">Humans: <span class="highlight">2-week</span> sprints</p>
+        <p>AI: <span class="highlight">12-hour</span> sprints</p>
+        <p style="margin-top:6px;font-weight:600;">= 100x faster iteration</p>
+      </div>
+      <div class="sticky sticky-green">
+        <h3>🎯 PROMISE VS STRETCH</h3>
+        <p>Forces <span class="highlight">unambiguous scope</span>.</p>
+        <p>Agents need this clarity.</p>
+        <p style="margin-top:8px;">Promise = guaranteed</p>
+        <p>Stretch = aspirational</p>
+        <p style="margin-top:6px;font-size:11px;color:#666;">No ambiguity = no hallucinated scope</p>
+      </div>
+      <div class="sticky sticky-green">
+        <h3>🏗️ HIERARCHICAL COORDINATION</h3>
+        <p style="text-align:center;font-weight:600;">Program Manager</p>
+        <div class="arrow">↓</div>
+        <p style="text-align:center;font-weight:600;">Flow Coordinators</p>
+        <div class="arrow">↓</div>
+        <p style="text-align:center;font-weight:600;">Squads</p>
+        <p style="margin-top:8px;font-size:11px;color:#666;">Mirrors supervisor/worker patterns</p>
+      </div>
+      <div class="sticky sticky-green">
+        <h3>✅ REQUIREMENTS VERIFIER</h3>
+        <p>"Vibe prototype vs squad output"</p>
+        <p>= <span class="highlight">automated diff/testing</span></p>
+        <p style="margin-top:8px;">Video-to-Video comparison</p>
+        <p>Continuous alignment</p>
+      </div>
+      <div class="sticky sticky-green">
+        <h3>🚨 AGENT 215 PROTOCOL</h3>
+        <p><span class="highlight">Idle detection</span> is critical.</p>
+        <p>Agents fail silently.</p>
+        <p style="margin-top:8px;">No commits for 2+ standups</p>
+        <p>→ diagnostic intervention</p>
+      </div>
+    </div>
+
+    <div class="section-label">Adaptations Needed</div>
+    <div class="sticky-row">
+      <div class="sticky sticky-orange">
+        <h3>⚠️ NO EGO</h3>
+        <p><strong>Human:</strong> Peer pressure drives self-correction</p>
+        <p><strong>AI:</strong> Agents don't have ego</p>
+        <p style="margin-top:8px;font-weight:600;">→ Explicit failure handling + retry logic</p>
+      </div>
+      <div class="sticky sticky-orange">
+        <h3>⚠️ STRUCTURED I/O</h3>
+        <p><strong>Human:</strong> Verbal/written standups</p>
+        <p><strong>AI:</strong> Agents need structure</p>
+        <p style="margin-top:8px;font-weight:600;">→ JSON-formatted status reports</p>
+      </div>
+      <div class="sticky sticky-orange">
+        <h3>⚠️ AUTO VERIFICATION</h3>
+        <p><strong>Human:</strong> "See" if work is done</p>
+        <p><strong>AI:</strong> Can't eyeball</p>
+        <p style="margin-top:8px;font-weight:600;">→ Automated tests, visual diff, deploy checks</p>
+      </div>
+      <div class="sticky sticky-orange">
+        <h3>⚠️ NO REFLECTION</h3>
+        <p><strong>Human:</strong> Retrospectives = learning</p>
+        <p><strong>AI:</strong> Agents don't reflect</p>
+        <p style="margin-top:8px;font-weight:600;">→ Prompt refinement, context memory, fine-tuning</p>
+      </div>
+      <div class="sticky sticky-orange">
+        <h3>⚠️ INFINITE LOOPS</h3>
+        <p><strong>Human:</strong> "Watch and see" patience</p>
+        <p><strong>AI:</strong> Agents can loop forever</p>
+        <p style="margin-top:8px;font-weight:600;">→ Tighter timeouts, cost guardrails</p>
+      </div>
+      <div class="sticky sticky-orange">
+        <h3>⚠️ TOKEN BURN</h3>
+        <p><strong>Human:</strong> Cost is implicit</p>
+        <p><strong>AI:</strong> API burn is real</p>
+        <p style="margin-top:8px;font-weight:600;">→ Portfolio Manager needs hard limits</p>
+      </div>
+    </div>
+
+    <div class="cycle-box">
+      <div class="cycle-title">⚡ THE KILLER FEATURE: See It Cycle at Machine Speed</div>
+      <div class="cycle-flow">
+        <div class="cycle-step">See where you<br>want to go</div>
+        <div class="cycle-arrow">→</div>
+        <div class="cycle-step">See where<br>you are</div>
+        <div class="cycle-arrow">→</div>
+        <div class="cycle-step">See how to<br>get there</div>
+        <div class="cycle-arrow">→</div>
+        <div class="cycle-step" style="background:#81c784;">↻ Every<br>30 min</div>
+      </div>
+      <div class="cycle-note">Humans can't run this loop every 30 minutes. <strong>AI agents can.</strong> That's the leverage.</div>
+    </div>
+
+    <div class="section-label">Flow Coordinator: The See It Cycle Enforcer</div>
+    <div class="sticky-row">
+      <div class="sticky sticky-purple" style="width: 340px; min-height: 280px;">
+        <h3>🌱 FLOW COORDINATOR HEARTBEAT</h3>
+        <p style="font-weight:600; margin-bottom:12px;">Runs at EVERY standup, reality check, and cycle gate:</p>
+        <div style="background:rgba(0,0,0,0.08); padding:12px; border-radius:6px; margin-bottom:8px;">
+          <p style="font-weight:700; color:#6a1b9a;">1️⃣ SEE WHERE WE WANT TO GO</p>
+          <p style="font-size:11px;">• Sprint goal still valid?</p>
+          <p style="font-size:11px;">• Promise backlog items on track?</p>
+        </div>
+        <div style="background:rgba(0,0,0,0.08); padding:12px; border-radius:6px; margin-bottom:8px;">
+          <p style="font-weight:700; color:#6a1b9a;">2️⃣ SEE WHERE WE ARE</p>
+          <p style="font-size:11px;">• Check each agent's commits (SHOW ME)</p>
+          <p style="font-size:11px;">• Agent 215 detection (idle?)</p>
+          <p style="font-size:11px;">• Blockers surfaced?</p>
+        </div>
+        <div style="background:rgba(0,0,0,0.08); padding:12px; border-radius:6px;">
+          <p style="font-weight:700; color:#6a1b9a;">3️⃣ SEE HOW TO GET THERE</p>
+          <p style="font-size:11px;">• Adjust assignments</p>
+          <p style="font-size:11px;">• Escalate to Program Manager?</p>
+          <p style="font-size:11px;">• Reality Check gate: GO / NO-GO</p>
+        </div>
+      </div>
+      <div class="sticky sticky-purple" style="width: 280px;">
+        <h3>🔑 WHY FC OWNS THE CYCLE</h3>
+        <p>In human teams, the Flow Coordinator ran the See It Cycle at:</p>
+        <p style="margin:8px 0;">• <span class="highlight">Daily standups</span></p>
+        <p>• <span class="highlight">Reality checks</span></p>
+        <p>• <span class="highlight">Cycle gates</span></p>
+        <p style="margin-top:12px;">This kept the whole team aligned on the goal, not just busy with tasks.</p>
+        <p style="margin-top:12px; font-weight:600; color:#6a1b9a;">Same for AI: FC agent ensures squad agents stay on trajectory.</p>
+      </div>
+      <div class="sticky sticky-purple" style="width: 280px;">
+        <h3>📋 FC CHECKPOINT TRIGGERS</h3>
+        <p style="font-weight:600;">Every 2-4 hours:</p>
+        <p>• Standup equivalent</p>
+        <p>• Run See It Cycle</p>
+        <p style="margin-top:10px; font-weight:600;">Mid-cycle (6 hrs):</p>
+        <p>• Reality Check gate</p>
+        <p>• GO → continue to stretch</p>
+        <p>• NO-GO → scope cut, escalate</p>
+        <p style="margin-top:10px; font-weight:600;">End-cycle (12 hrs):</p>
+        <p>• Cycle Lookback</p>
+        <p>• Feed learnings to Estimator</p>
+      </div>
+    </div>
+
+    <div class="bottom-box">
+      <h3>💡 Bottom Line</h3>
+      <p>APP was designed to get humans out of the "death spiral" of micromanagement. For AI agents, the problem is different—they don't get tired or resentful, but they <strong>fail silently and confidently</strong>.</p>
+      <p>APP's evidence-based philosophy + short cycles + hierarchical coordination is actually <strong>better suited to AI agents than humans</strong> if you:</p>
+      <ul>
+        <li>Automate verification (not human inspection)</li>
+        <li>Add hard cost/time guardrails</li>
+        <li>Define explicit failure modes</li>
+        <li>Structure all communication as data, not prose</li>
+      </ul>
+      <div class="conclusion">✅ Will it work? Yes. It's one of the few human methodologies that translates because it's built on <span style="color:#4fc3f7;">verification, not trust</span>.</div>
+    </div>
+  </div>
+</body>
+</html>

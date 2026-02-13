@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Unlock: Akira as the Profiler and Prioritizer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1f2e 0%, #141821 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        header h1 {
+            font-size: 2.2rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+        header .subtitle {
+            color: #a78bfa;
+            font-size: 1.1rem;
+        }
+        header .date {
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+        
+        .section {
+            background: rgba(30, 36, 50, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .section h2 {
+            color: #4ecdc4;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .pipeline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 1.5rem 0;
+        }
+        .pipeline-step {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 12px;
+            position: relative;
+        }
+        .pipeline-step.missing {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(251, 191, 36, 0.1) 100%);
+            border: 2px dashed #fbbf24;
+        }
+        .pipeline-step.present {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .pipeline-step .label {
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        .pipeline-step.missing .label { color: #fbbf24; }
+        .pipeline-step.present .label { color: #10b981; }
+        .pipeline-step .desc {
+            font-size: 0.75rem;
+            color: #888;
+        }
+        .pipeline-step .owner {
+            font-size: 0.7rem;
+            color: #667eea;
+            margin-top: 0.5rem;
+        }
+        .pipeline-arrow {
+            color: #4ecdc4;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+        }
+        .comparison-table th {
+            text-align: left;
+            padding: 0.75rem;
+            color: #888;
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .comparison-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: #ccc;
+        }
+        .comparison-table tr:last-child td { border-bottom: none; }
+        .check { color: #10b981; }
+        .cross { color: #f87171; }
+        .partial { color: #fbbf24; }
+        
+        .insight-box {
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.15) 0%, rgba(102, 126, 234, 0.1) 100%);
+            border-left: 4px solid #a78bfa;
+            padding: 1rem 1.25rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1rem 0;
+        }
+        .insight-box p {
+            color: #ddd;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        .insight-box strong { color: #a78bfa; }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.15) 0%, rgba(16, 185, 129, 0.1) 100%);
+            border: 1px solid rgba(78, 205, 196, 0.3);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+        .highlight-box .big {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #4ecdc4;
+            margin-bottom: 0.5rem;
+        }
+        .highlight-box .sub {
+            font-size: 0.85rem;
+            color: #888;
+        }
+        
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        @media (max-width: 600px) {
+            .two-col { grid-template-columns: 1fr; }
+            .pipeline { flex-direction: column; }
+            .pipeline-arrow { transform: rotate(90deg); }
+        }
+        
+        .col-box {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+        .col-box h3 {
+            font-size: 0.9rem;
+            color: #fff;
+            margin-bottom: 0.75rem;
+        }
+        .col-box ul {
+            list-style: none;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+        .col-box li {
+            padding: 0.3rem 0;
+            padding-left: 1.2rem;
+            position: relative;
+        }
+        .col-box li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+        }
+        
+        .unlock-section {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+            border: 2px solid rgba(251, 191, 36, 0.3);
+        }
+        .unlock-section h2 { color: #fbbf24; }
+        
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #555;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔓 The Unlock</h1>
+            <p class="subtitle">Akira as the Profiler and Prioritizer</p>
+            <p class="date">February 6, 2026 • VtKl + Kindo Partnership Strategy</p>
+        </header>
+        
+        <!-- The Pipeline -->
+        <section class="section">
+            <h2>🔄 The Full Autonomous Development Pipeline</h2>
+            
+            <div class="pipeline">
+                <div class="pipeline-step missing">
+                    <div class="label">PROFILER</div>
+                    <div class="desc">What do they actually want?</div>
+                    <div class="owner">❌ Missing piece</div>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step present">
+                    <div class="label">PRIORITIZER</div>
+                    <div class="desc">Which 20% matters most?</div>
+                    <div class="owner">Akira PMO</div>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step present">
+                    <div class="label">EXECUTOR</div>
+                    <div class="desc">Build it right</div>
+                    <div class="owner">Jarvis (Charlie)</div>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step present">
+                    <div class="label">VERIFIER</div>
+                    <div class="desc">Prove it works</div>
+                    <div class="owner">Both systems</div>
+                </div>
+            </div>
+            
+            <div class="insight-box">
+                <p><strong>The 80/20 Rule (Pareto Principle):</strong> 80% of human-perceived value comes from 20% of the features. Identifying that 20% requires <em>judgment</em> — skillfully assessing the situation and human preference.</p>
+            </div>
+        </section>
+        
+        <!-- The Catalyst -->
+        <section class="section">
+            <h2>⚡ The Catalyst: Charlie's Jarvis Demo</h2>
+            
+            <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 1rem;">Charlie's AI Organization completed a complex feature (500 lines, 9 files) with full automation:</p>
+            
+            <table class="comparison-table">
+                <tr>
+                    <th style="width: 40px;">#</th>
+                    <th>Step</th>
+                    <th>Who Did It</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Read Linear ticket ENG-8055</td>
+                    <td>🤖 AI Supervisor</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Comment "taking over"</td>
+                    <td>🤖 AI Supervisor</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Build 527 lines across 9 files</td>
+                    <td>🤖 Claude Code team</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Submit to GitHub</td>
+                    <td>🤖 doink-kindo bot</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>Find security issue → patch</td>
+                    <td>🤖 AI Reviewer</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>CI/CD fail → patch</td>
+                    <td>🤖 Automated</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>Launch k8s cluster, E2E test</td>
+                    <td>🤖 Automated</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>Record video of test flow</td>
+                    <td>🤖 Automated</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>Submit to QA platform</td>
+                    <td>🤖 Automated</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>Attach report + video to PR</td>
+                    <td>🤖 Automated</td>
+                </tr>
+            </table>
+            
+            <div class="highlight-box">
+                <div class="big">Charlie's Human Contribution: 3 Steps</div>
+                <div class="sub">1. Listen to Deloitte call &nbsp;→&nbsp; 2. Write contextual ticket &nbsp;→&nbsp; 3. Tell Jarvis to do it</div>
+            </div>
+        </section>
+        
+        <!-- The Comparison -->
+        <section class="section">
+            <h2>⚖️ Charlie + Jarvis vs. Akira PMO</h2>
+            
+            <table class="comparison-table">
+                <tr>
+                    <th>Capability</th>
+                    <th>Charlie + Jarvis</th>
+                    <th>Akira PMO</th>
+                </tr>
+                <tr>
+                    <td><strong>Input</strong></td>
+                    <td>One ticket (human-selected)</td>
+                    <td>Many tickets (need ranking)</td>
+                </tr>
+                <tr>
+                    <td><strong>Value Discovery</strong></td>
+                    <td><span class="cross">❌</span> Charlie on the call</td>
+                    <td><span class="cross">❌</span> Assumes PM supplies priorities</td>
+                </tr>
+                <tr>
+                    <td><strong>Prioritization</strong></td>
+                    <td><span class="partial">⚠️</span> Implicit (Charlie chose)</td>
+                    <td><span class="check">✓</span> Explicit (Pareto Engine)</td>
+                </tr>
+                <tr>
+                    <td><strong>Effort Estimation</strong></td>
+                    <td><span class="cross">❌</span> Not its job</td>
+                    <td><span class="check">✓</span> Core function</td>
+                </tr>
+                <tr>
+                    <td><strong>Execution</strong></td>
+                    <td><span class="check">✓</span> Fully automated</td>
+                    <td><span class="cross">❌</span> Not its job</td>
+                </tr>
+                <tr>
+                    <td><strong>Verification</strong></td>
+                    <td><span class="check">✓</span> Video + QA evidence</td>
+                    <td><span class="check">✓</span> "Show Me Don't Tell Me"</td>
+                </tr>
+            </table>
+            
+            <div class="insight-box">
+                <p><strong>Neither system answers:</strong> "Why is THIS the right ticket to work on?"</p>
+                <p style="margin-top: 0.5rem;">Charlie knew because he was on the call. He <strong>is</strong> the Profiler. He scales linearly with calls he can attend.</p>
+            </div>
+        </section>
+        
+        <!-- The Gap -->
+        <section class="section">
+            <h2>🕳️ The Gap: What's Missing</h2>
+            
+            <div class="two-col">
+                <div class="col-box">
+                    <h3>What Charlie Did (Human Work)</h3>
+                    <ul>
+                        <li>Listened to Deloitte on a call</li>
+                        <li>Understood their context and pain</li>
+                        <li>Wrote a contextually well-defined ticket</li>
+                        <li>Made implicit judgment: "This is worth doing"</li>
+                    </ul>
+                </div>
+                <div class="col-box">
+                    <h3>What Neither System Does</h3>
+                    <ul>
+                        <li>Elicit customer preferences</li>
+                        <li>Score features by perceived value</li>
+                        <li>Identify the vital 20% autonomously</li>
+                        <li>Learn "we thought X mattered but Y did"</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- The Unlock -->
+        <section class="section unlock-section">
+            <h2>🔓 The Unlock: Akira as Profiler + Prioritizer</h2>
+            
+            <p style="color: #ddd; font-size: 0.9rem; margin-bottom: 1.5rem;">If you could automate what Charlie did on that Deloitte call:</p>
+            
+            <div class="two-col" style="margin-bottom: 1.5rem;">
+                <div class="col-box" style="background: rgba(251, 191, 36, 0.1); border-color: rgba(251, 191, 36, 0.2);">
+                    <h3 style="color: #fbbf24;">The Profiler Function</h3>
+                    <ul>
+                        <li>Listen to customer (call transcript, emails, chat)</li>
+                        <li>Understand context, pain points, goals</li>
+                        <li>Generate candidate features/tickets</li>
+                        <li>Score by likely perceived value to THIS customer</li>
+                    </ul>
+                </div>
+                <div class="col-box" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2);">
+                    <h3 style="color: #10b981;">Feed Into Pareto Engine</h3>
+                    <ul>
+                        <li>Profiler outputs → Priority weights</li>
+                        <li>Estimator → Effort scores</li>
+                        <li>Cross-reference: High Priority ∩ Low Effort</li>
+                        <li>Result: The vital 20% identified automatically</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight-box" style="background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%); border-color: rgba(251, 191, 36, 0.4);">
+                <div class="big" style="color: #fbbf24;">The Full Autonomous Loop</div>
+                <div class="sub" style="color: #ccc; font-size: 0.9rem;">
+                    PROFILER (Akira) → PRIORITIZER (Akira) → EXECUTOR (Jarvis) → VERIFIER (Both)
+                </div>
+            </div>
+            
+            <div class="insight-box" style="background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.1) 100%); border-color: #fbbf24;">
+                <p><strong>The Partnership Edge:</strong></p>
+                <p style="margin-top: 0.5rem;">• <strong>Charlie has</strong> the execution engine (Jarvis) — HOW to build it right</p>
+                <p>• <strong>Tony has</strong> the methodology (APP/Akira) — WHAT to build and WHEN</p>
+                <p>• <strong>The Profiler</strong> answers WHY — turning customer understanding into structured priorities</p>
+                <p style="margin-top: 0.75rem; color: #fbbf24;"><strong>Combined: First mover advantage in autonomous AI development.</strong></p>
+            </div>
+        </section>
+        
+        <!-- Next Step -->
+        <section class="section">
+            <h2>📍 Next Step: Explain the Profiler</h2>
+            
+            <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 1rem;">To-Do Item #10: "Explain Profiler & Multi-Agent Distribution Product Customizer"</p>
+            
+            <div class="insight-box">
+                <p>This is where Tony explains the <strong>Human Profiler Engine</strong> — the mechanism for assessing perceived value by understanding the human. This completes the Pareto judgment loop and unlocks the full autonomous pipeline.</p>
+            </div>
+        </section>
+        
+        <footer>
+            <p>The Unlock: Akira as the Profiler and Prioritizer • VtKl • February 6, 2026</p>
+            <p style="margin-top: 0.5rem;">Generated by Greg (AI Assistant)</p>
+        </footer>
+    </div>
+</body>
+</html>

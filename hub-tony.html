@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tony's Personal Dashboard Hub</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            color: #888;
+            font-size: 1.1rem;
+        }
+        .date {
+            color: #667eea;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .section-header h2 {
+            font-size: 1.25rem;
+            color: #fff;
+        }
+        .section-header .badge {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+        }
+        .section-header .badge.new {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+        .section-header .badge.wip {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+        
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.25rem;
+        }
+        
+        /* Dashboard Cards */
+        .dashboard-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s;
+            display: block;
+        }
+        .dashboard-card:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+        .dashboard-card.new {
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+        .dashboard-card.wip {
+            border-color: rgba(251, 191, 36, 0.3);
+            opacity: 0.7;
+        }
+        .dashboard-card.wip:hover {
+            opacity: 1;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .card-icon {
+            font-size: 1.75rem;
+        }
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .card-description {
+            font-size: 0.85rem;
+            color: #888;
+            line-height: 1.4;
+        }
+        .card-meta {
+            margin-top: 0.75rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .card-tag {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.1);
+            color: #aaa;
+        }
+        .card-tag.kanban {
+            background: rgba(102, 126, 234, 0.2);
+            color: #a5b4fc;
+        }
+        .card-tag.legacy {
+            background: rgba(107, 114, 128, 0.2);
+            color: #9ca3af;
+        }
+        
+        /* Agent Section */
+        .agent-section {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        .agent-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .agent-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .agent-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+        .agent-info p {
+            font-size: 0.85rem;
+            color: #888;
+        }
+        .agent-team {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        .team-member {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .team-member .status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .status.active { background: #10b981; }
+        .status.pending { background: #f59e0b; }
+        .status.inactive { background: #6b7280; }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #444;
+            font-size: 0.85rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏠 Tony's Personal Dashboard Hub</h1>
+            <p class="subtitle">Chief of Staff: Greg • Kanban-Powered Personal OS</p>
+            <p class="date" id="current-date"></p>
+        </header>
+        
+        <!-- Core Dashboards (Kanban) -->
+        <div class="section-header">
+            <h2>📋 Core Dashboards</h2>
+            <span class="badge new">Kanban</span>
+        </div>
+        <div class="dashboard-grid">
+            <a href="kanban-todo.html" class="dashboard-card new">
+                <div class="card-header">
+                    <span class="card-icon">✅</span>
+                    <span class="card-title">To-Do Kanban</span>
+                </div>
+                <p class="card-description">Drag-and-drop task management. Filter by agent, priority, category.</p>
+                <div class="card-meta">
+                    <span class="card-tag kanban">SortableJS</span>
+                    <span class="card-tag">Chief of Staff View</span>
+                </div>
+            </a>
+            
+            <a href="standup.html" class="dashboard-card new">
+                <div class="card-header">
+                    <span class="card-icon">🤝</span>
+                    <span class="card-title">Daily Standup</span>
+                </div>
+                <p class="card-description">Three questions, every day. Tony + Greg standup log.</p>
+                <div class="card-meta">
+                    <span class="card-tag kanban">Injection API</span>
+                </div>
+            </a>
+            
+            <a href="stream.html" class="dashboard-card">
+                <div class="card-header">
+                    <span class="card-icon">🌊</span>
+                    <span class="card-title">Stream of Consciousness</span>
+                </div>
+                <p class="card-description">Hypnagogic capture. Index cards → categorization → routing.</p>
+                <div class="card-meta">
+                    <span class="card-tag">Exec.AI</span>
+                </div>
+            </a>
+        </div>
+        
+        <!-- Life Management -->
+        <div class="section-header">
+            <h2>🏡 Life Management</h2>
+            <span class="badge new">Migrated</span>
+        </div>
+        <div class="dashboard-grid">
+            <a href="meals.html" class="dashboard-card new">
+                <div class="card-header">
+                    <span class="card-icon">🍽️</span>
+                    <span class="card-title">Meals & Nutrition</span>
+                </div>
+                <p class="card-description">Recipe catalog + weekly drag-and-drop meal planner. Cal/protein tracking.</p>
+                <div class="card-meta">
+                    <span class="card-tag">Meal Planner</span>
+                </div>
+            </a>
+            
+            <a href="kanban-health.html" class="dashboard-card new">
+                <div class="card-header">
+                    <span class="card-icon">🏥</span>
+                    <span class="card-title">Health Tracker</span>
+                </div>
+                <p class="card-description">Interventions, habits, metrics. Drag to change status.</p>
+                <div class="card-meta">
+                    <span class="card-tag">Kanban</span>
+                </div>
+            </a>
+            
+            <a href="kanban-family.html" class="dashboard-card new">
+                <div class="card-header">
+                    <span class="card-icon">👨‍👦</span>
+                    <span class="card-title">Family</span>
+                </div>
+                <p class="card-description">Wong family Kanban. Tony & Dukane tasks.</p>
+                <div class="card-meta">
+                    <span class="card-tag">Kanban</span>
+                </div>
+            </a>
+            
+            <a href="finance.html" class="dashboard-card">
+                <div class="card-header">
+                    <span class="card-icon">💰</span>
+                    <span class="card-title">Finance</span>
+                </div>
+                <p class="card-description">Personal finance tracking and budgets.</p>
+                <div class="card-meta">
+                    <span class="card-tag">Tracker View</span>
+                </div>
+            </a>
+        </div>
+        
+        <!-- Products & Strategy -->
+        <div class="section-header">
+            <h2>🚀 Products & Strategy</h2>
+        </div>
+        <div class="dashboard-grid">
+            <a href="products.html" class="dashboard-card">
+                <div class="card-header">
+                    <span class="card-icon">📦</span>
+                    <span class="card-title">Products Dashboard</span>
+                </div>
+                <p class="card-description">Exec.AI, Akira PMO, VtKl products overview.</p>
+                <div class="card-meta">
+                    <span class="card-tag">The Unlock</span>
+                </div>
+            </a>
+            
+            <a href="https://opportunity-dashboard-nu.vercel.app" class="dashboard-card new">
+                <div class="card-header">
+                    <span class="card-icon">💎</span>
+                    <span class="card-title">Opportunity Stack Rank</span>
+                </div>
+                <p class="card-description">Score & rank entrepreneurial opportunities by revenue, effort, risk.</p>
+                <div class="card-meta">
+                    <span class="card-tag">Strategy</span>
+                </div>
+            </a>
+            
+            <a href="Akira-PMO-SeeItCycle-Org.html" class="dashboard-card">
+                <div class="card-header">
+                    <span class="card-icon">🎯</span>
+                    <span class="card-title">Akira PMO - See It Cycle</span>
+                </div>
+                <p class="card-description">Multi-agent organization design. Tiered autopilot cycles.</p>
+                <div class="card-meta">
+                    <span class="card-tag">Architecture</span>
+                </div>
+            </a>
+            
+            <a href="the-unlock-akira.html" class="dashboard-card">
+                <div class="card-header">
+                    <span class="card-icon">🔓</span>
+                    <span class="card-title">The Unlock</span>
+                </div>
+                <p class="card-description">Profiler + Prioritizer (Akira) + Executor (Jarvis).</p>
+                <div class="card-meta">
+                    <span class="card-tag">Key Insight</span>
+                </div>
+            </a>
+            
+            <a href="kanban-marketing.html" class="dashboard-card new">
+                <div class="card-header">
+                    <span class="card-icon">📣</span>
+                    <span class="card-title">Marketing</span>
+                </div>
+                <p class="card-description">Content pipeline: Ideas → Creating → Ready → Posted.</p>
+                <div class="card-meta">
+                    <span class="card-tag">Kanban</span>
+                </div>
+            </a>
+        </div>
+        
+        <!-- Knowledge & Research -->
+        <div class="section-header">
+            <h2>📚 Knowledge & Research</h2>
+        </div>
+        <div class="dashboard-grid">
+            <a href="knowledge.html" class="dashboard-card">
+                <div class="card-header">
+                    <span class="card-icon">🧠</span>
+                    <span class="card-title">Knowledge Base</span>
+                </div>
+                <p class="card-description">Curated knowledge and references.</p>
+                <div class="card-meta">
+                    <span class="card-tag">Reference View</span>
+                </div>
+            </a>
+            
+            <a href="notes.html" class="dashboard-card">
+                <div class="card-header">
+                    <span class="card-icon">📝</span>
+                    <span class="card-title">Notes</span>
+                </div>
+                <p class="card-description">Quick notes and scratch pad.</p>
+                <div class="card-meta">
+                    <span class="card-tag">Scratchpad</span>
+                </div>
+            </a>
+        </div>
+        
+        <!-- Business Analyst -->
+        <div class="section-header">
+            <h2>📊 Business Analyst</h2>
+            <span class="badge new">Agent</span>
+        </div>
+        <div class="dashboard-grid">
+            <a href="multi-city-living.html" class="dashboard-card">
+                <div class="card-header">
+                    <span class="card-icon">🌆</span>
+                    <span class="card-title">Multi-City Living</span>
+                </div>
+                <p class="card-description">Decision tracker from Grok. Honolulu, Austin, San Francisco comparison.</p>
+                <div class="card-meta">
+                    <span class="card-tag">Exec.AI Discussion Tracker</span>
+                </div>
+            </a>
+            
+            <a href="research-multi-city.html" class="dashboard-card">
+                <div class="card-header">
+                    <span class="card-icon">🌏</span>
+                    <span class="card-title">Multi-City Living</span>
+                </div>
+                <p class="card-description">Executive nomad housing, deep work immersions, economics.</p>
+                <div class="card-meta">
+                    <span class="card-tag">Research</span>
+                </div>
+            </a>
+            
+            <a href="https://gartner-dashboard.vercel.app" class="dashboard-card">
+                <div class="card-header">
+                    <span class="card-icon">📈</span>
+                    <span class="card-title">Gartner Research</span>
+                </div>
+                <p class="card-description">AI distribution channels, market trends, culture-tech overlap.</p>
+                <div class="card-meta">
+                    <span class="card-tag">Research</span>
+                </div>
+            </a>
+        </div>
+        
+        <!-- Agent Team -->
+        <div class="agent-section">
+            <div class="agent-header">
+                <div class="agent-avatar">🤖</div>
+                <div class="agent-info">
+                    <h3>Greg — Chief of Staff</h3>
+                    <p>Managing Tony's personal agent team</p>
+                </div>
+            </div>
+            <div class="agent-team">
+                <div class="team-member">
+                    <span class="status active"></span>
+                    <span>Greg (Chief of Staff)</span>
+                </div>
+                <div class="team-member">
+                    <span class="status active"></span>
+                    <span>10x Coder</span>
+                </div>
+                <div class="team-member">
+                    <span class="status active"></span>
+                    <span>Business Analyst</span>
+                </div>
+                <div class="team-member">
+                    <span class="status pending"></span>
+                    <span>Tech Analyst</span>
+                </div>
+                <div class="team-member">
+                    <span class="status inactive"></span>
+                    <span>Personal OS</span>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            Tony's Personal Dashboard Hub • Chief of Staff: Greg<br>
+            <!-- Legacy hub.html link removed - deprecated -->
+        </footer>
+    </div>
+    
+    <script>
+        // Set current date
+        const now = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
+    </script>
+</body>
+</html>

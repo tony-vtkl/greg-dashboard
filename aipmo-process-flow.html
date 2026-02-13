@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIPMO Business Process Flow</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { 
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #0a0e1a;
+    color: #e0e0e0;
+    padding: 40px 20px;
+  }
+  .container { max-width: 1200px; margin: 0 auto; }
+  
+  h1 { 
+    text-align: center; font-size: 2rem; margin-bottom: 8px;
+    background: linear-gradient(135deg, #00d4ff, #7b61ff);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .subtitle { text-align: center; color: #8892a4; margin-bottom: 12px; font-size: 0.95rem; }
+  .version { text-align: center; color: #556; font-size: 0.8rem; margin-bottom: 40px; }
+
+  /* Legend */
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;
+    margin: 20px 0 36px; padding: 14px; border-radius: 10px;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.75rem; }
+  .legend-box { width: 28px; height: 18px; border-radius: 3px; }
+
+  /* Swim lanes = ROLES */
+  .swimlane {
+    position: relative; margin-bottom: 0; border-radius: 0;
+    padding: 14px 14px 14px 170px; min-height: 70px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .swimlane:first-of-type { border-radius: 12px 12px 0 0; }
+  .swimlane:last-of-type { border-radius: 0 0 12px 12px; border-bottom: none; }
+  .swimlane-label {
+    position: absolute; left: 0; top: 0; bottom: 0; width: 155px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.82rem; text-align: center; padding: 8px;
+  }
+  .swimlane-label .lane-icon { font-size: 1.3rem; margin-bottom: 3px; }
+  .swimlane-label .lane-type { font-size: 0.62rem; font-weight: 400; opacity: 0.6; margin-top: 2px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* Lane colors by role type */
+  .lane-client { background: rgba(255,165,0,0.06); }
+  .lane-client .swimlane-label { background: rgba(255,165,0,0.12); color: #ffa500; border-right: 3px solid rgba(255,165,0,0.3); }
+
+  .lane-pm { background: rgba(255,107,107,0.06); }
+  .lane-pm .swimlane-label { background: rgba(255,107,107,0.12); color: #ff6b6b; border-right: 3px solid rgba(255,107,107,0.3); }
+  
+  .lane-estimator { background: rgba(123,97,255,0.06); }
+  .lane-estimator .swimlane-label { background: rgba(123,97,255,0.12); color: #7b61ff; border-right: 3px solid rgba(123,97,255,0.3); }
+
+  .lane-progmgr { background: rgba(0,150,255,0.06); }
+  .lane-progmgr .swimlane-label { background: rgba(0,150,255,0.12); color: #0096ff; border-right: 3px solid rgba(0,150,255,0.3); }
+
+  .lane-portmgr { background: rgba(0,212,200,0.06); }
+  .lane-portmgr .swimlane-label { background: rgba(0,212,200,0.12); color: #00d4c8; border-right: 3px solid rgba(0,212,200,0.3); }
+
+  .lane-fc { background: rgba(0,212,255,0.06); }
+  .lane-fc .swimlane-label { background: rgba(0,212,255,0.12); color: #00d4ff; border-right: 3px solid rgba(0,212,255,0.3); }
+  
+  .lane-squads { background: rgba(0,230,118,0.06); }
+  .lane-squads .swimlane-label { background: rgba(0,230,118,0.12); color: #00e676; border-right: 3px solid rgba(0,230,118,0.3); }
+
+  .lane-verifier { background: rgba(255,193,7,0.06); }
+  .lane-verifier .swimlane-label { background: rgba(255,193,7,0.12); color: #ffc107; border-right: 3px solid rgba(255,193,7,0.3); }
+
+  /* Flow content */
+  .flow-row {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 4px 0;
+  }
+
+  /* BPM nodes — proper types */
+  .n {
+    display: inline-flex; flex-direction: column; align-items: center;
+    padding: 10px 14px; font-size: 0.78rem;
+    text-align: center; min-width: 110px; max-width: 180px;
+    position: relative; line-height: 1.3;
+  }
+  .n-label { font-weight: 600; font-size: 0.78rem; }
+  .n-detail { font-size: 0.66rem; opacity: 0.65; margin-top: 2px; }
+
+  /* Start/End event — circle */
+  .n-start {
+    background: linear-gradient(135deg, #1a3a2a, #1a4a2a);
+    border: 3px solid #00e676; border-radius: 50%;
+    width: 80px; height: 80px; justify-content: center; min-width: 80px;
+  }
+  .n-end {
+    background: linear-gradient(135deg, #3a1a1a, #2a1a2a);
+    border: 3px double #ff6b6b; border-radius: 50%;
+    width: 80px; height: 80px; justify-content: center; min-width: 80px;
+  }
+
+  /* Intermediate event — circle with thin border */
+  .n-event {
+    background: rgba(123,97,255,0.1);
+    border: 2px solid #7b61ff; border-radius: 50%;
+    width: 90px; height: 90px; justify-content: center; min-width: 90px;
+    padding: 6px;
+  }
+
+  /* Process/Activity — rounded rectangle */
+  .n-process {
+    background: rgba(255,255,255,0.06);
+    border: 1.5px solid rgba(255,255,255,0.18);
+    border-radius: 8px;
+  }
+
+  /* Decision/Gateway — diamond shape via rotated square */
+  .n-decision {
+    background: rgba(255,193,7,0.12);
+    border: 2px solid #ffc107;
+    border-radius: 0; transform: rotate(45deg);
+    width: 60px; height: 60px; min-width: 60px;
+    padding: 0; justify-content: center;
+  }
+  .n-decision .n-inner {
+    transform: rotate(-45deg);
+    display: flex; flex-direction: column; align-items: center;
+    font-size: 0.72rem; font-weight: 700;
+  }
+
+  /* Gate — octagon-like */
+  .n-gate {
+    background: rgba(255,107,107,0.1);
+    border: 2px solid #ff6b6b;
+    border-radius: 4px;
+    padding: 10px 16px;
+  }
+
+  /* Data object / Artifact — folded corner */
+  .n-data {
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(255,255,255,0.2);
+    border-radius: 2px;
+    position: relative;
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+    padding: 12px 14px;
+  }
+
+  /* Arrows */
+  .arrow {
+    display: inline-flex; align-items: center; color: #48d1cc;
+    font-size: 1.4rem; padding: 0 3px; align-self: center;
+    font-weight: 700; text-shadow: 0 0 6px rgba(72,209,204,0.3);
+    min-width: 28px; justify-content: center;
+  }
+  .arrow-down {
+    display: flex; justify-content: center; padding: 4px 0;
+    color: #48d1cc; font-size: 1.2rem;
+    text-shadow: 0 0 6px rgba(72,209,204,0.3);
+  }
+  .arrow-down.cross-lane {
+    margin-left: 170px;
+  }
+
+  /* Branch paths */
+  .branch { display: flex; gap: 8px; margin: 4px 0; }
+  .branch-path {
+    flex: 1; padding: 8px; border-radius: 6px;
+    text-align: center; font-size: 0.7rem;
+  }
+  .branch-yes { background: rgba(0,230,118,0.07); border: 1px solid rgba(0,230,118,0.2); }
+  .branch-no { background: rgba(255,107,107,0.07); border: 1px solid rgba(255,107,107,0.2); }
+  .branch-mod { background: rgba(255,193,7,0.07); border: 1px solid rgba(255,193,7,0.2); }
+  .branch-label { font-weight: 700; margin-bottom: 2px; font-size: 0.72rem; }
+
+  /* Phase separator */
+  .phase-sep {
+    display: flex; align-items: center; margin: 28px 0 12px; gap: 16px;
+  }
+  .phase-sep::before, .phase-sep::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+  }
+  .phase-label {
+    font-size: 0.82rem; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; white-space: nowrap;
+    padding: 5px 16px; border-radius: 20px;
+    color: #8892a4; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  /* Severity */
+  .severity-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 4px 0; }
+  .sev-box { padding: 6px; border-radius: 5px; text-align: center; font-size: 0.68rem; }
+  .sev-low { background: rgba(0,230,118,0.08); border: 1px solid rgba(0,230,118,0.2); }
+  .sev-med { background: rgba(255,193,7,0.08); border: 1px solid rgba(255,193,7,0.2); }
+  .sev-high { background: rgba(255,107,107,0.08); border: 1px solid rgba(255,107,107,0.2); }
+
+  /* Parallel */
+  .parallel-group {
+    display: flex; gap: 6px; padding: 8px;
+    border: 1.5px dashed rgba(0,230,118,0.25); border-radius: 8px;
+    background: rgba(0,230,118,0.02);
+  }
+  .parallel-label {
+    writing-mode: vertical-rl; text-orientation: mixed;
+    font-size: 0.58rem; color: #00e676; font-weight: 600;
+    display: flex; align-items: center; letter-spacing: 1px;
+  }
+
+  /* Timer events — dashed circle */
+  .n-timer {
+    background: rgba(255,152,0,0.08);
+    border: 2px dashed #ff9800; border-radius: 50%;
+    width: 80px; height: 80px; justify-content: center; min-width: 80px;
+    padding: 4px;
+  }
+
+  .note { font-size: 0.66rem; color: #556; padding: 2px 0; }
+
+  /* Cycle labels */
+  .cycle-label {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;
+    margin: 8px 0 4px;
+  }
+  .cycle-timer { background: rgba(255,152,0,0.08); border-left: 3px solid #ff9800; color: #ff9800; }
+  .cycle-see { background: rgba(123,97,255,0.08); border-left: 3px solid #7b61ff; color: #7b61ff; }
+
+  .loop-indicator {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; margin: 10px 0; font-size: 0.75rem; color: #8892a4;
+  }
+  .loop-line {
+    flex: 1; max-width: 60px; height: 1px;
+    background: repeating-linear-gradient(90deg, #445 0, #445 4px, transparent 4px, transparent 8px);
+  }
+
+  footer {
+    text-align: center; color: #445; font-size: 0.72rem;
+    margin-top: 40px; padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>📋 AIPMO Business Process Flow</h1>
+<p class="subtitle">Client Intake → Profiling → Estimation → Execution → Retrospective</p>
+<p class="version">v3.0 — Feb 11, 2026</p>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-box" style="background:rgba(0,230,118,0.3);border:3px solid #00e676;border-radius:50%;width:18px;height:18px;"></div> Start / End Event</div>
+  <div class="legend-item"><div class="legend-box" style="background:rgba(123,97,255,0.1);border:2px solid #7b61ff;border-radius:50%;width:18px;height:18px;"></div> Intermediate Event</div>
+  <div class="legend-item"><div class="legend-box" style="background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.18);border-radius:6px;"></div> Process / Activity</div>
+  <div class="legend-item"><div class="legend-box" style="background:rgba(255,193,7,0.12);border:2px solid #ffc107;transform:rotate(45deg);width:14px;height:14px;border-radius:0;"></div> Decision / Gateway</div>
+  <div class="legend-item"><div class="legend-box" style="background:rgba(255,107,107,0.1);border:2px solid #ff6b6b;border-radius:3px;"></div> Gate (Human)</div>
+  <div class="legend-item"><div class="legend-box" style="background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.2);border-radius:2px;clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);"></div> Data / Artifact</div>
+  <div class="legend-item"><div class="legend-box" style="background:rgba(255,152,0,0.08);border:2px dashed #ff9800;border-radius:50%;width:18px;height:18px;"></div> Timer Event</div>
+</div>
+
+<!-- ===== PHASE 1: INTAKE & PROFILING ===== -->
+<div class="phase-sep"><span class="phase-label">Phase 1 — Intake & Profiling</span></div>
+
+<!-- Client lane -->
+<div class="swimlane lane-client">
+  <div class="swimlane-label">
+    <div class="lane-icon">👤</div>
+    Client
+    <div class="lane-type">Human</div>
+  </div>
+  <div class="flow-row">
+    <div class="n n-start">
+      <div class="n-label">Sparse Input</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-data">
+      <div class="n-label">Requirements</div>
+      <div class="n-detail">Call transcript · Notes · Voice memo · Ticket</div>
+    </div>
+  </div>
+</div>
+
+<div class="arrow-down cross-lane">↓</div>
+
+<!-- PM lane -->
+<div class="swimlane lane-pm">
+  <div class="swimlane-label">
+    <div class="lane-icon">💎</div>
+    Product Manager
+    <div class="lane-type">Human</div>
+  </div>
+  <div class="flow-row">
+    <div class="n n-process">
+      <div class="n-label">Translate Needs</div>
+      <div class="n-detail">Client needs → business requirements</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-process">
+      <div class="n-label">Profile Priorities</div>
+      <div class="n-detail">From transcripts, notes, context</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-process">
+      <div class="n-label">Apply Hexagon of Success</div>
+      <div class="n-detail">Model preferences · 6 trade-off criteria</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-data">
+      <div class="n-label">Priority Profile</div>
+      <div class="n-detail">Structured priorities + requirements</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-event">
+      <div class="n-label" style="font-size:0.68rem;">INTAKE_<br>RECEIVED</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PHASE 2: ESTIMATION, ASSIGNMENT & BUDGET ===== -->
+<div class="phase-sep"><span class="phase-label">Phase 2 — Estimation, Assignment & Budget</span></div>
+
+<div class="arrow-down cross-lane">↓</div>
+
+<!-- Estimator lane -->
+<div class="swimlane lane-estimator">
+  <div class="swimlane-label">
+    <div class="lane-icon">🎯</div>
+    AI Estimator
+    <div class="lane-type">Strategic AI</div>
+  </div>
+  <div class="flow-row">
+    <div class="n n-process">
+      <div class="n-label">Decompose</div>
+      <div class="n-detail">Epics → Stories → Tasks</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-process">
+      <div class="n-label">Define AC</div>
+      <div class="n-detail">Acceptance criteria per story</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-process">
+      <div class="n-label">Estimate</div>
+      <div class="n-detail">SP × 2 × 1.7 drag</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-process">
+      <div class="n-label">Pareto Engine</div>
+      <div class="n-detail">Priority ∩ effort = rank</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-process">
+      <div class="n-label">Capacity Map</div>
+      <div class="n-detail">Promise/Stretch 33/33/34</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-data">
+      <div class="n-label">Estimated Backlog</div>
+      <div class="n-detail">Specified + prioritized + costed</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-event">
+      <div class="n-label" style="font-size:0.68rem;">ESTIMATES_<br>COMPLETE</div>
+    </div>
+  </div>
+</div>
+
+<div class="arrow-down cross-lane">↓</div>
+
+<!-- Program Manager lane -->
+<div class="swimlane lane-progmgr">
+  <div class="swimlane-label">
+    <div class="lane-icon">🤖</div>
+    AI Program Mgr
+    <div class="lane-type">Strategic AI</div>
+  </div>
+  <div class="flow-row">
+    <div class="n n-process">
+      <div class="n-label">Assign to Squads</div>
+      <div class="n-detail">Alpha · Beta · Gamma</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-process">
+      <div class="n-label">Resolve Dependencies</div>
+      <div class="n-detail">Cross-squad coordination</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-process">
+      <div class="n-label">Allocate Resources</div>
+      <div class="n-detail">Capacity per squad</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-data">
+      <div class="n-label">Coordination Plan</div>
+      <div class="n-detail">Squad-assigned backlog</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-event">
+      <div class="n-label" style="font-size:0.68rem;">BACKLOG_<br>READY</div>
+    </div>
+  </div>
+</div>
+
+<div class="arrow-down cross-lane">↓</div>
+
+<!-- Portfolio Manager lane -->
+<div class="swimlane lane-portmgr">
+  <div class="swimlane-label">
+    <div class="lane-icon">📊</div>
+    AI Portfolio Mgr
+    <div class="lane-type">Strategic AI</div>
+  </div>
+  <div class="flow-row">
+    <div class="n n-process">
+      <div class="n-label">Validate Budget</div>
+      <div class="n-detail">Alignment · Margin</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-process">
+      <div class="n-label">Token Cost Projection</div>
+      <div class="n-detail">Tokens × model rate</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-process">
+      <div class="n-label">Milestone Check</div>
+      <div class="n-detail">Payment alignment</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-decision">
+      <div class="n-inner">Budget<br>OK?</div>
+    </div>
+  </div>
+  <div class="branch">
+    <div class="branch-path branch-yes">
+      <div class="branch-label" style="color:#00e676;">✅ YES → BUDGET_APPROVED</div>
+    </div>
+    <div class="branch-path branch-no">
+      <div class="branch-label" style="color:#ff6b6b;">❌ NO → Return to PM</div>
+      Scope too expensive or margin too thin
+    </div>
+  </div>
+</div>
+
+<!-- ===== PHASE 3: HUMAN REVIEW GATE ===== -->
+<div class="phase-sep"><span class="phase-label">Phase 3 — Human Review Gate</span></div>
+
+<div class="arrow-down cross-lane">↓</div>
+
+<div class="swimlane lane-pm">
+  <div class="swimlane-label">
+    <div class="lane-icon">💎</div>
+    Product Manager
+    <div class="lane-type">Human</div>
+  </div>
+  <div class="flow-row">
+    <div class="n n-event" style="min-width:140px;">
+      <div class="n-label">Trigger</div>
+      <div class="n-detail">BUDGET_APPROVED</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-gate">
+      <div class="n-label">Human Review Gate (§5.1.1)</div>
+      <div class="n-detail">PM (Joana/Victor) + Client (if large scope)</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-decision">
+      <div class="n-inner">Approve?</div>
+    </div>
+  </div>
+  <div class="note" style="margin: 8px 0; padding: 10px 14px; background: rgba(255,255,255,0.04); border-radius: 8px; font-size: 0.78rem; line-height: 1.6;">
+    <strong>Reviews:</strong><br>
+    • Sprint scope — Are the right things prioritized?<br>
+    • Estimates — Do the numbers make sense?<br>
+    • Squad assignments — Any concerns on allocation?<br>
+    • Budget — Token cost projection acceptable?
+  </div>
+  <div class="branch">
+    <div class="branch-path branch-yes">
+      <div class="branch-label" style="color:#00e676;">✅ APPROVED</div>
+      EVENT: HUMAN_APPROVED → triggers Contract Generation
+    </div>
+    <div class="branch-path branch-mod">
+      <div class="branch-label" style="color:#ffc107;">🔄 MODIFY</div>
+      Feedback → Estimator/Program Manager re-run affected steps
+    </div>
+    <div class="branch-path branch-no">
+      <div class="branch-label" style="color:#ff6b6b;">❌ REJECT</div>
+      Sprint cancelled → Back to intake
+    </div>
+  </div>
+  <div class="note">⏰ 24h timeout. PM pinged if no response. No auto-approve.</div>
+</div>
+
+<!-- ===== PHASE 4: CONTRACT SIGNING ===== -->
+<div class="phase-sep"><span class="phase-label">Phase 4 — Contract Signing Ritual</span></div>
+
+<div class="arrow-down cross-lane">↓</div>
+
+<!-- Verifier lane -->
+<div class="swimlane lane-verifier">
+  <div class="swimlane-label">
+    <div class="lane-icon">✅</div>
+    Req. Verifier
+    <div class="lane-type">Coordination</div>
+  </div>
+  <div class="flow-row">
+    <div class="n n-process">
+      <div class="n-label">Generate Contract</div>
+      <div class="n-detail">Promise + Stretch + Acceptance Criteria</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-data">
+      <div class="n-label">Contract</div>
+      <div class="n-detail">GitHub markdown + commit SHA</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-event">
+      <div class="n-label" style="font-size:0.68rem;">CONTRACT_<br>GENERATED</div>
+    </div>
+  </div>
+</div>
+
+<div class="arrow-down cross-lane">↓</div>
+
+<!-- Squads sign -->
+<div class="swimlane lane-squads">
+  <div class="swimlane-label">
+    <div class="lane-icon">📁</div>
+    Execution Squads
+    <div class="lane-type">Execution</div>
+  </div>
+  <div class="flow-row">
+    <div class="n n-process">
+      <div class="n-label">Review Contract</div>
+      <div class="n-detail">Promise/Stretch items + AC</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-decision">
+      <div class="n-inner">Sign?</div>
+    </div>
+  </div>
+  <div class="branch">
+    <div class="branch-path branch-yes">
+      <div class="branch-label" style="color:#00e676;">✅ ACCEPT</div>
+      Write signature: commitment + hash + ETA → CONTRACT_SIGNED
+    </div>
+    <div class="branch-path branch-mod">
+      <div class="branch-label" style="color:#ffc107;">🔄 MODIFY</div>
+      Propose changes → Renegotiate
+    </div>
+    <div class="branch-path branch-no">
+      <div class="branch-label" style="color:#ff6b6b;">❌ DECLINE</div>
+      Cannot commit → Reassign
+    </div>
+  </div>
+</div>
+
+<div class="arrow-down cross-lane">↓</div>
+
+<!-- FC confirms -->
+<div class="swimlane lane-fc">
+  <div class="swimlane-label">
+    <div class="lane-icon">🌱</div>
+    Flow Coordinators
+    <div class="lane-type">Coordination</div>
+  </div>
+  <div class="flow-row">
+    <div class="n n-process">
+      <div class="n-label">Verify All Signatures</div>
+      <div class="n-detail">FC α · β · γ confirm squad sigs</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-event">
+      <div class="n-label" style="font-size:0.72rem;">BEGIN_WORK</div>
+    </div>
+  </div>
+  <div class="note">⛔ No unsigned contracts proceed. Ever.</div>
+</div>
+
+<!-- ===== PHASE 5: EXECUTION ===== -->
+<div class="phase-sep"><span class="phase-label">Phase 5 — Execution (30-min cycles)</span></div>
+
+<div class="arrow-down cross-lane">↓</div>
+
+<div class="swimlane lane-squads">
+  <div class="swimlane-label">
+    <div class="lane-icon">⚡</div>
+    Execution Squads
+    <div class="lane-type">Execution</div>
+  </div>
+  <div class="parallel-group">
+    <div class="parallel-label">PARALLEL</div>
+    <div style="flex:1;">
+      <div class="flow-row">
+        <div class="n n-process"><div class="n-label">Squad Alpha</div><div class="n-detail">Backend · API · DB</div></div>
+        <div class="n n-process"><div class="n-label">Squad Beta</div><div class="n-detail">Frontend · UX · Style</div></div>
+        <div class="n n-process"><div class="n-label">Squad Gamma</div><div class="n-detail">Integration · QA · Deploy</div></div>
+      </div>
+      <div class="note">Signed items only · 30-min status reports · All commits to GitHub</div>
+      <div class="flow-row" style="margin-top:4px;">
+        <div class="n n-event" style="width:70px;height:70px;">
+          <div class="n-label" style="font-size:0.65rem;">TASK_<br>COMPLETE</div>
+        </div>
+        <span style="font-size:0.7rem; color:#667; padding:0 4px;">or</span>
+        <div class="n n-event" style="width:70px;height:70px;border-color:#ff6b6b;background:rgba(255,107,107,0.1);">
+          <div class="n-label" style="font-size:0.65rem;">BLOCKER_<br>RAISED</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="n n-decision">
+          <div class="n-inner" style="font-size:0.6rem;">Severity?</div>
+        </div>
+      </div>
+      <div class="severity-grid">
+        <div class="sev-box sev-low"><strong>🟢 LOW</strong><br>Workaround → Document → Continue</div>
+        <div class="sev-box sev-med"><strong>🟡 MED</strong><br>Pause → FC approval → PM notified</div>
+        <div class="sev-box sev-high"><strong>🔴 HIGH</strong><br>Stop → Escalate → Human (Slack)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PHASE 6: TIERED CHECKPOINTS ===== -->
+<div class="phase-sep"><span class="phase-label">Phase 6 — Tiered Checkpoints (See It Cycle)</span></div>
+
+<!-- FC lane — micro standup -->
+<div class="swimlane lane-fc">
+  <div class="swimlane-label">
+    <div class="lane-icon">🌱</div>
+    Flow Coordinators
+    <div class="lane-type">Coordination</div>
+  </div>
+
+  <div class="cycle-label cycle-timer">⏱️ Every 30 min — Micro-Standup</div>
+  <div class="flow-row">
+    <div class="n n-timer">
+      <div class="n-label" style="font-size:0.65rem;">30 min</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-process">
+      <div class="n-label">Poll Squad</div>
+      <div class="n-detail">Done? Working on? Blockers? Promise on track?</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-process">
+      <div class="n-label">Resolve / Escalate</div>
+      <div class="n-detail">LOW: resolve · MED/HIGH: escalate</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-event">
+      <div class="n-label" style="font-size:0.6rem;">MICRO_<br>STANDUP_<br>COMPLETE</div>
+    </div>
+  </div>
+
+  <div class="cycle-label cycle-timer">⏱️ Every 1 hour — Checkpoint Gate</div>
+  <div class="flow-row">
+    <div class="n n-timer">
+      <div class="n-label" style="font-size:0.65rem;">1 hour</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-process">
+      <div class="n-label">AC Verification</div>
+      <div class="n-detail">Req. Verifier checks batches</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-event">
+      <div class="n-label" style="font-size:0.65rem;">BATCH_<br>VERIFIED</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-process">
+      <div class="n-label">Publish to Vercel</div>
+      <div class="n-detail">Velocity · Blockers · Cost</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-event">
+      <div class="n-label" style="font-size:0.6rem;">CHECKPOINT_<br>GATE_<br>COMPLETE</div>
+    </div>
+  </div>
+
+  <div class="cycle-label cycle-see">🎯 Promise / Stretch Gate</div>
+  <div class="flow-row">
+    <div class="n n-event">
+      <div class="n-label" style="font-size:0.65rem;">PROMISE_<br>COMPLETE</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-decision">
+      <div class="n-inner" style="font-size:0.58rem;">Stretch?</div>
+    </div>
+  </div>
+  <div class="branch">
+    <div class="branch-path branch-yes"><div class="branch-label" style="color:#00e676;">✅ APPROVED</div>Proceed to Stretch</div>
+    <div class="branch-path branch-no"><div class="branch-label" style="color:#ff6b6b;">⏹️ DECLINED</div>Sprint ends → Retro</div>
+    <div class="branch-path branch-mod"><div class="branch-label" style="color:#ffc107;">⚠️ INCOMPLETE</div>Finish Promise first</div>
+  </div>
+</div>
+
+<!-- Strategic AI — Reality Check -->
+<div class="swimlane lane-estimator" style="border-radius:0;">
+  <div class="swimlane-label">
+    <div class="lane-icon">🧠</div>
+    Strategic AI
+    <div class="lane-type">All 3 agents</div>
+  </div>
+
+  <div class="cycle-label cycle-see">🔄 Every 4 hours — Reality Check</div>
+  <div class="flow-row">
+    <div class="n n-timer">
+      <div class="n-label" style="font-size:0.65rem;">4 hours</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-process">
+      <div class="n-label">Program Mgr</div>
+      <div class="n-detail">Alignment · Blockers</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-process">
+      <div class="n-label">Portfolio Mgr</div>
+      <div class="n-detail">Burn · Budget</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-process">
+      <div class="n-label">Estimator</div>
+      <div class="n-detail">Actuals vs estimates</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-event">
+      <div class="n-label" style="font-size:0.6rem;">REALITY_<br>CHECK_<br>COMPLETE</div>
+    </div>
+  </div>
+</div>
+
+<!-- Audit trail -->
+<div class="swimlane lane-fc" style="border-radius:0;">
+  <div class="swimlane-label">
+    <div class="lane-icon">📤</div>
+    Audit Trail
+    <div class="lane-type">Automated</div>
+  </div>
+  <div class="flow-row">
+    <div class="n n-data"><div class="n-label">Git Commit</div></div>
+    <div class="arrow">→</div>
+    <div class="n n-data"><div class="n-label">Vercel Dashboard</div><div class="n-detail">Goal · Velocity · Cost</div></div>
+    <div class="arrow">→</div>
+    <div class="n n-data"><div class="n-label">Slack #akira-swarm</div></div>
+    <div class="arrow">→</div>
+    <div class="n n-data"><div class="n-label">GitHub Wiki</div></div>
+  </div>
+  <div class="note">Non-negotiable for every checkpoint.</div>
+</div>
+
+<!-- Agent 215 -->
+<div class="swimlane lane-fc" style="border-radius: 0 0 12px 12px;">
+  <div class="swimlane-label">
+    <div class="lane-icon">🚨</div>
+    Idle Detection
+    <div class="lane-type">Agent 215</div>
+  </div>
+  <div class="flow-row">
+    <div class="n n-timer" style="width:70px;height:70px;">
+      <div class="n-label" style="font-size:0.6rem;">Exec<br>60m</div>
+    </div>
+    <div class="n n-timer" style="width:70px;height:70px;">
+      <div class="n-label" style="font-size:0.6rem;">FC<br>2h</div>
+    </div>
+    <div class="n n-timer" style="width:70px;height:70px;">
+      <div class="n-label" style="font-size:0.6rem;">Strategic<br>8h</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-process">
+      <div class="n-label">Ping</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-decision">
+      <div class="n-inner" style="font-size:0.55rem;">Response?</div>
+    </div>
+  </div>
+  <div class="branch" style="max-width:500px;">
+    <div class="branch-path branch-yes"><div class="branch-label" style="color:#00e676;">✅ YES</div>Resume</div>
+    <div class="branch-path branch-no"><div class="branch-label" style="color:#ff6b6b;">❌ +15m</div>Escalate up → +30m → Restart + notify human</div>
+  </div>
+  <div class="note">Escalations are always real-time. MED/HIGH blockers → Program Mgr immediately → Human if HIGH.</div>
+</div>
+
+<!-- ===== PHASE 7: RETROSPECTIVE ===== -->
+<div class="phase-sep"><span class="phase-label">Phase 7 — Retrospective & Loop Back</span></div>
+
+<div class="swimlane lane-fc" style="border-radius: 12px 12px 0 0;">
+  <div class="swimlane-label">
+    <div class="lane-icon">🌱</div>
+    Flow Coordinators
+    <div class="lane-type">Coordination</div>
+  </div>
+  <div class="cycle-label cycle-timer">⏱️ Every 12 hours</div>
+  <div class="flow-row">
+    <div class="n n-timer">
+      <div class="n-label" style="font-size:0.65rem;">12 hours</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-process">
+      <div class="n-label">Compile Retro Data</div>
+      <div class="n-detail">Squad-level: well / wrong / improve</div>
+    </div>
+  </div>
+</div>
+
+<div class="swimlane lane-estimator" style="border-radius:0;">
+  <div class="swimlane-label">
+    <div class="lane-icon">🎯</div>
+    AI Estimator
+    <div class="lane-type">Strategic AI</div>
+  </div>
+  <div class="flow-row">
+    <div class="n n-process">
+      <div class="n-label">Recalibrate Model</div>
+      <div class="n-detail">If actuals diverge >20% · Adjust drag factor</div>
+    </div>
+  </div>
+</div>
+
+<div class="swimlane lane-progmgr" style="border-radius:0;">
+  <div class="swimlane-label">
+    <div class="lane-icon">🤖</div>
+    AI Program Mgr
+    <div class="lane-type">Strategic AI</div>
+  </div>
+  <div class="flow-row">
+    <div class="n n-process">
+      <div class="n-label">Apply Improvements</div>
+      <div class="n-detail">Consolidate learnings → Update agent config</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-event">
+      <div class="n-label" style="font-size:0.65rem;">RETRO_<br>COMPLETE</div>
+    </div>
+  </div>
+</div>
+
+<div class="arrow-down cross-lane">↓</div>
+
+<div class="swimlane lane-pm" style="border-radius: 0 0 12px 12px;">
+  <div class="swimlane-label">
+    <div class="lane-icon">💎</div>
+    Product Manager
+    <div class="lane-type">Human</div>
+  </div>
+  <div class="flow-row">
+    <div class="n n-decision">
+      <div class="n-inner" style="font-size:0.58rem;">Next?</div>
+    </div>
+  </div>
+  <div class="branch">
+    <div class="branch-path branch-yes"><div class="branch-label" style="color:#00e676;">✅ NEXT SPRINT</div>→ Phase 4: New contracts</div>
+    <div class="branch-path branch-mod"><div class="branch-label" style="color:#ffc107;">🔄 PIVOT</div>→ Phase 1: New intake</div>
+    <div class="branch-path branch-no"><div class="branch-label" style="color:#ff6b6b;">🏁 COMPLETE</div>Client acceptance → Close</div>
+  </div>
+</div>
+
+<div class="arrow-down">↓</div>
+<div style="display:flex;justify-content:center;">
+  <div class="n n-end"><div class="n-label">Delivered</div></div>
+</div>
+<div class="loop-indicator"><div class="loop-line"></div>🔄 Each cycle feeds learnings into the next<div class="loop-line"></div></div>
+
+<!-- ===== SPRINT ABORT ===== -->
+<div class="phase-sep"><span class="phase-label">Sprint Abort — Emergency (any point during Phases 5-7)</span></div>
+
+<div class="swimlane lane-pm" style="border-radius: 12px 12px 0 0;">
+  <div class="swimlane-label">
+    <div class="lane-icon">🛑</div>
+    Triggered By
+    <div class="lane-type">PM · Prog Mgr · Port Mgr</div>
+  </div>
+  <div class="flow-row">
+    <div class="n n-event" style="border-color:#ff3c3c;background:rgba(255,60,60,0.1);">
+      <div class="n-label" style="font-size:0.65rem;">SPRINT_<br>ABORT</div>
+    </div>
+    <div class="arrow" style="color:#ff3c3c;">→</div>
+    <div class="n n-process">
+      <div class="n-label">Conditions</div>
+      <div class="n-detail">Client pivot · Budget 100% · All-squad HIGH · PM calls it</div>
+    </div>
+  </div>
+</div>
+
+<div class="swimlane lane-squads" style="border-radius:0;">
+  <div class="swimlane-label">
+    <div class="lane-icon">⏹️</div>
+    All Squads
+    <div class="lane-type">Execution</div>
+  </div>
+  <div class="flow-row">
+    <div class="n n-process"><div class="n-label">STOP Immediately</div></div>
+    <div class="arrow" style="color:#ff3c3c;">→</div>
+    <div class="n n-process"><div class="n-label">Commit All Work</div><div class="n-detail">GitHub — no lost work</div></div>
+  </div>
+</div>
+
+<div class="swimlane lane-progmgr" style="border-radius: 0 0 12px 12px;">
+  <div class="swimlane-label">
+    <div class="lane-icon">🤖</div>
+    AI Program Mgr
+    <div class="lane-type">Strategic AI</div>
+  </div>
+  <div class="flow-row">
+    <div class="n n-process"><div class="n-label">Produce Abort Report</div><div class="n-detail">Done · Lost · Salvageable</div></div>
+    <div class="arrow">→</div>
+    <div class="n n-decision">
+      <div class="n-inner" style="font-size:0.55rem;">Next?</div>
+    </div>
+  </div>
+  <div class="branch">
+    <div class="branch-path branch-mod"><div class="branch-label" style="color:#ffc107;">🔄 RE-PLAN</div>Phase 2</div>
+    <div class="branch-path" style="background:rgba(0,212,255,0.07);border:1px solid rgba(0,212,255,0.2);"><div class="branch-label" style="color:#00d4ff;">↪️ PIVOT</div>Phase 1</div>
+    <div class="branch-path branch-no"><div class="branch-label" style="color:#ff6b6b;">📦 SHELVE</div>Paused · Preserved</div>
+  </div>
+  <div class="note">Abort ≠ failure. Controlled stop. All work preserved.</div>
+</div>
+
+<!-- See It Cycle Summary -->
+<div style="margin-top:30px;">
+  <div class="phase-sep"><span class="phase-label">See It Cycle — Nested Frequencies</span></div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px;">
+    <div style="background:rgba(255,165,0,0.08);border:1px solid rgba(255,165,0,0.25);border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-size:1.2rem;">👤</div>
+      <div style="font-weight:700;color:#ffa500;margin:4px 0;font-size:0.82rem;">Client</div>
+      <div style="font-size:0.72rem;color:#8892a4;">Every 4-5 Sprints</div>
+      <div style="font-size:0.66rem;margin-top:3px;opacity:0.7;">Goals · Market · ROI</div>
+    </div>
+    <div style="background:rgba(123,97,255,0.08);border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-size:1.2rem;">🧠</div>
+      <div style="font-weight:700;color:#7b61ff;margin:4px 0;font-size:0.82rem;">Strategic AI</div>
+      <div style="font-size:0.72rem;color:#8892a4;">Every 12 hours</div>
+      <div style="font-size:0.66rem;margin-top:3px;opacity:0.7;">Alignment · Budget · Estimates</div>
+    </div>
+    <div style="background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.25);border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-size:1.2rem;">🌱</div>
+      <div style="font-weight:700;color:#00d4ff;margin:4px 0;font-size:0.82rem;">Flow Coordinators</div>
+      <div style="font-size:0.72rem;color:#8892a4;">30m / 1h / 4h</div>
+      <div style="font-size:0.66rem;margin-top:3px;opacity:0.7;">Standup · Gate · Reality</div>
+    </div>
+    <div style="background:rgba(0,230,118,0.08);border:1px solid rgba(0,230,118,0.25);border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-size:1.2rem;">📁</div>
+      <div style="font-weight:700;color:#00e676;margin:4px 0;font-size:0.82rem;">Execution Agents</div>
+      <div style="font-size:0.72rem;color:#8892a4;">Every 30 min</div>
+      <div style="font-size:0.66rem;margin-top:3px;opacity:0.7;">Status · Contracts · Blockers</div>
+    </div>
+  </div>
+  <div style="text-align:center; margin-top:8px; font-size:0.72rem; color:#667;">
+    Info flows <strong style="color:#00e676;">UP</strong> on drift · <strong style="color:#ff6b6b;">DOWN</strong> on goal changes
+  </div>
+</div>
+
+<!-- Event Chain -->
+<div style="margin-top:30px;">
+  <div class="phase-sep"><span class="phase-label">Complete Event Chain</span></div>
+  <div style="margin-top:14px; padding:16px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); font-family:monospace; font-size:0.73rem; line-height:1.7;">
+    <span style="color:#ff6b6b;">INTAKE_RECEIVED</span> <span style="color:#445;">(PM → Estimator)</span><br>
+    &nbsp;&nbsp;→ <span style="color:#7b61ff;">ESTIMATES_COMPLETE</span> <span style="color:#445;">(decompose + Pareto + size)</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#0096ff;">BACKLOG_READY</span> <span style="color:#445;">(squad assignment)</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#00d4c8;">BUDGET_APPROVED</span> <span style="color:#445;">(portfolio validation)</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#ff6b6b;">HUMAN_APPROVED</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#ffc107;">CONTRACT_GENERATED</span> → <span style="color:#00e676;">CONTRACT_SIGNED</span> → <span style="color:#00e676;">BEGIN_WORK</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#00e676;">TASK_COMPLETE</span> · <span style="color:#ff6b6b;">BLOCKER_RAISED</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#ff9800;">MICRO_STANDUP</span> <span style="color:#445;">(30m)</span> · <span style="color:#ffc107;">CHECKPOINT_GATE</span> <span style="color:#445;">(1h)</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#00e676;">PROMISE_COMPLETE</span> → STRETCH gate<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#7b61ff;">REALITY_CHECK</span> <span style="color:#445;">(4h)</span> · <span style="color:#7b61ff;">RETRO_COMPLETE</span> <span style="color:#445;">(12h)</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ NEXT_CYCLE · HUMAN_REVIEW · <span style="color:#ff3c3c;">SPRINT_ABORT</span>
+  </div>
+</div>
+
+<footer>
+  AIPMO Business Process Flow v3.0 · VtKl · Feb 11, 2026<br>
+  INTERNAL — NOT FOR PUBLIC DISTRIBUTION
+</footer>
+
+</div>
+</body>
+</html>

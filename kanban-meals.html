@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Planner Kanban - Tony's Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+            padding: 1.5rem;
+        }
+        
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .back-link { color: #667eea; text-decoration: none; font-size: 0.9rem; }
+        .back-link:hover { text-decoration: underline; }
+        .top-actions { display: flex; gap: 0.5rem; }
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+        .btn-primary { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+        .btn-secondary { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ccc; }
+        .btn:hover { transform: translateY(-1px); }
+        
+        header { margin-bottom: 1.5rem; }
+        header h1 { font-size: 1.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .subtitle { color: #888; font-size: 0.9rem; margin-top: 0.25rem; }
+        
+        .week-info {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .week-stat {
+            background: rgba(255,255,255,0.05);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+        .week-stat .value { color: #4ecdc4; font-weight: 600; }
+        
+        .kanban-board {
+            display: flex;
+            gap: 0.75rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+            min-height: calc(100vh - 200px);
+        }
+        
+        .kanban-column {
+            min-width: 180px;
+            max-width: 200px;
+            flex-shrink: 0;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+        }
+        .column-header {
+            padding: 0.75rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            text-align: center;
+        }
+        .column-title { font-weight: 600; font-size: 0.9rem; }
+        .column-date { font-size: 0.75rem; color: #888; margin-top: 0.25rem; }
+        .column-totals { font-size: 0.7rem; color: #4ecdc4; margin-top: 0.25rem; }
+        
+        .column-sunday .column-header { border-left: 3px solid #ef4444; }
+        .column-monday .column-header { border-left: 3px solid #f59e0b; }
+        .column-tuesday .column-header { border-left: 3px solid #eab308; }
+        .column-wednesday .column-header { border-left: 3px solid #22c55e; }
+        .column-thursday .column-header { border-left: 3px solid #3b82f6; }
+        .column-friday .column-header { border-left: 3px solid #ec4899; }
+        .column-saturday .column-header { border-left: 3px solid #8b5cf6; }
+        
+        .card-list {
+            flex: 1;
+            padding: 0.5rem;
+            min-height: 100px;
+            overflow-y: auto;
+        }
+        
+        .meal-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 0.6rem;
+            margin-bottom: 0.5rem;
+            cursor: grab;
+            transition: all 0.2s;
+        }
+        .meal-card:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.2);
+        }
+        .meal-card.sortable-ghost { opacity: 0.4; background: rgba(239, 68, 68, 0.2); }
+        .meal-card.sortable-chosen { box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+        
+        .meal-slot {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+        .slot-breakfast { color: #fbbf24; }
+        .slot-lunch { color: #4ecdc4; }
+        .slot-dinner { color: #ef4444; }
+        
+        .meal-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            line-height: 1.2;
+        }
+        .meal-macros {
+            font-size: 0.7rem;
+            color: #888;
+        }
+        .meal-macros .cal { color: #ef4444; }
+        .meal-macros .protein { color: #4ecdc4; }
+        .meal-badge {
+            display: inline-block;
+            font-size: 0.6rem;
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            margin-left: 0.25rem;
+        }
+        .recipe-link {
+            display: block;
+            font-size: 0.65rem;
+            color: #fbbf24;
+            text-decoration: none;
+            margin-top: 0.25rem;
+            padding: 0.2rem 0.4rem;
+            background: rgba(251, 191, 36, 0.15);
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .recipe-link:hover {
+            background: rgba(251, 191, 36, 0.3);
+            color: #fff;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.visible { display: flex; }
+        .modal {
+            background: #1e2433;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 450px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-title { font-size: 1.1rem; font-weight: 600; }
+        .modal-close { background: none; border: none; color: #888; font-size: 1.5rem; cursor: pointer; }
+        .modal-body { padding: 1.5rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-label { display: block; font-size: 0.85rem; color: #888; margin-bottom: 0.4rem; }
+        .form-input, .form-select {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            padding: 0.6rem;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+        .form-row { display: flex; gap: 1rem; }
+        .form-row .form-group { flex: 1; }
+        .form-input:focus, .form-select:focus { outline: none; border-color: #ef4444; }
+        .modal-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        footer { text-align: center; padding: 1.5rem; color: #444; font-size: 0.8rem; }
+    </style>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="hub-tony.html" class="back-link">← Back to Tony's Dashboard Hub</a>
+        <div class="top-actions">
+            <button class="btn btn-secondary" onclick="exportData()">📥 Export</button>
+            <button class="btn btn-primary" onclick="openAddModal()">+ Add Meal</button>
+        </div>
+    </div>
+    
+    <header>
+        <h1>🍽️ Meal Planner</h1>
+        <p class="subtitle">Drag meals between days • Click to edit</p>
+        <div class="week-info">
+            <span class="week-stat">📅 Week of <span class="value" id="week-start">Feb 9-15</span></span>
+            <span class="week-stat">🔥 Avg <span class="value" id="avg-cal">0</span> cal/day</span>
+            <span class="week-stat">💪 Avg <span class="value" id="avg-protein">0</span>g protein</span>
+        </div>
+    </header>
+    
+    <div class="kanban-board" id="kanban-board">
+        <div class="kanban-column column-sunday" data-day="sunday">
+            <div class="column-header">
+                <div class="column-title">Sunday</div>
+                <div class="column-date">Feb 9</div>
+                <div class="column-totals" id="totals-sunday">0 cal</div>
+            </div>
+            <div class="card-list" id="list-sunday"></div>
+        </div>
+        <div class="kanban-column column-monday" data-day="monday">
+            <div class="column-header">
+                <div class="column-title">Monday</div>
+                <div class="column-date">Feb 10</div>
+                <div class="column-totals" id="totals-monday">0 cal</div>
+            </div>
+            <div class="card-list" id="list-monday"></div>
+        </div>
+        <div class="kanban-column column-tuesday" data-day="tuesday">
+            <div class="column-header">
+                <div class="column-title">Tuesday</div>
+                <div class="column-date">Feb 11</div>
+                <div class="column-totals" id="totals-tuesday">0 cal</div>
+            </div>
+            <div class="card-list" id="list-tuesday"></div>
+        </div>
+        <div class="kanban-column column-wednesday" data-day="wednesday">
+            <div class="column-header">
+                <div class="column-title">Wednesday</div>
+                <div class="column-date">Feb 12</div>
+                <div class="column-totals" id="totals-wednesday">0 cal</div>
+            </div>
+            <div class="card-list" id="list-wednesday"></div>
+        </div>
+        <div class="kanban-column column-thursday" data-day="thursday">
+            <div class="column-header">
+                <div class="column-title">Thursday</div>
+                <div class="column-date">Feb 13</div>
+                <div class="column-totals" id="totals-thursday">0 cal</div>
+            </div>
+            <div class="card-list" id="list-thursday"></div>
+        </div>
+        <div class="kanban-column column-friday" data-day="friday">
+            <div class="column-header">
+                <div class="column-title">Friday ❤️</div>
+                <div class="column-date">Feb 14</div>
+                <div class="column-totals" id="totals-friday">0 cal</div>
+            </div>
+            <div class="card-list" id="list-friday"></div>
+        </div>
+        <div class="kanban-column column-saturday" data-day="saturday">
+            <div class="column-header">
+                <div class="column-title">Saturday</div>
+                <div class="column-date">Feb 15</div>
+                <div class="column-totals" id="totals-saturday">0 cal</div>
+            </div>
+            <div class="card-list" id="list-saturday"></div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="meal-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title" id="modal-title">Add Meal</span>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="meal-id">
+                <div class="form-group">
+                    <label class="form-label">Meal Name *</label>
+                    <input type="text" class="form-input" id="meal-name" placeholder="e.g., Grilled Salmon">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Day</label>
+                        <select class="form-select" id="meal-day">
+                            <option value="sunday">Sunday</option>
+                            <option value="monday">Monday</option>
+                            <option value="tuesday">Tuesday</option>
+                            <option value="wednesday">Wednesday</option>
+                            <option value="thursday">Thursday</option>
+                            <option value="friday">Friday</option>
+                            <option value="saturday">Saturday</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Meal Slot</label>
+                        <select class="form-select" id="meal-slot">
+                            <option value="breakfast">Breakfast</option>
+                            <option value="lunch">Lunch</option>
+                            <option value="dinner">Dinner</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Calories</label>
+                        <input type="number" class="form-input" id="meal-calories" placeholder="450">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Protein (g)</label>
+                        <input type="number" class="form-input" id="meal-protein" placeholder="35">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Notes</label>
+                    <input type="text" class="form-input" id="meal-notes" placeholder="Optional notes...">
+                </div>
+                <div class="form-group" id="recipe-url-group" style="display:none;">
+                    <label class="form-label">📖 Recipe Link</label>
+                    <a href="#" id="recipe-link" target="_blank" class="recipe-link-btn" style="display:inline-block;background:rgba(251,191,36,0.2);color:#fbbf24;padding:0.5rem 1rem;border-radius:6px;text-decoration:none;font-size:0.9rem;">🔗 View Recipe</a>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="deleteMeal()" id="delete-btn" style="display:none; margin-right:auto; background:rgba(239,68,68,0.2); border-color:#ef4444; color:#ef4444;">Delete</button>
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveMeal()">Save</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer>Meal Planner Kanban • Tony's Dashboard • Feb 2026</footer>
+    
+    <script>
+        // Supabase config - DIRECT CONNECTION
+        const SUPABASE_URL = 'https://mmwbiogqmgmtxboipyko.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_r6q0-iEnygKZiZkaOuY-hg_Tvlb-66U';
+        const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const BOARD_NAME = 'meals';
+
+        let meals = [];
+        const DAYS = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+        const SLOT_ORDER = { breakfast: 1, lunch: 2, dinner: 3 };
+        
+        async function init() {
+            console.log('🍽️ Meals Kanban initializing...');
+            await loadData();
+            console.log('📦 Loaded meals:', meals.length);
+            renderBoard();
+            initSortable();
+            updateStats();
+            console.log('✅ Meals Kanban ready');
+        }
+        
+        async function loadData() {
+            try {
+                const { data, error } = await db
+                    .from('kanban_items')
+                    .select('*')
+                    .eq('board', BOARD_NAME)
+                    .order('position', { ascending: true });
+                
+                if (error) throw error;
+                
+                meals = data.map(item => ({
+                    id: parseInt(item.item_id) || item.id,
+                    supabaseId: item.id,
+                    day: item.column_id,
+                    position: item.position,
+                    ...(typeof item.data === 'string' ? JSON.parse(item.data) : item.data)
+                }));
+                
+                console.log(`Loaded ${meals.length} meals from Supabase`);
+            } catch (e) {
+                console.error('Failed to load from Supabase:', e);
+                meals = [];
+            }
+        }
+        
+        async function saveMealToSupabase(meal, isNew = false) {
+            const mealData = { name: meal.name, slot: meal.slot, time: meal.time, calories: meal.calories, protein: meal.protein, recipe: meal.recipe, recipeUrl: meal.recipeUrl, notes: meal.notes };
+            try {
+                if (isNew) {
+                    const { error } = await db.from('kanban_items').insert({ board: BOARD_NAME, column_id: meal.day, item_id: String(meal.id), position: meals.length, data: mealData });
+                    if (error) throw error;
+                } else {
+                    const { error } = await db.from('kanban_items').update({ column_id: meal.day, data: mealData }).eq('board', BOARD_NAME).eq('item_id', String(meal.id));
+                    if (error) throw error;
+                }
+            } catch (e) { console.error('Failed to save to Supabase:', e); }
+        }
+        
+        async function updateMealDay(mealId, newDay) {
+            try {
+                const { error } = await db.from('kanban_items').update({ column_id: newDay }).eq('board', BOARD_NAME).eq('item_id', String(mealId));
+                if (error) throw error;
+            } catch (e) { console.error('Failed to update day:', e); }
+        }
+        
+        function renderBoard() {
+            DAYS.forEach(day => {
+                const list = document.getElementById(`list-${day}`);
+                const dayMeals = meals
+                    .filter(m => m.day === day)
+                    .sort((a, b) => SLOT_ORDER[a.slot] - SLOT_ORDER[b.slot]);
+                
+                list.innerHTML = dayMeals.map(meal => `
+                    <div class="meal-card" data-id="${meal.id}" onclick="openEditModal(${meal.id})">
+                        <div class="meal-slot slot-${meal.slot}">${meal.slot}</div>
+                        <div class="meal-name">${escapeHtml(meal.name)}${meal.recipe ? '<span class="meal-badge">⭐</span>' : ''}</div>
+                        <div class="meal-macros">
+                            <span class="cal">${meal.calories} cal</span> · 
+                            <span class="protein">${meal.protein}g</span>
+                        </div>
+                        ${meal.recipeUrl ? `<a href="${meal.recipeUrl}" target="_blank" class="recipe-link" onclick="event.stopPropagation()">📖 View Recipe</a>` : ''}
+                    </div>
+                `).join('');
+                
+                // Update column totals
+                const totalCal = dayMeals.reduce((sum, m) => sum + (m.calories || 0), 0);
+                const totalProtein = dayMeals.reduce((sum, m) => sum + (m.protein || 0), 0);
+                document.getElementById(`totals-${day}`).textContent = `${totalCal} cal · ${totalProtein}g`;
+            });
+        }
+        
+        function updateStats() {
+            let totalCal = 0, totalProtein = 0;
+            meals.forEach(m => {
+                totalCal += m.calories || 0;
+                totalProtein += m.protein || 0;
+            });
+            document.getElementById('avg-cal').textContent = Math.round(totalCal / 7);
+            document.getElementById('avg-protein').textContent = Math.round(totalProtein / 7);
+        }
+        
+        function initSortable() {
+            const lists = document.querySelectorAll('.card-list');
+            lists.forEach(list => {
+                new Sortable(list, {
+                    group: 'meals',
+                    animation: 150,
+                    ghostClass: 'sortable-ghost',
+                    chosenClass: 'sortable-chosen',
+                    onEnd: async function(evt) {
+                        const mealId = parseInt(evt.item.dataset.id);
+                        const newDay = evt.to.id.replace('list-', '');
+                        
+                        const meal = meals.find(m => m.id === mealId);
+                        if (meal) {
+                            meal.day = newDay;
+                            await updateMealDay(mealId, newDay);
+                            renderBoard();
+                            updateStats();
+                            initSortable();
+                        }
+                    }
+                });
+            });
+        }
+        
+        function openAddModal(day = 'sunday') {
+            document.getElementById('modal-title').textContent = 'Add Meal';
+            document.getElementById('meal-id').value = '';
+            document.getElementById('meal-name').value = '';
+            document.getElementById('meal-day').value = day;
+            document.getElementById('meal-slot').value = 'dinner';
+            document.getElementById('meal-calories').value = '';
+            document.getElementById('meal-protein').value = '';
+            document.getElementById('meal-notes').value = '';
+            document.getElementById('delete-btn').style.display = 'none';
+            document.getElementById('recipe-url-group').style.display = 'none';
+            document.getElementById('meal-modal').classList.add('visible');
+        }
+        
+        function openEditModal(id) {
+            const meal = meals.find(m => m.id === id);
+            if (!meal) return;
+            
+            document.getElementById('modal-title').textContent = 'Edit Meal';
+            document.getElementById('meal-id').value = meal.id;
+            document.getElementById('meal-name').value = meal.name;
+            document.getElementById('meal-day').value = meal.day;
+            document.getElementById('meal-slot').value = meal.slot;
+            document.getElementById('meal-calories').value = meal.calories || '';
+            document.getElementById('meal-protein').value = meal.protein || '';
+            document.getElementById('meal-notes').value = meal.notes || '';
+            document.getElementById('delete-btn').style.display = 'block';
+            
+            // Show recipe link if available
+            const recipeGroup = document.getElementById('recipe-url-group');
+            const recipeLink = document.getElementById('recipe-link');
+            if (meal.recipeUrl) {
+                recipeLink.href = meal.recipeUrl;
+                recipeGroup.style.display = 'block';
+            } else {
+                recipeGroup.style.display = 'none';
+            }
+            
+            document.getElementById('meal-modal').classList.add('visible');
+        }
+        
+        function closeModal() {
+            document.getElementById('meal-modal').classList.remove('visible');
+        }
+        
+        async function saveMeal() {
+            const id = document.getElementById('meal-id').value;
+            const name = document.getElementById('meal-name').value.trim();
+            if (!name) { alert('Name is required'); return; }
+            
+            const mealData = {
+                name: name,
+                day: document.getElementById('meal-day').value,
+                slot: document.getElementById('meal-slot').value,
+                calories: parseInt(document.getElementById('meal-calories').value) || 0,
+                protein: parseInt(document.getElementById('meal-protein').value) || 0,
+                notes: document.getElementById('meal-notes').value.trim(),
+                recipe: false
+            };
+            
+            if (id) {
+                const meal = meals.find(m => m.id === parseInt(id));
+                if (meal) {
+                    Object.assign(meal, mealData);
+                    await saveMealToSupabase(meal, false);
+                }
+            } else {
+                mealData.id = Date.now();
+                meals.push(mealData);
+                await saveMealToSupabase(mealData, true);
+            }
+            
+            renderBoard();
+            updateStats();
+            initSortable();
+            closeModal();
+        }
+        
+        function deleteMeal() {
+            const id = document.getElementById('meal-id').value;
+            if (!id || !confirm('Delete this meal?')) return;
+            meals = meals.filter(m => m.id !== parseInt(id));
+            saveData();
+            renderBoard();
+            updateStats();
+            initSortable();
+            closeModal();
+        }
+        
+        function exportData() {
+            const data = JSON.stringify(meals, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `meals-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        document.getElementById('meal-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+        
+        init();
+    </script>
+</body>
+</html>

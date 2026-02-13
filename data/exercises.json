@@ -1,0 +1,825 @@
+{
+  "version": "2026-02-07-v2",
+  "exercises": [
+    {
+      "id": 1,
+      "name": "Arm Circles",
+      "category": "Total Body Secondary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Shoulders",
+      "secondaryMuscle": "Core",
+      "instructions": "Stand with arms extended, make circular motions forward and backward",
+      "imageUrl": null
+    },
+    {
+      "id": 2,
+      "name": "Five Body Fish-Up",
+      "category": "Total Body Secondary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Core",
+      "secondaryMuscle": "Full Body",
+      "instructions": "Complex movement combining fish-up motion with full body engagement",
+      "imageUrl": null
+    },
+    {
+      "id": 3,
+      "name": "L-Sit",
+      "category": "Upper Body Primary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Core",
+      "secondaryMuscle": "Triceps",
+      "instructions": "Sit with legs extended forward, lift body off ground with arms",
+      "imageUrl": null
+    },
+    {
+      "id": 4,
+      "name": "Side V Crunch",
+      "category": "Upper Body Secondary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Obliques",
+      "secondaryMuscle": "Core",
+      "instructions": "Lie on side, bring knee and elbow together in crunch motion",
+      "imageUrl": null
+    },
+    {
+      "id": 5,
+      "name": "Plank Jack",
+      "category": "Total Body Primary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Core",
+      "secondaryMuscle": "Shoulders",
+      "instructions": "Hold plank position, jump feet apart and together",
+      "imageUrl": "images/exercises/5-plank-jack.png"
+    },
+    {
+      "id": 6,
+      "name": "Bird Dog",
+      "category": "Upper Body Secondary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Core",
+      "secondaryMuscle": "Glutes",
+      "instructions": "On hands and knees, extend opposite arm and leg",
+      "imageUrl": "images/exercises/6-bird-dog.png"
+    },
+    {
+      "id": 7,
+      "name": "Crocodile Walk",
+      "category": "Total Body Primary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Core",
+      "secondaryMuscle": "Shoulders",
+      "instructions": "Low crawl forward using arms and core",
+      "imageUrl": null
+    },
+    {
+      "id": 8,
+      "name": "Single Leg Push-Up",
+      "category": "Upper Body Primary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Chest",
+      "secondaryMuscle": "Core",
+      "instructions": "Perform push-up with one leg raised",
+      "imageUrl": "images/exercises/8-single-leg-push-up.png"
+    },
+    {
+      "id": 9,
+      "name": "Leg Raise On Track",
+      "category": "Lower Body Secondary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Hip Flexors",
+      "secondaryMuscle": "Core",
+      "instructions": "Lying down, raise legs to vertical position",
+      "imageUrl": null
+    },
+    {
+      "id": 10,
+      "name": "Lateral Tick Tock",
+      "category": "Upper Body Secondary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Obliques",
+      "secondaryMuscle": "Core",
+      "instructions": "Side-to-side core movement like pendulum",
+      "imageUrl": null
+    },
+    {
+      "id": 11,
+      "name": "OCR Through Luna",
+      "category": "Total Body Secondary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Full Body",
+      "secondaryMuscle": "Agility",
+      "instructions": "Obstacle course style through movement",
+      "imageUrl": null
+    },
+    {
+      "id": 13,
+      "name": "Side Bridge M Crunch",
+      "category": "Upper Body Secondary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Obliques",
+      "secondaryMuscle": "Core",
+      "instructions": "Side plank with dynamic crunch movement",
+      "imageUrl": null
+    },
+    {
+      "id": 14,
+      "name": "Butterfly Sit-Up",
+      "category": "Upper Body Secondary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Core",
+      "secondaryMuscle": "Hip Flexors",
+      "instructions": "Sit-up with soles of feet together",
+      "imageUrl": "images/exercises/14-butterfly-sit-up.png"
+    },
+    {
+      "id": 16,
+      "name": "Side Leg Lift",
+      "category": "Lower Body Secondary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Hip Abductors",
+      "secondaryMuscle": "Glutes",
+      "instructions": "Lying on side, lift top leg up",
+      "imageUrl": null
+    },
+    {
+      "id": 17,
+      "name": "Plank In Legs Lift",
+      "category": "Upper Body Primary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Core",
+      "secondaryMuscle": "Glutes",
+      "instructions": "Plank position with alternating leg lifts",
+      "imageUrl": "images/exercises/17-plank-in-legs-lift.png"
+    },
+    {
+      "id": 18,
+      "name": "Plank Reach-In N Leg",
+      "category": "Total Body Primary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Core",
+      "secondaryMuscle": "Shoulders",
+      "instructions": "Plank with reaching movement and leg extension",
+      "imageUrl": "images/exercises/18-plank-reach-in-n-leg.png"
+    },
+    {
+      "id": 19,
+      "name": "Y Extension",
+      "category": "Upper Body Secondary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Posterior Deltoids",
+      "secondaryMuscle": "Rhomboids",
+      "instructions": "Arms in Y position, extend and squeeze shoulder blades",
+      "imageUrl": "images/exercises/19-y-extension.png"
+    },
+    {
+      "id": 20,
+      "name": "Butt Lift",
+      "category": "Lower Body Primary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Glutes",
+      "secondaryMuscle": "Hamstrings",
+      "instructions": "Bridge position, lift hips up",
+      "imageUrl": null
+    },
+    {
+      "id": 21,
+      "name": "Squat Hold",
+      "category": "Lower Body Primary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Quads",
+      "secondaryMuscle": "Glutes",
+      "instructions": "Hold squat position isometrically",
+      "imageUrl": "images/exercises/21-squat-hold.png"
+    },
+    {
+      "id": 22,
+      "name": "Isometric Balance",
+      "category": "Total Body Secondary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Core",
+      "secondaryMuscle": "Stabilizers",
+      "instructions": "Hold challenging balance position",
+      "imageUrl": null
+    },
+    {
+      "id": 23,
+      "name": "Crab Walk",
+      "category": "Total Body Primary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Shoulders",
+      "secondaryMuscle": "Triceps",
+      "instructions": "Walk in crab position on hands and feet",
+      "imageUrl": null
+    },
+    {
+      "id": 24,
+      "name": "Down Dog Abs",
+      "category": "Upper Body Primary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Core",
+      "secondaryMuscle": "Shoulders",
+      "instructions": "Downward dog position with core engagement",
+      "imageUrl": null
+    },
+    {
+      "id": 25,
+      "name": "Hero Push-Up",
+      "category": "Upper Body Primary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Chest",
+      "secondaryMuscle": "Core",
+      "instructions": "Advanced push-up variation",
+      "imageUrl": "images/exercises/25-hero-push-up.png"
+    },
+    {
+      "id": 26,
+      "name": "Broaden & Reach",
+      "category": "Total Body Secondary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Full Body",
+      "secondaryMuscle": "Mobility",
+      "instructions": "Dynamic stretching movement",
+      "imageUrl": null
+    },
+    {
+      "id": 29,
+      "name": "Lunge W/ Twist Pivot",
+      "category": "Total Body Primary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Quads",
+      "secondaryMuscle": "Core",
+      "instructions": "Lunge with rotational twist",
+      "imageUrl": null
+    },
+    {
+      "id": 30,
+      "name": "Sumo Squat",
+      "category": "Lower Body Primary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Glutes",
+      "secondaryMuscle": "Inner Thighs",
+      "instructions": "Wide-stance squat targeting glutes",
+      "imageUrl": "images/exercises/30-sumo-squat.png"
+    },
+    {
+      "id": 32,
+      "name": "Curtsy Lunge",
+      "category": "Lower Body Primary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Glutes",
+      "secondaryMuscle": "Quads",
+      "instructions": "Lunge back and across into curtsy position",
+      "imageUrl": null
+    },
+    {
+      "id": 34,
+      "name": "Farmer's Walk",
+      "category": "Total Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Forearms",
+      "secondaryMuscle": "Core",
+      "instructions": "Walk while carrying heavy weights at sides",
+      "imageUrl": null
+    },
+    {
+      "id": 35,
+      "name": "Lunge & Rotation",
+      "category": "Total Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Quads",
+      "secondaryMuscle": "Core",
+      "instructions": "Lunge with rotational movement",
+      "imageUrl": null
+    },
+    {
+      "id": 36,
+      "name": "Leg Lift",
+      "category": "Lower Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Hip Flexors",
+      "secondaryMuscle": "Core",
+      "instructions": "Weighted leg lift movement",
+      "imageUrl": "images/exercises/36-leg-lift.png"
+    },
+    {
+      "id": 37,
+      "name": "Romanian Deadlift",
+      "category": "Lower Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Hamstrings",
+      "secondaryMuscle": "Glutes",
+      "instructions": "Hip hinge movement keeping legs relatively straight",
+      "imageUrl": "images/exercises/37-romanian-deadlift.png"
+    },
+    {
+      "id": 38,
+      "name": "Front Squat",
+      "category": "Lower Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Quads",
+      "secondaryMuscle": "Core",
+      "instructions": "Squat with weight held at front",
+      "imageUrl": "images/exercises/38-front-squat.png"
+    },
+    {
+      "id": 39,
+      "name": "Side Lunge",
+      "category": "Lower Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Glutes",
+      "secondaryMuscle": "Inner Thighs",
+      "instructions": "Lunge to the side",
+      "imageUrl": "images/exercises/39-side-lunge.png"
+    },
+    {
+      "id": 40,
+      "name": "Step Up",
+      "category": "Lower Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Quads",
+      "secondaryMuscle": "Glutes",
+      "instructions": "Step up onto elevated surface",
+      "imageUrl": null
+    },
+    {
+      "id": 41,
+      "name": "Deadlift",
+      "category": "Lower Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Hamstrings",
+      "secondaryMuscle": "Glutes",
+      "instructions": "Hip hinge movement lifting weight from ground",
+      "imageUrl": "images/exercises/41-deadlift.png"
+    },
+    {
+      "id": 42,
+      "name": "Calf Raises",
+      "category": "Lower Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Calves",
+      "secondaryMuscle": "Stabilizers",
+      "instructions": "Rise up on toes, lower slowly",
+      "imageUrl": "images/exercises/42-calf-raises.png"
+    },
+    {
+      "id": 43,
+      "name": "Goblet Squat",
+      "category": "Lower Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Quads",
+      "secondaryMuscle": "Glutes",
+      "instructions": "Squat holding weight at chest",
+      "imageUrl": "images/exercises/43-goblet-squat.png"
+    },
+    {
+      "id": 44,
+      "name": "Lunge",
+      "category": "Lower Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Quads",
+      "secondaryMuscle": "Glutes",
+      "instructions": "Step forward into lunge position",
+      "imageUrl": "images/exercises/44-lunge.png"
+    },
+    {
+      "id": 45,
+      "name": "Swing",
+      "category": "Lower Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Glutes",
+      "secondaryMuscle": "Hamstrings",
+      "instructions": "Kettlebell swing movement",
+      "imageUrl": null
+    },
+    {
+      "id": 47,
+      "name": "T-Leg Deadlift",
+      "category": "Lower Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Hamstrings",
+      "secondaryMuscle": "Balance",
+      "instructions": "Single leg deadlift with T-position",
+      "imageUrl": null
+    },
+    {
+      "id": 48,
+      "name": "Donkey Kicks",
+      "category": "Lower Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Glutes",
+      "secondaryMuscle": "Hamstrings",
+      "instructions": "On hands and knees, kick leg back",
+      "imageUrl": null
+    },
+    {
+      "id": 49,
+      "name": "Hip Raise",
+      "category": "Lower Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Glutes",
+      "secondaryMuscle": "Hamstrings",
+      "instructions": "Bridge movement raising hips",
+      "imageUrl": null
+    },
+    {
+      "id": 50,
+      "name": "Incline Chest Fly",
+      "category": "Upper Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Chest",
+      "secondaryMuscle": "Anterior Deltoids",
+      "instructions": "Chest fly movement on incline",
+      "imageUrl": "images/exercises/50-incline-chest-fly.png"
+    },
+    {
+      "id": 51,
+      "name": "Chest Press",
+      "category": "Upper Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Chest",
+      "secondaryMuscle": "Triceps",
+      "instructions": "Press weights from chest level",
+      "imageUrl": "images/exercises/51-chest-press.png"
+    },
+    {
+      "id": 52,
+      "name": "Lat Pullover",
+      "category": "Upper Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Lats",
+      "secondaryMuscle": "Chest",
+      "instructions": "Pull weight over chest while lying down",
+      "imageUrl": null
+    },
+    {
+      "id": 53,
+      "name": "One Arm Row",
+      "category": "Upper Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Lats",
+      "secondaryMuscle": "Rhomboids",
+      "instructions": "Row weight with one arm",
+      "imageUrl": null
+    },
+    {
+      "id": 54,
+      "name": "Bent Over Row",
+      "category": "Upper Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Lats",
+      "secondaryMuscle": "Rhomboids",
+      "instructions": "Bent forward, row weights to torso",
+      "imageUrl": null
+    },
+    {
+      "id": 55,
+      "name": "Tricep Kickback",
+      "category": "Upper Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Triceps",
+      "secondaryMuscle": "Posterior Deltoids",
+      "instructions": "Extend arm back from bent position",
+      "imageUrl": null
+    },
+    {
+      "id": 56,
+      "name": "Hammer Curl",
+      "category": "Upper Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Biceps",
+      "secondaryMuscle": "Forearms",
+      "instructions": "Curl with neutral grip",
+      "imageUrl": "images/exercises/56-hammer-curl.png"
+    },
+    {
+      "id": 57,
+      "name": "Chest Fly",
+      "category": "Upper Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Chest",
+      "secondaryMuscle": "Anterior Deltoids",
+      "instructions": "Open arms wide, bring together",
+      "imageUrl": null
+    },
+    {
+      "id": 58,
+      "name": "Seesaw Row",
+      "category": "Upper Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Lats",
+      "secondaryMuscle": "Core",
+      "instructions": "Alternating row movement",
+      "imageUrl": "images/exercises/58-seesaw-row.png"
+    },
+    {
+      "id": 59,
+      "name": "Grip Curl",
+      "category": "Upper Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Forearms",
+      "secondaryMuscle": "Biceps",
+      "instructions": "Focus on grip strength during curl",
+      "imageUrl": null
+    },
+    {
+      "id": 60,
+      "name": "Upright Row",
+      "category": "Upper Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Traps",
+      "secondaryMuscle": "Deltoids",
+      "instructions": "Pull weights up to chest level",
+      "imageUrl": "images/exercises/60-upright-row.png"
+    },
+    {
+      "id": 61,
+      "name": "Side Raise",
+      "category": "Upper Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Lateral Deltoids",
+      "secondaryMuscle": "Traps",
+      "instructions": "Raise arms out to sides",
+      "imageUrl": null
+    },
+    {
+      "id": 62,
+      "name": "Front Raise",
+      "category": "Upper Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Anterior Deltoids",
+      "secondaryMuscle": "Core",
+      "instructions": "Raise arms forward to shoulder height",
+      "imageUrl": "images/exercises/62-front-raise.png"
+    },
+    {
+      "id": 63,
+      "name": "Rotate Row",
+      "category": "Upper Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Lats",
+      "secondaryMuscle": "Core",
+      "instructions": "Row with rotation movement",
+      "imageUrl": null
+    },
+    {
+      "id": 64,
+      "name": "Scaption",
+      "category": "Upper Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Deltoids",
+      "secondaryMuscle": "Rotator Cuff",
+      "instructions": "Raise arms in scapular plane",
+      "imageUrl": null
+    },
+    {
+      "id": 65,
+      "name": "Sweeper",
+      "category": "Upper Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Core",
+      "secondaryMuscle": "Shoulders",
+      "instructions": "Sweeping movement with weight",
+      "imageUrl": null
+    },
+    {
+      "id": 66,
+      "name": "Incline Raise",
+      "category": "Upper Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Posterior Deltoids",
+      "secondaryMuscle": "Rhomboids",
+      "instructions": "Rear delt raise on incline",
+      "imageUrl": "images/exercises/66-incline-raise.png"
+    },
+    {
+      "id": 67,
+      "name": "Bench Twist",
+      "category": "Upper Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Obliques",
+      "secondaryMuscle": "Core",
+      "instructions": "Twisting movement on bench",
+      "imageUrl": "images/exercises/67-bench-twist.png"
+    },
+    {
+      "id": 68,
+      "name": "Incline T-Raise",
+      "category": "Upper Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Posterior Deltoids",
+      "secondaryMuscle": "Rhomboids",
+      "instructions": "T-shaped raise on incline",
+      "imageUrl": "images/exercises/68-incline-t-raise.png"
+    },
+    {
+      "id": 69,
+      "name": "Renegade Row",
+      "category": "Upper Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Lats",
+      "secondaryMuscle": "Core",
+      "instructions": "Row from plank position",
+      "imageUrl": null
+    },
+    {
+      "id": 70,
+      "name": "T Push Up",
+      "category": "Upper Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Chest",
+      "secondaryMuscle": "Core",
+      "instructions": "Push up with T rotation",
+      "imageUrl": "images/exercises/70-t-push-up.png"
+    },
+    {
+      "id": 71,
+      "name": "Shoulder Press",
+      "category": "Upper Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Deltoids",
+      "secondaryMuscle": "Triceps",
+      "instructions": "Press weights overhead",
+      "imageUrl": "images/exercises/71-shoulder-press.png"
+    },
+    {
+      "id": 72,
+      "name": "Reverse Fly",
+      "category": "Upper Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Posterior Deltoids",
+      "secondaryMuscle": "Rhomboids",
+      "instructions": "Reverse fly movement",
+      "imageUrl": "images/exercises/72-reverse-fly.png"
+    },
+    {
+      "id": 73,
+      "name": "Lunge Press",
+      "category": "Total Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Quads",
+      "secondaryMuscle": "Deltoids",
+      "instructions": "Lunge with overhead press",
+      "imageUrl": null
+    },
+    {
+      "id": 74,
+      "name": "Discus",
+      "category": "Total Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Core",
+      "secondaryMuscle": "Shoulders",
+      "instructions": "Rotational throwing movement",
+      "imageUrl": null
+    },
+    {
+      "id": 75,
+      "name": "Snatch",
+      "category": "Total Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Full Body",
+      "secondaryMuscle": "Power",
+      "instructions": "Explosive lift from ground to overhead",
+      "imageUrl": null
+    },
+    {
+      "id": 76,
+      "name": "Bulgarian Press",
+      "category": "Total Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Quads",
+      "secondaryMuscle": "Deltoids",
+      "instructions": "Bulgarian split squat with press",
+      "imageUrl": null
+    },
+    {
+      "id": 77,
+      "name": "Leaning Camel",
+      "category": "Total Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Core",
+      "secondaryMuscle": "Balance",
+      "instructions": "Leaning balance exercise",
+      "imageUrl": null
+    },
+    {
+      "id": 78,
+      "name": "Floor T Raise",
+      "category": "Total Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Posterior Deltoids",
+      "secondaryMuscle": "Core",
+      "instructions": "T-raise from floor position",
+      "imageUrl": null
+    },
+    {
+      "id": 79,
+      "name": "Russian Twist",
+      "category": "Total Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Obliques",
+      "secondaryMuscle": "Core",
+      "instructions": "Seated twist with weight",
+      "imageUrl": "images/exercises/79-russian-twist.png"
+    },
+    {
+      "id": 80,
+      "name": "Turkish Get Up",
+      "category": "Total Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Full Body",
+      "secondaryMuscle": "Core",
+      "instructions": "Complex movement from lying to standing",
+      "imageUrl": null
+    },
+    {
+      "id": 81,
+      "name": "Plank T",
+      "category": "Total Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Core",
+      "secondaryMuscle": "Shoulders",
+      "instructions": "Plank with T rotation",
+      "imageUrl": "images/exercises/81-plank-t.png"
+    },
+    {
+      "id": 82,
+      "name": "Thruster",
+      "category": "Total Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Full Body",
+      "secondaryMuscle": "Power",
+      "instructions": "Squat to overhead press",
+      "imageUrl": null
+    },
+    {
+      "id": 83,
+      "name": "Wood Chop",
+      "category": "Total Body Primary",
+      "equipment": "Weights",
+      "primaryMuscle": "Core",
+      "secondaryMuscle": "Obliques",
+      "instructions": "Diagonal chopping movement",
+      "imageUrl": null
+    },
+    {
+      "id": 84,
+      "name": "Turbo Twist",
+      "category": "Total Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Core",
+      "secondaryMuscle": "Obliques",
+      "instructions": "Dynamic twisting movement",
+      "imageUrl": "images/exercises/84-turbo-twist.png"
+    },
+    {
+      "id": 85,
+      "name": "Bear Crawl",
+      "category": "Total Body Secondary",
+      "equipment": "Bodyweight",
+      "primaryMuscle": "Core",
+      "secondaryMuscle": "Shoulders",
+      "instructions": "Crawl forward on hands and feet",
+      "imageUrl": null
+    },
+    {
+      "id": 87,
+      "name": "Overhead Squat",
+      "category": "Total Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Quads",
+      "secondaryMuscle": "Core",
+      "instructions": "Squat with weight held overhead",
+      "imageUrl": null
+    },
+    {
+      "id": 88,
+      "name": "Jackknife",
+      "category": "Total Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Core",
+      "secondaryMuscle": "Hip Flexors",
+      "instructions": "Bring knees to chest from extended position",
+      "imageUrl": null
+    },
+    {
+      "id": 89,
+      "name": "Renaissance Combo",
+      "category": "Total Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Full Body",
+      "secondaryMuscle": "Coordination",
+      "instructions": "Complex combination movement",
+      "imageUrl": null
+    },
+    {
+      "id": 90,
+      "name": "Side Bend",
+      "category": "Total Body Secondary",
+      "equipment": "Weights",
+      "primaryMuscle": "Obliques",
+      "secondaryMuscle": "Core",
+      "instructions": "Lateral bending movement with weight",
+      "imageUrl": "images/exercises/90-side-bend.png"
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "version": "2026-02-07-v1",
+  "content": [
+    {
+      "id": 1,
+      "title": "AI PMO launch announcement",
+      "platform": "linkedin",
+      "status": "ideas",
+      "type": "post",
+      "description": "Announce Akira PMO public launch",
+      "priority": "high",
+      "scheduledDate": null
+    },
+    {
+      "id": 2,
+      "title": "The Unlock - Profiler gap insight",
+      "platform": "linkedin",
+      "status": "ideas",
+      "type": "article",
+      "description": "Share the Profiler → Prioritizer → Executor → Verifier framework",
+      "priority": "high",
+      "scheduledDate": null
+    },
+    {
+      "id": 3,
+      "title": "Behind the scenes: Building with AI agents",
+      "platform": "twitter",
+      "status": "ideas",
+      "type": "thread",
+      "description": "Thread about the multi-agent development process",
+      "priority": "medium",
+      "scheduledDate": null
+    },
+    {
+      "id": 4,
+      "title": "VtKl services overview",
+      "platform": "linkedin",
+      "status": "ideas",
+      "type": "post",
+      "description": "What VtKl offers - AI consulting and products",
+      "priority": "medium",
+      "scheduledDate": null
+    },
+    {
+      "id": 5,
+      "title": "Auto Pilot Projects methodology",
+      "platform": "linkedin",
+      "status": "ideas",
+      "type": "article",
+      "description": "Explain APP methodology vs traditional Scrum",
+      "priority": "medium",
+      "scheduledDate": null
+    }
+  ]
+}

@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-City Living Strategy | Greg's Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .subtitle { color: #888; font-size: 1rem; }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .back-link:hover { text-decoration: underline; }
+        
+        /* Cards */
+        .card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .card h2 {
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .card h3 {
+            font-size: 1.1rem;
+            color: #f5576c;
+            margin: 1.5rem 0 0.75rem 0;
+        }
+        .card p, .card li { line-height: 1.7; color: #ccc; margin-bottom: 0.5rem; }
+        .card ul { margin-left: 1.5rem; }
+        
+        /* Highlight boxes */
+        .highlight {
+            background: rgba(245, 87, 108, 0.15);
+            border-left: 4px solid #f5576c;
+            padding: 1rem 1.25rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+        .highlight-blue {
+            background: rgba(102, 126, 234, 0.15);
+            border-left: 4px solid #667eea;
+        }
+        .highlight-green {
+            background: rgba(46, 213, 115, 0.15);
+            border-left: 4px solid #2ed573;
+        }
+        .highlight strong { color: #fff; }
+        
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        th {
+            background: rgba(0,0,0,0.3);
+            color: #f5576c;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+        tr:hover { background: rgba(255,255,255,0.03); }
+        .amount { font-family: 'SF Mono', Monaco, monospace; color: #2ed573; }
+        .savings { color: #2ed573; font-weight: 600; }
+        
+        /* Grid layouts */
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+        
+        /* Tags */
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .tag-city { background: rgba(102, 126, 234, 0.3); color: #a8b4f0; }
+        .tag-tax { background: rgba(46, 213, 115, 0.3); color: #7ee8a8; }
+        .tag-strategy { background: rgba(245, 87, 108, 0.3); color: #f8a8b6; }
+        
+        /* City cards */
+        .city-card {
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .city-card h4 {
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+        .city-card .emoji { font-size: 1.5rem; margin-right: 0.5rem; }
+        
+        /* Stats row */
+        .stats-row {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2ed573;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Action items */
+        .action-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+        .action-item .number {
+            background: #f5576c;
+            color: #fff;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        /* Section divider */
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            margin: 2rem 0;
+        }
+        
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            table { font-size: 0.8rem; }
+            th, td { padding: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="hub-tony.html" class="back-link">← Back to Hub</a>
+        
+        <header>
+            <h1>🌏 Multi-City Living Strategy</h1>
+            <p class="subtitle">Executive Nomad Housing + Deep Work Immersions</p>
+            <p style="color: #666; font-size: 0.85rem; margin-top: 0.5rem;">Source: Grok conversation Dec 27, 2025 • 145 messages</p>
+        </header>
+
+        <!-- Executive Summary -->
+        <div class="card">
+            <h2>📋 Executive Summary</h2>
+            <div class="stats-row">
+                <div class="stat">
+                    <div class="stat-value">$29K+</div>
+                    <div class="stat-label">Annual Savings</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">70%</div>
+                    <div class="stat-label">Rent Write-off</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">3x/yr</div>
+                    <div class="stat-label">Deep Work Sessions</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">4</div>
+                    <div class="stat-label">Cities</div>
+                </div>
+            </div>
+            <div class="highlight">
+                <strong>Core Concept:</strong> Live 4 months each in LA, Austin, San Francisco, and Tokyo. Transform personal living expenses into business expenses through a corporate entity that provides housing + office space for executive nomads ("Airbnb + WeWork for the Uber Black crowd").
+            </div>
+        </div>
+
+        <!-- The Business Model -->
+        <div class="card">
+            <h2>🏢 The Business Model: Executive Nomad Corp</h2>
+            <span class="tag tag-strategy">Airbnb + WeWork</span>
+            <span class="tag tag-strategy">Uber Black Crowd</span>
+            <span class="tag tag-tax">70% Deductible</span>
+            
+            <h3>What It Is</h3>
+            <p>A Delaware LLC/S-Corp that rents premium properties across multiple cities, providing:</p>
+            <ul>
+                <li><strong>Living accommodations</strong> for you and your business partner</li>
+                <li><strong>Office/work space</strong> for daily operations</li>
+                <li><strong>Deep work venues</strong> for 20-person immersion sessions 3x/year</li>
+                <li><strong>Sublease revenue</strong> from other HNW nomads when you're not using it</li>
+            </ul>
+            
+            <h3>Revenue Streams</h3>
+            <div class="grid-3">
+                <div class="city-card">
+                    <h4>💰 Session Fees</h4>
+                    <p>$100K-200K per event (20 people × $5-10K/week)</p>
+                </div>
+                <div class="city-card">
+                    <h4>🏠 Subleasing</h4>
+                    <p>$50K+/year per property during unused periods</p>
+                </div>
+                <div class="city-card">
+                    <h4>🤖 AI Add-ons</h4>
+                    <p>$2K/person for VtKl productivity tools</p>
+                </div>
+            </div>
+            
+            <h3>Tax Benefits (Consult Attorney)</h3>
+            <div class="highlight highlight-green">
+                <ul>
+                    <li><strong>70%+ of rent deductible</strong> as business expense (IRC §162)</li>
+                    <li><strong>LLC manages properties</strong> → revenue deductible against expenses</li>
+                    <li><strong>Domicile in Texas</strong> = no state income tax (sever CA ties)</li>
+                    <li><strong>Foreign Earned Income Exclusion</strong> if 330+ days abroad</li>
+                    <li><strong>Sublease revenue</strong> on Schedule E (rental) avoids self-employment tax</li>
+                </ul>
+            </div>
+            
+            <h3>Partner Benefits (LA-Based Co-founder)</h3>
+            <p>Your business partner who lives primarily in LA with his children can:</p>
+            <ul>
+                <li>Deduct his share of LA housing (~$16,800/year = ~$6,200 tax savings)</li>
+                <li>Earn $25K+ passive income from sublease revenue split</li>
+                <li>Use entity to shift some "tax home" to Texas</li>
+                <li>Build equity in entity valued at $200K+ for liquidity events</li>
+            </ul>
+        </div>
+
+        <!-- Deep Work Sessions -->
+        <div class="card">
+            <h2>🧠 Deep Work Immersion Model</h2>
+            <span class="tag tag-strategy">3x/Year</span>
+            <span class="tag tag-strategy">20 People</span>
+            <span class="tag tag-strategy">7-10 Days</span>
+            
+            <div class="highlight highlight-blue">
+                <strong>The Theory:</strong> Deep work can't be done effectively with daily task-switching. Annual December planning (7-10 days) is insufficient for AI companies. Do it 3x/year to adapt to market changes not once but three times.
+            </div>
+            
+            <h3>Session Schedule</h3>
+            <table>
+                <tr>
+                    <th>Session</th>
+                    <th>Timing</th>
+                    <th>Location</th>
+                    <th>Focus</th>
+                </tr>
+                <tr>
+                    <td>Q1 Immersion</td>
+                    <td>March</td>
+                    <td>🇺🇸 Austin</td>
+                    <td>Strategy & market adaptation</td>
+                </tr>
+                <tr>
+                    <td>Q2 Immersion</td>
+                    <td>June</td>
+                    <td>🇺🇸 San Francisco</td>
+                    <td>Innovation & partnerships</td>
+                </tr>
+                <tr>
+                    <td>Q3 Immersion</td>
+                    <td>September</td>
+                    <td>🇯🇵 Tokyo</td>
+                    <td>Asia expansion & global view</td>
+                </tr>
+            </table>
+            
+            <h3>What Gets Discussed</h3>
+            <ul>
+                <li>Gartner distribution channels</li>
+                <li>Overcoming shorter contracts & pilot test preferences</li>
+                <li>Procurement teams wanting plug-and-play AI modules</li>
+                <li>Building trust through longer vetting cycles</li>
+                <li>Addressing stress-induced purchase delays</li>
+                <li>Culture-tech intersection insights (87% accuracy from Tony Wong Podcast)</li>
+            </ul>
+            
+            <h3>Nomad Code Camps</h3>
+            <p>Engineering deep dives — one week, no meetings, no distractions, just produce. Rotate cities 3x/year.</p>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- Cost Tables -->
+        <div class="card">
+            <h2>💵 Cost Breakdown & Savings</h2>
+            
+            <h3>Annual Multi-City Budget (Shared Luxury)</h3>
+            <table>
+                <tr>
+                    <th>Category</th>
+                    <th>Tokyo (4 mo)</th>
+                    <th>Austin (4 mo)</th>
+                    <th>LA (4 mo)</th>
+                    <th>Total</th>
+                </tr>
+                <tr>
+                    <td>Housing (Shared)</td>
+                    <td class="amount">$14,000</td>
+                    <td class="amount">$11,200</td>
+                    <td class="amount">$16,000</td>
+                    <td class="amount">$41,200</td>
+                </tr>
+                <tr>
+                    <td>Storage</td>
+                    <td class="amount">$400</td>
+                    <td class="amount">$400</td>
+                    <td class="amount">$480</td>
+                    <td class="amount">$1,280</td>
+                </tr>
+                <tr>
+                    <td>Transportation</td>
+                    <td class="amount">$0</td>
+                    <td class="amount">$6,000</td>
+                    <td class="amount">$0</td>
+                    <td class="amount">$6,000</td>
+                </tr>
+                <tr>
+                    <td>Mold Prevention</td>
+                    <td class="amount">$400</td>
+                    <td class="amount">$400</td>
+                    <td class="amount">$400</td>
+                    <td class="amount">$1,200</td>
+                </tr>
+                <tr style="background: rgba(46,213,115,0.1);">
+                    <td><strong>Total</strong></td>
+                    <td class="amount"><strong>$14,800</strong></td>
+                    <td class="amount"><strong>$18,000</strong></td>
+                    <td class="amount"><strong>$16,880</strong></td>
+                    <td class="amount"><strong>$49,680</strong></td>
+                </tr>
+            </table>
+            
+            <div class="highlight highlight-green">
+                <strong>Savings vs Single-City Setup:</strong> <span class="savings">$29,120/year</span><br>
+                <strong>Savings vs BMW Lease:</strong> <span class="savings">$12,000/year</span> (Turo Sequoia @ $6K/4mo vs $18K/yr lease)
+            </div>
+            
+            <h3>With Deep Work Sessions (Expanded Model)</h3>
+            <table>
+                <tr>
+                    <th>Category</th>
+                    <th>Annual Cost</th>
+                    <th>Deductible (70%)</th>
+                    <th>Net Personal</th>
+                </tr>
+                <tr>
+                    <td>4-City Housing (5,000 sq ft each)</td>
+                    <td class="amount">$480,000</td>
+                    <td class="amount">$336,000</td>
+                    <td class="amount">$144,000</td>
+                </tr>
+                <tr>
+                    <td>Deep Work Sessions (3x @ $50K)</td>
+                    <td class="amount">$150,000</td>
+                    <td class="amount">$150,000</td>
+                    <td class="amount">$0</td>
+                </tr>
+                <tr>
+                    <td>Travel & Logistics</td>
+                    <td class="amount">$60,000</td>
+                    <td class="amount">$42,000</td>
+                    <td class="amount">$18,000</td>
+                </tr>
+                <tr style="background: rgba(46,213,115,0.1);">
+                    <td><strong>Total</strong></td>
+                    <td class="amount"><strong>$690,000</strong></td>
+                    <td class="amount"><strong>$528,000</strong></td>
+                    <td class="amount"><strong>$162,000</strong></td>
+                </tr>
+            </table>
+            <p style="color: #888; font-size: 0.85rem; margin-top: 0.5rem;">* Plus potential $100-200K revenue from session fees and subleasing</p>
+        </div>
+
+        <!-- Property Listings -->
+        <div class="card">
+            <h2>🏠 Property Listings</h2>
+            
+            <h3>🇯🇵 Tokyo — Japanese-Owned (High Trust)</h3>
+            <div class="grid-2">
+                <div class="city-card">
+                    <h4><span class="emoji">⭐</span>Mori Living (Toranomon)</h4>
+                    <p><strong>Your benchmark.</strong> Unit bath enclosures with ceiling fans, mold-resistant design, luxury finishes.</p>
+                    <p><a href="https://www.moriliving.com/en/sa/toranomon_rt/roomplan/index.html" style="color: #667eea;">moriliving.com</a></p>
+                </div>
+                <div class="city-card">
+                    <h4><span class="emoji">⭐</span>Sumii</h4>
+                    <p><strong>4.8/5 rating.</strong> Premium furnished apartments in Minami-Azabu, Roppongi. Enclosed unit baths. $3,500-5,000/mo.</p>
+                </div>
+            </div>
+            
+            <h3>🇺🇸 Austin — New Construction (2025)</h3>
+            <table>
+                <tr>
+                    <th>Property</th>
+                    <th>Location</th>
+                    <th>Features</th>
+                    <th>Price</th>
+                </tr>
+                <tr>
+                    <td><strong>Citizen House Decker</strong></td>
+                    <td>Northeast Austin</td>
+                    <td>Enclosed glass showers, exhaust fans, never-lived-in Phase 1 units</td>
+                    <td>$1,187-2,500/mo</td>
+                </tr>
+                <tr>
+                    <td><strong>The George</strong></td>
+                    <td>East Austin</td>
+                    <td>Opened Sept 2025, townhomes with enclosed showers, smart home humidity control</td>
+                    <td>$2,500-4,000/mo</td>
+                </tr>
+                <tr>
+                    <td><strong>Cala Apartments</strong></td>
+                    <td>South Austin</td>
+                    <td>Brand new 2025, enclosed walk-in showers, anti-mold tile</td>
+                    <td>$1,800-3,200/mo</td>
+                </tr>
+                <tr>
+                    <td><strong>The Vaughan</strong></td>
+                    <td>Tech Corridor</td>
+                    <td>Completed mid-2025, enclosed bathrooms with exhaust</td>
+                    <td>$1,900-3,500/mo</td>
+                </tr>
+                <tr>
+                    <td><strong>The Alden</strong></td>
+                    <td>Cedar Park</td>
+                    <td>Glass-enclosed showers, integrated fans, suburban luxury</td>
+                    <td>$1,600-2,800/mo</td>
+                </tr>
+            </table>
+            
+            <h3>🏨 Austin Hotels (New 2025 — For Property Visits)</h3>
+            <table>
+                <tr>
+                    <th>Hotel</th>
+                    <th>Location</th>
+                    <th>Features</th>
+                    <th>Price/Night</th>
+                </tr>
+                <tr>
+                    <td><strong>The Loren at Lady Bird Lake</strong></td>
+                    <td>South Austin</td>
+                    <td>Opened early 2025, luxury waterfront, enclosed glass showers</td>
+                    <td>$350-600</td>
+                </tr>
+                <tr>
+                    <td><strong>Frame Hotel – SoCo</strong></td>
+                    <td>South Congress</td>
+                    <td>Opened mid-2025, boutique with sealed bath enclosures</td>
+                    <td>$250-450</td>
+                </tr>
+            </table>
+            
+            <h3>🇺🇸 LA & SF — European-Owned Platforms</h3>
+            <div class="city-card">
+                <h4>Flatio (Czech-owned, 4.7/5)</h4>
+                <p>Properties in Tokyo, Austin, LA. Flexible terms, partner-matching for recurring cohabitants. $2,800-4,500/mo shared.</p>
+            </div>
+        </div>
+
+        <!-- Mold Strategy -->
+        <div class="card">
+            <h2>🦠 Mold Prevention Strategy</h2>
+            
+            <div class="highlight">
+                <strong>Austin's Mold Problem:</strong> Subtropical humid climate (67% avg humidity), Gulf of Mexico moisture, warm year-round temps, frequent rain/flooding, heavy vegetation. Choose new builds (post-2020) with smart HVAC.
+            </div>
+            
+            <h3>Required Features</h3>
+            <ul>
+                <li><strong>"Unit bath" enclosures</strong> — Glass/composite rooms containing shower/bath with always-on ceiling fans (like Mori Living)</li>
+                <li><strong>New construction</strong> — Post-2020 builds with smart HVAC systems</li>
+                <li><strong>Dehumidifiers</strong> — Portable units ($50-100/mo rental)</li>
+                <li><strong>Pre-move inspections</strong> — $200-300 per city</li>
+            </ul>
+            
+            <h3>City-Specific</h3>
+            <div class="grid-3">
+                <div class="city-card">
+                    <h4>🇯🇵 Tokyo</h4>
+                    <p>Humid climate. Choose Mori-style with built-in dehumidifiers. "Mold Busters Japan" for inspections ($300).</p>
+                </div>
+                <div class="city-card">
+                    <h4>🇺🇸 Austin</h4>
+                    <p>Variable humidity. Use climate-controlled storage. New builds with AC filters required.</p>
+                </div>
+                <div class="city-card">
+                    <h4>🇺🇸 LA</h4>
+                    <p>Much drier (60-65% humidity). Lower risk but still verify ventilation in bathrooms.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="card">
+            <h2>✅ Key Recommendations</h2>
+            
+            <div class="action-item">
+                <div class="number">1</div>
+                <div><strong>Test with Sumii in Tokyo first</strong> — Matches your Mori Living benchmark, high reviews (4.8/5), unit bath design</div>
+            </div>
+            <div class="action-item">
+                <div class="number">2</div>
+                <div><strong>Visit Austin new builds</strong> — Stay at The Loren, tour Citizen House Decker and The George for sublease potential</div>
+            </div>
+            <div class="action-item">
+                <div class="number">3</div>
+                <div><strong>Form Delaware LLC</strong> — "Executive Nomad Housing Services" with your LA partner as equity holder</div>
+            </div>
+            <div class="action-item">
+                <div class="number">4</div>
+                <div><strong>Establish Texas domicile</strong> — Register vehicles, vote there to sever CA ties (save ~$65K on $500K income)</div>
+            </div>
+            <div class="action-item">
+                <div class="number">5</div>
+                <div><strong>Get mold inspections</strong> — Pre-move tests in each city ($200-300 each)</div>
+            </div>
+            <div class="action-item">
+                <div class="number">6</div>
+                <div><strong>Consult tax attorney</strong> — Validate 70% deduction strategy, FEIE eligibility, sublease structure</div>
+            </div>
+            <div class="action-item">
+                <div class="number">7</div>
+                <div><strong>Schedule first Deep Work Session</strong> — Q1 2026 in Austin with 20 people, test the model</div>
+            </div>
+        </div>
+
+        <!-- Advanced Strategies -->
+        <div class="card">
+            <h2>🌐 Advanced Strategies (From Conversation)</h2>
+            
+            <h3>UAE Entity Option</h3>
+            <ul>
+                <li>0% corporate/income tax in UAE</li>
+                <li>Route international clients (Tokyo subleases) through UAE subsidiary</li>
+                <li>Access UAE startup loans/grants for HNW services</li>
+            </ul>
+            
+            <h3>Japan Residency Path</h3>
+            <ul>
+                <li>Startup Visa (2 years) → Business Manager Visa</li>
+                <li>Requires ¥30M (~$200K) capital post-Oct 2025 changes</li>
+                <li>AI-focused companies prioritized</li>
+                <li>Leads to permanent residency after ~10 years</li>
+            </ul>
+            
+            <h3>Mexico Dual Citizenship Leverage</h3>
+            <ul>
+                <li>Territorial tax system (only Mexico-sourced income taxed)</li>
+                <li>Mexican S. de R.L. for export incentives</li>
+                <li>US-Mexico tax treaty for credits</li>
+            </ul>
+        </div>
+
+        <!-- What's NOT on dashboard -->
+        <div class="card" style="border-color: rgba(245,87,108,0.5);">
+            <h2>⚠️ What's NOT on This Dashboard</h2>
+            <p>The following topics were discussed in the Grok conversation but not fully extracted here:</p>
+            <ul>
+                <li><strong>Full links/resources</strong> — 50+ URLs to Nomad Capitalist, Savills reports, housing platforms</li>
+                <li><strong>FEIE calculations</strong> — Detailed Foreign Earned Income Exclusion math for 330+ days abroad</li>
+                <li><strong>Dubai financing options</strong> — UAE startup loans, DMCC/DIFC free zone details</li>
+                <li><strong>VtKl AI integration ideas</strong> — Apps for nomad matching, mold-risk vetting, session optimization</li>
+                <li><strong>Tony Wong Podcast connection</strong> — 87% accuracy culture-tech intersection methodology</li>
+                <li><strong>Storage platforms</strong> — MakeSpace, Clutter, Yamato Transport details</li>
+                <li><strong>Partner matching platforms</strong> — NomadX, Cohabs, Outsite specifics</li>
+                <li><strong>San Francisco property listings</strong> — Not researched in detail</li>
+                <li><strong>Detailed infographics</strong> — Grok generated images that aren't in the export</li>
+            </ul>
+            <p style="margin-top: 1rem; color: #888;">Full conversation (145 messages, 333K chars) available at: <code>grok-data/multi-city-living.md</code></p>
+        </div>
+
+        <footer style="text-align: center; padding: 2rem; color: #666; font-size: 0.85rem;">
+            <p>Dashboard generated by Greg • Source: Grok export Dec 27, 2025</p>
+            <p>Last updated: Feb 6, 2026</p>
+        </footer>
+    </div>
+</body>
+</html>

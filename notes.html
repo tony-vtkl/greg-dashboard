@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes & Ideas - Greg's Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1f2e 0%, #141821 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+        }
+        .header-left h1 {
+            font-size: 2rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .header-left h1 .icon {
+            font-size: 1.8rem;
+        }
+        .header-left .subtitle {
+            color: #888;
+            font-size: 1rem;
+            margin-top: 0.25rem;
+        }
+        .stats {
+            display: flex;
+            gap: 2rem;
+            text-align: center;
+        }
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #4ecdc4;
+        }
+        .stat-label {
+            font-size: 0.7rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Quick Capture */
+        .quick-capture {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.15) 0%, rgba(255, 152, 0, 0.1) 100%);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .quick-capture-left {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        .quick-capture-title {
+            color: #ffc107;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .quick-capture-desc {
+            color: #aaa;
+            font-size: 0.85rem;
+        }
+        .quick-capture-desc code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, monospace;
+            color: #4ecdc4;
+        }
+        .quick-capture-time {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        /* Notes Grid */
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 1.5rem;
+        }
+        @media (max-width: 600px) {
+            .notes-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Note Card */
+        .note-card {
+            background: rgba(30, 36, 50, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .note-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+        .note-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+        .note-title {
+            font-size: 1.25rem;
+            color: #fff;
+            font-weight: 600;
+        }
+        .note-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: lowercase;
+        }
+        .badge-observation {
+            background: rgba(78, 205, 196, 0.2);
+            color: #4ecdc4;
+        }
+        .badge-insight {
+            background: rgba(167, 139, 250, 0.2);
+            color: #a78bfa;
+        }
+        .badge-idea {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+        .badge-question {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        .note-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #666;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+        .note-source {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .source-dot {
+            width: 8px;
+            height: 8px;
+            background: #4ecdc4;
+            border-radius: 50%;
+        }
+
+        /* Quote Block */
+        .quote-block {
+            border-left: 3px solid #fbbf24;
+            padding-left: 1rem;
+            margin-bottom: 1.25rem;
+            color: #ccc;
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        /* Analysis Section */
+        .analysis {
+            margin-bottom: 1rem;
+        }
+        .analysis-header {
+            color: #4ecdc4;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .analysis-item {
+            margin-bottom: 0.6rem;
+            line-height: 1.5;
+            color: #bbb;
+        }
+        .analysis-label {
+            color: #fbbf24;
+            font-weight: 600;
+        }
+        .highlight {
+            color: #fbbf24;
+        }
+        .highlight-teal {
+            color: #4ecdc4;
+        }
+
+        /* Tags */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .tag {
+            background: rgba(255, 255, 255, 0.08);
+            color: #888;
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        /* Back Link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #667eea;
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .back-link:hover {
+            color: #a78bfa;
+        }
+
+        /* Add Note Form */
+        .add-note-section {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .add-note-btn {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 10px rgba(78, 205, 196, 0.3);
+        }
+        .add-note-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(78, 205, 196, 0.4);
+        }
+        
+        .add-note-form {
+            background: rgba(30, 36, 50, 0.9);
+            border: 1px solid rgba(78, 205, 196, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            animation: slideDown 0.3s ease-out;
+        }
+        .add-note-form h3 {
+            color: #4ecdc4;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .form-group label {
+            display: block;
+            color: #ccc;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 0.75rem;
+            color: #fff;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 0 2px rgba(78, 205, 196, 0.2);
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+        
+        .form-actions button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        
+        #cancel-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ccc;
+        }
+        #cancel-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        #save-btn {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            color: white;
+        }
+        #save-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+        }
+        #save-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 2rem 2rem;
+            color: #555;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="hub-tony.html" class="back-link">← Back to Tony's Dashboard Hub</a>
+        
+        <header>
+            <div class="header-left">
+                <h1><span class="icon">💡</span> Notes & Ideas</h1>
+                <p class="subtitle">Your thinking, captured and organized</p>
+            </div>
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-value" id="total-notes">2</span>
+                    <span class="stat-label">Total Notes</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="insights-count">1</span>
+                    <span class="stat-label">Insights</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="this-week">2</span>
+                    <span class="stat-label">This Week</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="quick-capture">
+            <div class="quick-capture-left">
+                <div class="quick-capture-title">📝 QUICK CAPTURE</div>
+                <div class="quick-capture-desc">Tell Greg in chat, use the form below, or drop files into <code>~/.openclaw/workspace/notes/</code></div>
+            </div>
+            <div class="quick-capture-time">Last updated: <span id="last-updated">Feb 5, 2026 5:45 PM</span></div>
+        </div>
+
+        <!-- Add Note Form -->
+        <div class="add-note-form" id="add-note-form" style="display: none;">
+            <h3>✨ Create New Note</h3>
+            <form id="note-form">
+                <div class="form-group">
+                    <label for="note-title">Title</label>
+                    <input type="text" id="note-title" name="title" required placeholder="Enter note title...">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="note-type">Type</label>
+                        <select id="note-type" name="note_type" required>
+                            <option value="">Select type...</option>
+                            <option value="observation">Observation</option>
+                            <option value="insight">Insight</option>
+                            <option value="idea">Idea</option>
+                            <option value="question">Question</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="note-source">Source</label>
+                        <input type="text" id="note-source" name="source" placeholder="Chat with Greg">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="note-content">Content</label>
+                    <textarea id="note-content" name="content" required placeholder="Enter your note content..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="note-tags">Tags</label>
+                    <input type="text" id="note-tags" name="tags" placeholder="ai, strategy, economics (comma-separated)">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" id="cancel-btn">Cancel</button>
+                    <button type="submit" id="save-btn">💾 Save Note</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Add Note Button -->
+        <div class="add-note-section">
+            <button id="add-note-btn" class="add-note-btn">➕ Add New Note</button>
+        </div>
+
+        <div class="notes-grid" id="notes-container">
+            <!-- Note 1: Shrinkflation -->
+            <div class="note-card">
+                <div class="note-header">
+                    <h2 class="note-title">Shrinkflation at Restaurant Aki</h2>
+                    <span class="note-badge badge-observation">observation</span>
+                </div>
+                <div class="note-meta">
+                    <div class="note-source">
+                        <span class="source-dot"></span>
+                        <span>Chat with Greg</span>
+                    </div>
+                    <span>Feb 3, 2026</span>
+                </div>
+                <div class="quote-block">
+                    "Restaurant Aki's $15 Aki Original Salad used to have lettuce, carrots, caviar, four pieces of thin fish fillet, and radishes. Now it's just lettuce. When I complained, they added back some carrots and a bit of caviar. The table next to me got the same stripped-down version."
+                </div>
+                <div class="analysis">
+                    <div class="analysis-header">✨ GREG'S ANALYSIS</div>
+                    <div class="analysis-item"><span class="analysis-label">Pattern:</span> Shrinkflation applied to restaurant dishes — same price, gutted value proposition.</div>
+                    <div class="analysis-item"><span class="analysis-label">Signal:</span> Restaurants choosing stealth reduction over price increases. Betting customers won't notice.</div>
+                    <div class="analysis-item"><span class="analysis-label">Risk:</span> This works until <span class="highlight">loyal regulars who remember "good"</span> call it out. The silent downgrade risks the most valuable customers.</div>
+                </div>
+                <div class="tags">
+                    <span class="tag">#restaurants</span>
+                    <span class="tag">#economics</span>
+                    <span class="tag">#shrinkflation</span>
+                    <span class="tag">#honolulu</span>
+                </div>
+            </div>
+
+            <!-- Note 2: AI Adoption Paradox -->
+            <div class="note-card">
+                <div class="note-header">
+                    <h2 class="note-title">AI Adoption Paradox</h2>
+                    <span class="note-badge badge-insight">insight</span>
+                </div>
+                <div class="note-meta">
+                    <div class="note-source">
+                        <span class="source-dot"></span>
+                        <span>Chat with Greg</span>
+                    </div>
+                    <span>Feb 3, 2026</span>
+                </div>
+                <div class="quote-block">
+                    "The fastest sell is for AI to help people without requiring people to change their behavior.<br><br>The most effective and best result is for humans to change their behavior to adapt to how AI works today."
+                </div>
+                <div class="analysis">
+                    <div class="analysis-header">✨ GREG'S ANALYSIS</div>
+                    <div class="analysis-item"><span class="analysis-label">Core tension:</span> Speed-to-adoption vs. depth-of-impact.</div>
+                    <div class="analysis-item"><span class="analysis-label">Path A (Fast sell):</span> Meet users where they are. Low friction, quick adoption, but potentially suboptimal outcomes. <span class="highlight-teal">AI bends to human habits.</span></div>
+                    <div class="analysis-item"><span class="analysis-label">Path B (Best result):</span> Require behavior change. Slower adoption, higher resistance, but unlocks AI's full potential. <span class="highlight-teal">Humans adapt to AI's strengths.</span></div>
+                    <div class="analysis-item"><span class="analysis-label">Implication:</span> Start with A, graduate users to B.</div>
+                </div>
+                <div class="tags">
+                    <span class="tag">#ai</span>
+                    <span class="tag">#strategy</span>
+                    <span class="tag">#adoption</span>
+                    <span class="tag">#behavior-change</span>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Notes & Ideas Dashboard • Greg Tasker (AI Assistant) • February 2026</p>
+        </footer>
+    </div>
+
+    <!-- Supabase JavaScript SDK -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // Supabase configuration - DIRECT CONNECTION (same pattern as kanban boards)
+        const SUPABASE_URL = 'https://mmwbiogqmgmtxboipyko.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_r6q0-iEnygKZiZkaOuY-hg_Tvlb-66U';
+        const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Update timestamp
+        function updateTimestamp() {
+            const now = new Date();
+            const options = { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true };
+            document.getElementById('last-updated').textContent = now.toLocaleDateString('en-US', options);
+        }
+        
+        // Load notes from Supabase
+        async function loadNotes() {
+            try {
+                const { data: notes, error } = await db
+                    .from('notes')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                displayNotes(notes);
+                updateStats(notes);
+                
+            } catch (error) {
+                console.error('Error loading notes:', error);
+                // Fall back to showing static notes if there's an error
+            }
+        }
+        
+        // Display notes in the grid
+        function displayNotes(notes) {
+            const container = document.getElementById('notes-container');
+            
+            if (!notes || notes.length === 0) {
+                container.innerHTML = '<p style="color: #888; text-align: center; grid-column: 1 / -1;">No notes found. Create your first note!</p>';
+                return;
+            }
+            
+            container.innerHTML = notes.map(note => createNoteCard(note)).join('');
+        }
+        
+        // Create HTML for a note card
+        function createNoteCard(note) {
+            const badgeClass = getBadgeClass(note.note_type);
+            const formattedDate = formatDate(note.created_at);
+            // Tags can be array (from Supabase) or string (legacy)
+            const tagsArray = Array.isArray(note.tags) ? note.tags : (note.tags ? note.tags.split(',') : []);
+            const tags = tagsArray.map(tag => `<span class="tag">#${tag.trim()}</span>`).join('');
+            
+            return `
+                <div class="note-card">
+                    <div class="note-header">
+                        <h2 class="note-title">${escapeHtml(note.title)}</h2>
+                        <span class="note-badge ${badgeClass}">${note.note_type || 'note'}</span>
+                    </div>
+                    <div class="note-meta">
+                        <div class="note-source">
+                            <span class="source-dot"></span>
+                            <span>${escapeHtml(note.source || 'Dashboard')}</span>
+                        </div>
+                        <span>${formattedDate}</span>
+                    </div>
+                    <div class="note-content">${formatContent(note.content)}</div>
+                    ${tags ? `<div class="tags">${tags}</div>` : ''}
+                </div>
+            `;
+        }
+        
+        // Get badge class for note type
+        function getBadgeClass(noteType) {
+            const types = {
+                'observation': 'badge-observation',
+                'insight': 'badge-insight',
+                'idea': 'badge-idea',
+                'question': 'badge-question'
+            };
+            return types[noteType] || 'badge-observation';
+        }
+        
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+        
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Format note content
+        function formatContent(content) {
+            // Simple formatting - convert line breaks to paragraphs
+            return content
+                .split('\n\n')
+                .map(paragraph => `<p style="margin-bottom: 1rem; line-height: 1.6; color: #bbb;">${escapeHtml(paragraph)}</p>`)
+                .join('');
+        }
+        
+        // Update stats
+        function updateStats(notes) {
+            const totalNotes = notes.length;
+            const insightsCount = notes.filter(note => note.note_type === 'insight').length;
+            
+            // Calculate this week's notes
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            const thisWeekCount = notes.filter(note => new Date(note.created_at) > weekAgo).length;
+            
+            document.getElementById('total-notes').textContent = totalNotes;
+            document.getElementById('insights-count').textContent = insightsCount;
+            document.getElementById('this-week').textContent = thisWeekCount;
+        }
+        
+        // Save new note to Supabase
+        async function saveNote(noteData) {
+            try {
+                const { data, error } = await db
+                    .from('notes')
+                    .insert([noteData])
+                    .select();
+                
+                if (error) throw error;
+                
+                console.log('Note saved successfully:', data);
+                return data;
+                
+            } catch (error) {
+                console.error('Error saving note:', error);
+                throw error;
+            }
+        }
+        
+        // Form handling
+        function showAddNoteForm() {
+            document.getElementById('add-note-form').style.display = 'block';
+            document.getElementById('add-note-btn').style.display = 'none';
+            document.getElementById('note-title').focus();
+        }
+        
+        function hideAddNoteForm() {
+            document.getElementById('add-note-form').style.display = 'none';
+            document.getElementById('add-note-btn').style.display = 'block';
+            document.getElementById('note-form').reset();
+        }
+        
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            const saveBtn = document.getElementById('save-btn');
+            saveBtn.disabled = true;
+            saveBtn.textContent = '💾 Saving...';
+            
+            try {
+                const formData = new FormData(event.target);
+                
+                // Parse tags from comma-separated string to array
+                const tagsString = formData.get('tags') || '';
+                const tagsArray = tagsString.trim() 
+                    ? tagsString.split(',').map(tag => tag.trim()).filter(tag => tag)
+                    : null;
+                
+                const noteData = {
+                    title: formData.get('title'),
+                    content: formData.get('content'),
+                    note_type: formData.get('note_type'),
+                    tags: tagsArray,
+                    source: formData.get('source') || 'Dashboard'
+                };
+                
+                await saveNote(noteData);
+                hideAddNoteForm();
+                loadNotes(); // Refresh the notes list
+                
+            } catch (error) {
+                alert('Error saving note: ' + error.message);
+                console.error('Form submission error:', error);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = '💾 Save Note';
+            }
+        }
+        
+        // Initialize the page
+        function init() {
+            console.log('Notes dashboard initializing...');
+            updateTimestamp();
+            loadNotes();
+            
+            // Set up form event listeners
+            document.getElementById('add-note-btn').addEventListener('click', showAddNoteForm);
+            document.getElementById('cancel-btn').addEventListener('click', hideAddNoteForm);
+            document.getElementById('note-form').addEventListener('submit', handleFormSubmit);
+            
+            // Set default source
+            document.getElementById('note-source').value = 'Dashboard';
+            console.log('Notes dashboard initialized');
+        }
+        
+        // Run init when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            // DOM already loaded, run init immediately
+            init();
+        }
+    </script>
+</body>
+</html>

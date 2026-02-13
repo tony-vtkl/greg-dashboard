@@ -1,0 +1,409 @@
+{
+  "matches": [
+    {
+      "id": 5,
+      "ourName": "Plank Jack",
+      "wgerName": "Plank",
+      "matchType": "fuzzy",
+      "imageUrl": "images/exercises/5-plank-jack.png"
+    },
+    {
+      "id": 6,
+      "ourName": "Bird Dog",
+      "wgerName": "Bird Dog",
+      "matchType": "exact",
+      "imageUrl": "images/exercises/6-bird-dog.png"
+    },
+    {
+      "id": 8,
+      "ourName": "Single Leg Push-Up",
+      "wgerName": "Push-Up",
+      "matchType": "fuzzy",
+      "imageUrl": "images/exercises/8-single-leg-push-up.png"
+    },
+    {
+      "id": 14,
+      "ourName": "Butterfly Sit-Up",
+      "wgerName": "Butterfly",
+      "matchType": "fuzzy",
+      "imageUrl": "images/exercises/14-butterfly-sit-up.png"
+    },
+    {
+      "id": 17,
+      "ourName": "Plank In Legs Lift",
+      "wgerName": "Plank",
+      "matchType": "fuzzy",
+      "imageUrl": "images/exercises/17-plank-in-legs-lift.png"
+    },
+    {
+      "id": 18,
+      "ourName": "Plank Reach-In N Leg",
+      "wgerName": "Plank",
+      "matchType": "fuzzy",
+      "imageUrl": "images/exercises/18-plank-reach-in-n-leg.png"
+    },
+    {
+      "id": 25,
+      "ourName": "Hero Push-Up",
+      "wgerName": "Push-Up",
+      "matchType": "fuzzy",
+      "imageUrl": "images/exercises/25-hero-push-up.png"
+    },
+    {
+      "id": 30,
+      "ourName": "Sumo Squat",
+      "wgerName": "Sumo Deadlift",
+      "matchType": "fuzzy",
+      "imageUrl": "images/exercises/30-sumo-squat.png"
+    },
+    {
+      "id": 36,
+      "ourName": "Leg Lift",
+      "wgerName": "Quadriped Arm and Leg Raise",
+      "matchType": "fuzzy",
+      "imageUrl": "images/exercises/36-leg-lift.png"
+    },
+    {
+      "id": 37,
+      "ourName": "Romanian Deadlift",
+      "wgerName": "Romanian Deadlift",
+      "matchType": "exact",
+      "imageUrl": "images/exercises/37-romanian-deadlift.png"
+    },
+    {
+      "id": 38,
+      "ourName": "Front Squat",
+      "wgerName": "Front Squats",
+      "matchType": "fuzzy",
+      "imageUrl": "images/exercises/38-front-squat.png"
+    },
+    {
+      "id": 41,
+      "ourName": "Deadlift",
+      "wgerName": "Deadlifts",
+      "matchType": "fuzzy",
+      "imageUrl": "images/exercises/41-deadlift.png"
+    },
+    {
+      "id": 42,
+      "ourName": "Calf Raises",
+      "wgerName": "Standing Calf Raises",
+      "matchType": "fuzzy",
+      "imageUrl": "images/exercises/42-calf-raises.png"
+    },
+    {
+      "id": 43,
+      "ourName": "Goblet Squat",
+      "wgerName": "Dumbbell Goblet Squat",
+      "matchType": "fuzzy",
+      "imageUrl": "images/exercises/43-goblet-squat.png"
+    },
+    {
+      "id": 44,
+      "ourName": "Lunge",
+      "wgerName": "Lunges",
+      "matchType": "fuzzy",
+      "imageUrl": "images/exercises/44-lunge.png"
+    },
+    {
+      "id": 51,
+      "ourName": "Chest Press",
+      "wgerName": "Bench Press",
+      "matchType": "exact",
+      "imageUrl": "images/exercises/51-chest-press.png"
+    },
+    {
+      "id": 56,
+      "ourName": "Hammer Curl",
+      "wgerName": "Alternating dumbbell hammer curl",
+      "matchType": "fuzzy",
+      "imageUrl": "images/exercises/56-hammer-curl.png"
+    },
+    {
+      "id": 60,
+      "ourName": "Upright Row",
+      "wgerName": "Upright Row w/ Dumbbells",
+      "matchType": "fuzzy",
+      "imageUrl": "images/exercises/60-upright-row.png"
+    },
+    {
+      "id": 62,
+      "ourName": "Front Raise",
+      "wgerName": "Front Raises",
+      "matchType": "fuzzy",
+      "imageUrl": "images/exercises/62-front-raise.png"
+    },
+    {
+      "id": 70,
+      "ourName": "T Push Up",
+      "wgerName": "Push-Up",
+      "matchType": "fuzzy",
+      "imageUrl": "images/exercises/70-t-push-up.png"
+    },
+    {
+      "id": 71,
+      "ourName": "Shoulder Press",
+      "wgerName": "Shoulder Press, on Machine",
+      "matchType": "fuzzy",
+      "imageUrl": "images/exercises/71-shoulder-press.png"
+    },
+    {
+      "id": 72,
+      "ourName": "Reverse Fly",
+      "wgerName": "Incline Bench Reverse Fly - Hello",
+      "matchType": "fuzzy",
+      "imageUrl": "images/exercises/72-reverse-fly.png"
+    },
+    {
+      "id": 79,
+      "ourName": "Russian Twist",
+      "wgerName": "Russian Twist",
+      "matchType": "exact",
+      "imageUrl": "images/exercises/79-russian-twist.png"
+    },
+    {
+      "id": 81,
+      "ourName": "Plank T",
+      "wgerName": "Single Arm Plank to Row",
+      "matchType": "fuzzy",
+      "imageUrl": "images/exercises/81-plank-t.png"
+    },
+    {
+      "id": 90,
+      "ourName": "Side Bend",
+      "wgerName": "Dumbbell Side Bend",
+      "matchType": "fuzzy",
+      "imageUrl": "images/exercises/90-side-bend.png"
+    }
+  ],
+  "misses": [
+    {
+      "id": 1,
+      "name": "Arm Circles"
+    },
+    {
+      "id": 2,
+      "name": "Five Body Fish-Up"
+    },
+    {
+      "id": 3,
+      "name": "L-Sit"
+    },
+    {
+      "id": 4,
+      "name": "Side V Crunch"
+    },
+    {
+      "id": 7,
+      "name": "Crocodile Walk"
+    },
+    {
+      "id": 9,
+      "name": "Leg Raise On Track"
+    },
+    {
+      "id": 10,
+      "name": "Lateral Tick Tock"
+    },
+    {
+      "id": 11,
+      "name": "OCR Through Luna"
+    },
+    {
+      "id": 13,
+      "name": "Side Bridge M Crunch"
+    },
+    {
+      "id": 16,
+      "name": "Side Leg Lift"
+    },
+    {
+      "id": 19,
+      "name": "Y Extension"
+    },
+    {
+      "id": 20,
+      "name": "Butt Lift"
+    },
+    {
+      "id": 21,
+      "name": "Squat Hold"
+    },
+    {
+      "id": 22,
+      "name": "Isometric Balance"
+    },
+    {
+      "id": 23,
+      "name": "Crab Walk"
+    },
+    {
+      "id": 24,
+      "name": "Down Dog Abs"
+    },
+    {
+      "id": 26,
+      "name": "Broaden & Reach"
+    },
+    {
+      "id": 29,
+      "name": "Lunge W/ Twist Pivot"
+    },
+    {
+      "id": 32,
+      "name": "Curtsy Lunge"
+    },
+    {
+      "id": 34,
+      "name": "Farmer's Walk"
+    },
+    {
+      "id": 35,
+      "name": "Lunge & Rotation"
+    },
+    {
+      "id": 39,
+      "name": "Side Lunge"
+    },
+    {
+      "id": 40,
+      "name": "Step Up"
+    },
+    {
+      "id": 45,
+      "name": "Swing"
+    },
+    {
+      "id": 47,
+      "name": "T-Leg Deadlift"
+    },
+    {
+      "id": 48,
+      "name": "Donkey Kicks"
+    },
+    {
+      "id": 49,
+      "name": "Hip Raise"
+    },
+    {
+      "id": 50,
+      "name": "Incline Chest Fly"
+    },
+    {
+      "id": 52,
+      "name": "Lat Pullover"
+    },
+    {
+      "id": 53,
+      "name": "One Arm Row"
+    },
+    {
+      "id": 54,
+      "name": "Bent Over Row"
+    },
+    {
+      "id": 55,
+      "name": "Tricep Kickback"
+    },
+    {
+      "id": 57,
+      "name": "Chest Fly"
+    },
+    {
+      "id": 58,
+      "name": "Seesaw Row"
+    },
+    {
+      "id": 59,
+      "name": "Grip Curl"
+    },
+    {
+      "id": 61,
+      "name": "Side Raise"
+    },
+    {
+      "id": 63,
+      "name": "Rotate Row"
+    },
+    {
+      "id": 64,
+      "name": "Scaption"
+    },
+    {
+      "id": 65,
+      "name": "Sweeper"
+    },
+    {
+      "id": 66,
+      "name": "Incline Raise"
+    },
+    {
+      "id": 67,
+      "name": "Bench Twist"
+    },
+    {
+      "id": 68,
+      "name": "Incline T-Raise"
+    },
+    {
+      "id": 69,
+      "name": "Renegade Row"
+    },
+    {
+      "id": 73,
+      "name": "Lunge Press"
+    },
+    {
+      "id": 74,
+      "name": "Discus"
+    },
+    {
+      "id": 75,
+      "name": "Snatch"
+    },
+    {
+      "id": 76,
+      "name": "Bulgarian Press"
+    },
+    {
+      "id": 77,
+      "name": "Leaning Camel"
+    },
+    {
+      "id": 78,
+      "name": "Floor T Raise"
+    },
+    {
+      "id": 80,
+      "name": "Turkish Get Up"
+    },
+    {
+      "id": 82,
+      "name": "Thruster"
+    },
+    {
+      "id": 83,
+      "name": "Wood Chop"
+    },
+    {
+      "id": 84,
+      "name": "Turbo Twist"
+    },
+    {
+      "id": 85,
+      "name": "Bear Crawl"
+    },
+    {
+      "id": 87,
+      "name": "Overhead Squat"
+    },
+    {
+      "id": 88,
+      "name": "Jackknife"
+    },
+    {
+      "id": 89,
+      "name": "Renaissance Combo"
+    }
+  ]
+}

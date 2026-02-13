@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Planner Kanban - Tony's Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+            padding: 1.5rem;
+        }
+        
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .back-link { color: #667eea; text-decoration: none; font-size: 0.9rem; }
+        .back-link:hover { text-decoration: underline; }
+        .top-actions { display: flex; gap: 0.5rem; }
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+        .btn-primary { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+        .btn-secondary { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ccc; }
+        .btn-success { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; }
+        .btn:hover { transform: translateY(-1px); }
+        
+        header { margin-bottom: 1.5rem; }
+        header h1 { font-size: 1.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        .subtitle { color: #888; font-size: 0.9rem; margin-top: 0.25rem; }
+        
+        .week-info {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .week-stat {
+            background: rgba(255,255,255,0.05);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+        .week-stat .value { color: #4ecdc4; font-weight: 600; }
+        
+        .kanban-board {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+            min-height: calc(100vh - 200px);
+            justify-content: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .kanban-column {
+            flex: 1;
+            min-width: 220px;
+            max-width: 320px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+        }
+        .column-header {
+            padding: 0.75rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            text-align: center;
+        }
+        .column-title { font-weight: 600; font-size: 0.9rem; }
+        .column-date { font-size: 0.75rem; color: #888; margin-top: 0.25rem; }
+        .column-focus { font-size: 0.7rem; color: #4ecdc4; margin-top: 0.25rem; }
+        
+        .column-monday .column-header { border-left: 3px solid #f59e0b; }
+        .column-wednesday .column-header { border-left: 3px solid #22c55e; }
+        .column-friday .column-header { border-left: 3px solid #ec4899; }
+        .column-saturday .column-header { border-left: 3px solid #8b5cf6; }
+        
+        .card-list {
+            flex: 1;
+            padding: 0.5rem;
+            min-height: 100px;
+            overflow-y: auto;
+        }
+        
+        .exercise-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 0.6rem;
+            margin-bottom: 0.5rem;
+            cursor: grab;
+            transition: all 0.2s;
+        }
+        
+        .exercise-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .exercise-thumbnail {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
+        }
+        
+        .exercise-placeholder {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        
+        .exercise-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .exercise-card:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.2);
+        }
+        .exercise-card.sortable-ghost { opacity: 0.4; background: rgba(239, 68, 68, 0.2); }
+        .exercise-card.sortable-chosen { box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+        
+        .exercise-type {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.1rem;
+        }
+        .type-strength { color: #ef4444; }
+        .type-hypertrophy { color: #22c55e; }
+        .type-power { color: #f59e0b; }
+        
+        .exercise-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            line-height: 1.2;
+        }
+        
+        .exercise-specs {
+            font-size: 0.7rem;
+            color: #888;
+            margin-bottom: 0.25rem;
+        }
+        .exercise-specs .sets { color: #4ecdc4; }
+        .exercise-specs .reps { color: #fbbf24; }
+        .exercise-specs .rest { color: #ec4899; }
+        .exercise-specs .tempo { color: #8b5cf6; }
+        
+        .exercise-muscle {
+            font-size: 0.65rem;
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            display: inline-block;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.visible { display: flex; }
+        .modal {
+            background: #1e2433;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-title { font-size: 1.1rem; font-weight: 600; }
+        .modal-close { background: none; border: none; color: #888; font-size: 1.5rem; cursor: pointer; }
+        .modal-body { padding: 1.5rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-label { display: block; font-size: 0.85rem; color: #888; margin-bottom: 0.4rem; }
+        .form-input, .form-select {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            padding: 0.6rem;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+        .form-row { display: flex; gap: 1rem; }
+        .form-row .form-group { flex: 1; }
+        .form-input:focus, .form-select:focus { outline: none; border-color: #ef4444; }
+        .exercise-modal-image {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+        }
+        .modal-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        footer { text-align: center; padding: 1.5rem; color: #444; font-size: 0.8rem; }
+    </style>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="hub-tony.html" class="back-link">← Back to Tony's Dashboard Hub</a>
+        <div class="top-actions">
+            <button class="btn btn-secondary" onclick="exportData()">📥 Export</button>
+            <button class="btn btn-success" onclick="generateWeek()">🔄 Generate Week</button>
+            <button class="btn btn-primary" onclick="openAddModal()">+ Add Exercise</button>
+        </div>
+    </div>
+    
+    <header>
+        <h1>💪 Workout Planner</h1>
+        <p class="subtitle">Drag exercises between days • Click to edit • Uses Galpin periodization</p>
+        <div class="week-info">
+            <span class="week-stat">📅 Week <span class="value" id="week-number">1</span> of Mesocycle</span>
+            <span class="week-stat">🎯 Phase: <span class="value" id="current-phase">Adaptation</span></span>
+            <span class="week-stat">💯 Total Sets: <span class="value" id="total-sets">0</span></span>
+        </div>
+    </header>
+    
+    <div class="kanban-board" id="kanban-board">
+        <div class="kanban-column column-monday" data-day="monday">
+            <div class="column-header">
+                <div class="column-title">Monday</div>
+                <div class="column-date">Lower Body Focus</div>
+                <div class="column-focus" id="focus-monday">Strength Base</div>
+            </div>
+            <div class="card-list" id="list-monday"></div>
+        </div>
+        <div class="kanban-column column-wednesday" data-day="wednesday">
+            <div class="column-header">
+                <div class="column-title">Wednesday</div>
+                <div class="column-date">Upper Body Focus</div>
+                <div class="column-focus" id="focus-wednesday">Push/Pull</div>
+            </div>
+            <div class="card-list" id="list-wednesday"></div>
+        </div>
+        <div class="kanban-column column-friday" data-day="friday">
+            <div class="column-header">
+                <div class="column-title">Friday</div>
+                <div class="column-date">Total Body Focus</div>
+                <div class="column-focus" id="focus-friday">Power/Conditioning</div>
+            </div>
+            <div class="card-list" id="list-friday"></div>
+        </div>
+        <div class="kanban-column column-saturday" data-day="saturday">
+            <div class="column-header">
+                <div class="column-title">Saturday</div>
+                <div class="column-date">Accessory Work</div>
+                <div class="column-focus" id="focus-saturday">Weak Points</div>
+            </div>
+            <div class="card-list" id="list-saturday"></div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="exercise-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title" id="modal-title">Add Exercise</span>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="exercise-id">
+                <div class="form-group">
+                    <label class="form-label">Exercise *</label>
+                    <select class="form-select" id="exercise-name" onchange="updateExerciseImage()">
+                        <option value="">Select exercise...</option>
+                    </select>
+                </div>
+                <div class="form-group" id="exercise-image-container" style="display: none;">
+                    <label class="form-label">Exercise Demonstration</label>
+                    <img id="exercise-image" class="exercise-modal-image" alt="Exercise demonstration">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Day</label>
+                        <select class="form-select" id="exercise-day">
+                            <option value="monday">Monday</option>
+                            <option value="wednesday">Wednesday</option>
+                            <option value="friday">Friday</option>
+                            <option value="saturday">Saturday</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Type</label>
+                        <select class="form-select" id="exercise-type">
+                            <option value="strength">Strength</option>
+                            <option value="hypertrophy">Hypertrophy</option>
+                            <option value="power">Power</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Sets</label>
+                        <input type="number" class="form-input" id="exercise-sets" placeholder="3" min="1" max="6">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Reps</label>
+                        <input type="text" class="form-input" id="exercise-reps" placeholder="8-12">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Rest (sec)</label>
+                        <input type="number" class="form-input" id="exercise-rest" placeholder="90">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tempo</label>
+                        <input type="text" class="form-input" id="exercise-tempo" placeholder="3-1-2">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Notes</label>
+                    <input type="text" class="form-input" id="exercise-notes" placeholder="Optional notes...">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="deleteExercise()" id="delete-btn" style="display:none; margin-right:auto; background:rgba(239,68,68,0.2); border-color:#ef4444; color:#ef4444;">Delete</button>
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveExercise()">Save</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer>Workout Planner Kanban • Tony's Dashboard • Feb 2026</footer>
+    
+    <script>
+        // Supabase config - DIRECT CONNECTION
+        const SUPABASE_URL = 'https://mmwbiogqmgmtxboipyko.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_r6q0-iEnygKZiZkaOuY-hg_Tvlb-66U';
+        const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const BOARD_NAME = 'workout';
+
+        let workouts = [];
+        let exercises = [];
+        const DAYS = ['monday', 'wednesday', 'friday', 'saturday'];
+        const DAY_ORDER = { monday: 1, wednesday: 2, friday: 3, saturday: 4 };
+        
+        // Galpin periodization principles
+        const PERIODIZATION = {
+            strength: { sets: '3-5', reps: '3-5', rest: '180-300', tempo: '3-1-1' },
+            hypertrophy: { sets: '3-4', reps: '8-12', rest: '60-90', tempo: '3-1-2' },
+            power: { sets: '3-5', reps: '1-5', rest: '180-300', tempo: 'explosive' }
+        };
+        
+        const MESOCYCLE_PHASES = [
+            { week: 1, phase: 'Adaptation', focus: 'Moderate volume/intensity' },
+            { week: 2, phase: 'Accumulation', focus: 'Higher volume' },
+            { week: 3, phase: 'Intensification', focus: 'Higher intensity' },
+            { week: 4, phase: 'Deload', focus: '50% volume' }
+        ];
+        
+        async function init() {
+            console.log('💪 Workout Kanban initializing...');
+            await loadExercises();
+            await loadWorkouts();
+            populateExerciseDropdown();
+            renderBoard();
+            initSortable();
+            updateStats();
+            console.log('✅ Workout Kanban ready');
+        }
+        
+        async function loadExercises() {
+            try {
+                const response = await fetch(`data/exercises.json?t=${Date.now()}`);
+                const data = await response.json();
+                exercises = data.exercises || [];
+                console.log('📋 Loaded exercises:', exercises.length);
+            } catch (e) {
+                console.error('Failed to load exercises:', e);
+                exercises = [];
+            }
+        }
+        
+        async function loadWorkouts() {
+            try {
+                const { data, error } = await db
+                    .from('kanban_items')
+                    .select('*')
+                    .eq('board', BOARD_NAME)
+                    .order('position', { ascending: true });
+                
+                if (error) throw error;
+                
+                workouts = data.map(item => ({
+                    id: parseInt(item.item_id) || item.id,
+                    supabaseId: item.id,
+                    day: item.column_id,
+                    position: item.position,
+                    ...(typeof item.data === 'string' ? JSON.parse(item.data) : item.data)
+                }));
+                
+                console.log(`Loaded ${workouts.length} workouts from Supabase`);
+            } catch (e) {
+                console.error('Failed to load from Supabase:', e);
+                workouts = [];
+            }
+        }
+        
+        async function saveWorkoutToSupabase(workout, isNew = false) {
+            const workoutData = { name: workout.name, exerciseId: workout.exerciseId, order: workout.order, sets: workout.sets, reps: workout.reps, notes: workout.notes };
+            try {
+                if (isNew) {
+                    const { error } = await db.from('kanban_items').insert({ board: BOARD_NAME, column_id: workout.day, item_id: String(workout.id), position: workouts.length, data: workoutData });
+                    if (error) throw error;
+                } else {
+                    const { error } = await db.from('kanban_items').update({ column_id: workout.day, data: workoutData }).eq('board', BOARD_NAME).eq('item_id', String(workout.id));
+                    if (error) throw error;
+                }
+            } catch (e) { console.error('Failed to save to Supabase:', e); }
+        }
+        
+        async function updateWorkoutDay(workoutId, newDay) {
+            try {
+                const { error } = await db.from('kanban_items').update({ column_id: newDay }).eq('board', BOARD_NAME).eq('item_id', String(workoutId));
+                if (error) throw error;
+            } catch (e) { console.error('Failed to update day:', e); }
+        }
+        
+        function populateExerciseDropdown() {
+            const select = document.getElementById('exercise-name');
+            select.innerHTML = '<option value="">Select exercise...</option>';
+            
+            exercises.forEach(exercise => {
+                const option = document.createElement('option');
+                option.value = exercise.id;
+                option.textContent = `${exercise.name} (${exercise.category})`;
+                option.dataset.muscle = exercise.primaryMuscle;
+                select.appendChild(option);
+            });
+        }
+        
+        function updateExerciseImage() {
+            const selectedId = document.getElementById('exercise-name').value;
+            const imageContainer = document.getElementById('exercise-image-container');
+            const imageElement = document.getElementById('exercise-image');
+            
+            if (!selectedId) {
+                imageContainer.style.display = 'none';
+                return;
+            }
+            
+            const exercise = exercises.find(e => e.id === parseInt(selectedId));
+            if (exercise && exercise.imageUrl) {
+                imageElement.src = exercise.imageUrl;
+                imageElement.alt = `${exercise.name} demonstration`;
+                imageContainer.style.display = 'block';
+                
+                imageElement.onerror = function() {
+                    imageContainer.style.display = 'none';
+                };
+            } else {
+                imageContainer.style.display = 'none';
+            }
+        }
+        
+        function saveData() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(workouts));
+        }
+        
+        function renderBoard() {
+            DAYS.forEach(day => {
+                const list = document.getElementById(`list-${day}`);
+                const dayWorkouts = workouts
+                    .filter(w => w.day === day)
+                    .sort((a, b) => a.order - b.order);
+                
+                list.innerHTML = dayWorkouts.map(workout => {
+                    const exercise = exercises.find(e => e.id === workout.exerciseId);
+                    const exerciseName = exercise ? exercise.name : 'Unknown Exercise';
+                    const muscle = exercise ? exercise.primaryMuscle : '';
+                    const imageUrl = exercise && exercise.imageUrl ? exercise.imageUrl : null;
+                    
+                    return `
+                        <div class="exercise-card" data-id="${workout.id}" onclick="openEditModal(${workout.id})">
+                            <div class="exercise-header">
+                                ${imageUrl ? `<img src="${imageUrl}" class="exercise-thumbnail" alt="${escapeHtml(exerciseName)}" onerror="this.style.display='none'">` : `<div class="exercise-placeholder">🏋️</div>`}
+                                <div class="exercise-info">
+                                    <div class="exercise-type type-${workout.type}">${workout.type}</div>
+                                    <div class="exercise-name">${escapeHtml(exerciseName)}</div>
+                                </div>
+                            </div>
+                            <div class="exercise-specs">
+                                <span class="sets">${workout.sets} sets</span> × 
+                                <span class="reps">${workout.reps}</span> × 
+                                <span class="rest">${workout.rest}s</span>
+                                ${workout.tempo ? ` • <span class="tempo">${workout.tempo}</span>` : ''}
+                            </div>
+                            ${muscle ? `<span class="exercise-muscle">${muscle}</span>` : ''}
+                        </div>
+                    `;
+                }).join('');
+            });
+        }
+        
+        function updateStats() {
+            const totalSets = workouts.reduce((sum, w) => sum + (w.sets || 0), 0);
+            document.getElementById('total-sets').textContent = totalSets;
+            
+            // Update current week and phase (can be made dynamic later)
+            const currentWeek = 1; // This could be calculated based on start date
+            const phase = MESOCYCLE_PHASES[currentWeek - 1];
+            document.getElementById('week-number').textContent = currentWeek;
+            document.getElementById('current-phase').textContent = phase.phase;
+        }
+        
+        function initSortable() {
+            const lists = document.querySelectorAll('.card-list');
+            lists.forEach(list => {
+                new Sortable(list, {
+                    group: 'workouts',
+                    animation: 150,
+                    ghostClass: 'sortable-ghost',
+                    chosenClass: 'sortable-chosen',
+                    onEnd: async function(evt) {
+                        const workoutId = parseInt(evt.item.dataset.id);
+                        const newDay = evt.to.id.replace('list-', '');
+                        
+                        const workout = workouts.find(w => w.id === workoutId);
+                        if (workout) {
+                            workout.day = newDay;
+                            workout.order = evt.newIndex;
+                            await updateWorkoutDay(workoutId, newDay);
+                            renderBoard();
+                            updateStats();
+                            initSortable();
+                        }
+                    }
+                });
+            });
+        }
+        
+        function openAddModal(day = 'monday') {
+            document.getElementById('modal-title').textContent = 'Add Exercise';
+            document.getElementById('exercise-id').value = '';
+            document.getElementById('exercise-name').value = '';
+            document.getElementById('exercise-day').value = day;
+            document.getElementById('exercise-type').value = 'hypertrophy';
+            document.getElementById('exercise-sets').value = '3';
+            document.getElementById('exercise-reps').value = '8-12';
+            document.getElementById('exercise-rest').value = '90';
+            document.getElementById('exercise-tempo').value = '3-1-2';
+            document.getElementById('exercise-notes').value = '';
+            document.getElementById('delete-btn').style.display = 'none';
+            document.getElementById('exercise-modal').classList.add('visible');
+        }
+        
+        function openEditModal(id) {
+            const workout = workouts.find(w => w.id === id);
+            if (!workout) return;
+            
+            document.getElementById('modal-title').textContent = 'Edit Exercise';
+            document.getElementById('exercise-id').value = workout.id;
+            document.getElementById('exercise-name').value = workout.exerciseId;
+            document.getElementById('exercise-day').value = workout.day;
+            document.getElementById('exercise-type').value = workout.type;
+            document.getElementById('exercise-sets').value = workout.sets;
+            document.getElementById('exercise-reps').value = workout.reps;
+            document.getElementById('exercise-rest').value = workout.rest;
+            document.getElementById('exercise-tempo').value = workout.tempo || '';
+            document.getElementById('exercise-notes').value = workout.notes || '';
+            document.getElementById('delete-btn').style.display = 'block';
+            document.getElementById('exercise-modal').classList.add('visible');
+            updateExerciseImage();
+        }
+        
+        function closeModal() {
+            document.getElementById('exercise-modal').classList.remove('visible');
+            document.getElementById('exercise-image-container').style.display = 'none';
+        }
+        
+        async function saveExercise() {
+            const id = document.getElementById('exercise-id').value;
+            const exerciseId = document.getElementById('exercise-name').value;
+            if (!exerciseId) { alert('Exercise selection is required'); return; }
+            
+            const workoutData = {
+                exerciseId: parseInt(exerciseId),
+                day: document.getElementById('exercise-day').value,
+                type: document.getElementById('exercise-type').value,
+                sets: parseInt(document.getElementById('exercise-sets').value) || 3,
+                reps: document.getElementById('exercise-reps').value.trim() || '8-12',
+                rest: parseInt(document.getElementById('exercise-rest').value) || 90,
+                tempo: document.getElementById('exercise-tempo').value.trim(),
+                notes: document.getElementById('exercise-notes').value.trim(),
+                order: 0
+            };
+            
+            if (id) {
+                const workout = workouts.find(w => w.id === parseInt(id));
+                if (workout) {
+                    Object.assign(workout, workoutData);
+                    await saveWorkoutToSupabase(workout, false);
+                }
+            } else {
+                workoutData.id = Date.now();
+                workouts.push(workoutData);
+                await saveWorkoutToSupabase(workoutData, true);
+            }
+            
+            renderBoard();
+            updateStats();
+            initSortable();
+            closeModal();
+        }
+        
+        function deleteExercise() {
+            const id = document.getElementById('exercise-id').value;
+            if (!id || !confirm('Delete this exercise?')) return;
+            workouts = workouts.filter(w => w.id !== parseInt(id));
+            saveData();
+            renderBoard();
+            updateStats();
+            initSortable();
+            closeModal();
+        }
+        
+        async function generateWeek() {
+            if (!confirm('Generate a new week based on Galpin protocols? This will replace current workouts.')) return;
+            
+            try {
+                const response = await fetch(`data/workout-plan.json?t=${Date.now()}`);
+                const data = await response.json();
+                workouts = data.workouts || [];
+                localStorage.setItem(STORAGE_KEY + '-version', DATA_VERSION);
+                saveData();
+                renderBoard();
+                updateStats();
+                initSortable();
+                alert('Week generated successfully!');
+            } catch (e) {
+                console.error('Failed to generate week:', e);
+                alert('Failed to load workout plan. Please check the data file.');
+            }
+        }
+        
+        function exportData() {
+            const data = JSON.stringify(workouts, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `workouts-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+        }
+        
+        // Auto-fill Galpin recommendations when type changes
+        document.addEventListener('change', function(e) {
+            if (e.target.id === 'exercise-type') {
+                const type = e.target.value;
+                const recommendations = PERIODIZATION[type];
+                if (recommendations) {
+                    document.getElementById('exercise-sets').value = recommendations.sets.split('-')[0];
+                    document.getElementById('exercise-reps').value = recommendations.reps;
+                    document.getElementById('exercise-rest').value = recommendations.rest.split('-')[0];
+                    document.getElementById('exercise-tempo').value = recommendations.tempo;
+                }
+            }
+        });
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        document.getElementById('exercise-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+        
+        init();
+    </script>
+</body>
+</html>
