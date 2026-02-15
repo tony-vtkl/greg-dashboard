@@ -1,7 +1,363 @@
 <!DOCTYPE html>
-<html><head>
-<meta http-equiv="refresh" content="0;url=hub-tony.html">
-<title>Redirecting...</title>
-</head><body>
-<p>This page has moved. <a href="hub-tony.html">Go to Dashboard Hub</a></p>
-</body></html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greg's Dashboard Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+        .logo {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #4ecdc4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            color: #888;
+            font-size: 1.1rem;
+        }
+        .time-display {
+            margin-top: 1rem;
+            color: #4ecdc4;
+            font-size: 1rem;
+            font-family: 'SF Mono', Monaco, monospace;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Dashboard Card */
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 2rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        .dashboard-card:hover::before {
+            opacity: 1;
+        }
+        .dashboard-card.disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+        .dashboard-card.disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+        .card-description {
+            color: #888;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+        .card-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .status-live {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+        }
+        .status-coming {
+            background: rgba(251, 191, 36, 0.15);
+            color: #fbbf24;
+        }
+        .status-phase2 {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+        .status-live .status-dot {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Accent colors for cards */
+        .card-email { --accent-start: #667eea; --accent-end: #764ba2; }
+        .card-notes { --accent-start: #fbbf24; --accent-end: #f59e0b; }
+        .card-todo { --accent-start: #10b981; --accent-end: #059669; }
+        .card-meal { --accent-start: #ef4444; --accent-end: #dc2626; }
+        .card-family { --accent-start: #ec4899; --accent-end: #db2777; }
+        .card-marketing { --accent-start: #3b82f6; --accent-end: #2563eb; }
+        .card-news { --accent-start: #8b5cf6; --accent-end: #7c3aed; }
+        .card-portfolio { --accent-start: #06b6d4; --accent-end: #0891b2; }
+        .card-financial { --accent-start: #f97316; --accent-end: #ea580c; }
+        .card-knowledge { --accent-start: #a855f7; --accent-end: #7c3aed; }
+        .card-product { --accent-start: #f472b6; --accent-end: #ec4899; }
+
+        /* Section Headers */
+        .section-header {
+            color: #666;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            padding-left: 0.5rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #555;
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🦅</div>
+            <h1>Greg's Dashboard Hub</h1>
+            <p class="subtitle">Your personal command center</p>
+            <div class="time-display" id="current-time"></div>
+        </header>
+
+        <p class="section-header">Phase 1 — Active Dashboards</p>
+        <div class="dashboard-grid">
+            <!-- Email Dashboard -->
+            <a href="index.html" class="dashboard-card card-email">
+                <div class="card-icon">📧</div>
+                <h2 class="card-title">Email Dashboard</h2>
+                <p class="card-description">Recent emails from Tony with summaries, attachments, and dashboard specifications.</p>
+                <span class="card-status status-live"><span class="status-dot"></span> Live</span>
+            </a>
+
+            <!-- Notes & Ideas -->
+            <a href="notes.html" class="dashboard-card card-notes">
+                <div class="card-icon">💡</div>
+                <h2 class="card-title">Notes & Ideas</h2>
+                <p class="card-description">Your thinking, captured and organized. Observations, insights, and patterns.</p>
+                <span class="card-status status-live"><span class="status-dot"></span> Live</span>
+            </a>
+
+            <!-- To Do List -->
+            <a href="todos.html" class="dashboard-card card-todo">
+                <div class="card-icon">✅</div>
+                <h2 class="card-title">To Do List</h2>
+                <p class="card-description">Tasks, projects, and action items organized by category with progress tracking.</p>
+                <span class="card-status status-live"><span class="status-dot"></span> Live</span>
+            </a>
+
+            <!-- Weekly Food Planning -->
+            <a href="meals.html" class="dashboard-card card-meal">
+                <div class="card-icon">🍽️</div>
+                <h2 class="card-title">Weekly Meal Planning</h2>
+                <p class="card-description">Meal plans, recipes, shopping lists, prep schedules, and nutrition tracking.</p>
+                <span class="card-status status-live"><span class="status-dot"></span> Live</span>
+            </a>
+
+            <!-- Family Dashboard -->
+            <a href="family.html" class="dashboard-card card-family">
+                <div class="card-icon">👨‍👦</div>
+                <h2 class="card-title">Wong Family Dashboard</h2>
+                <p class="card-description">Shared goals, vision board, and Dukane's VtKl work tracking.</p>
+                <span class="card-status status-live"><span class="status-dot"></span> Live</span>
+            </a>
+
+            <!-- Marketing -->
+            <a href="marketing.html" class="dashboard-card card-marketing">
+                <div class="card-icon">📣</div>
+                <h2 class="card-title">Marketing</h2>
+                <p class="card-description">LinkedIn, Instagram, and X performance tracking and engagement.</p>
+                <span class="card-status status-live"><span class="status-dot"></span> Live</span>
+            </a>
+
+            <!-- Daily News Aggregator -->
+            <a href="#" class="dashboard-card card-news disabled">
+                <div class="card-icon">📰</div>
+                <h2 class="card-title">Daily News Aggregator</h2>
+                <p class="card-description">Curated YouTube content and news from sources you care about.</p>
+                <span class="card-status status-coming">Coming Soon</span>
+            </a>
+
+            <!-- VtKl Project Portfolio -->
+            <a href="#" class="dashboard-card card-portfolio disabled">
+                <div class="card-icon">💼</div>
+                <h2 class="card-title">VtKl Project Portfolio</h2>
+                <p class="card-description">Public portfolio view with project status and highlights.</p>
+                <span class="card-status status-coming">Coming Soon</span>
+            </a>
+
+            <!-- Health Journal -->
+            <a href="health.html" class="dashboard-card card-health" style="--accent-start: #10b981; --accent-end: #059669;">
+                <div class="card-icon">🏥</div>
+                <h2 class="card-title">Health Journal</h2>
+                <p class="card-description">Biometrics, interventions, supplements, and health insights tracking.</p>
+                <span class="card-status status-live"><span class="status-dot"></span> Live</span>
+            </a>
+
+            <!-- Knowledge Base -->
+            <a href="knowledge.html" class="dashboard-card card-knowledge">
+                <div class="card-icon">🧠</div>
+                <h2 class="card-title">Knowledge Base</h2>
+                <p class="card-description">Technical reference on AI memory systems, RAG vs OpenClaw, and knowledge management.</p>
+                <span class="card-status status-live"><span class="status-dot"></span> Live</span>
+            </a>
+
+            <!-- Stream of Consciousness -->
+            <a href="stream.html" class="dashboard-card card-stream" style="--accent-start: #a855f7; --accent-end: #6366f1;">
+                <div class="card-icon">🧠</div>
+                <h2 class="card-title">Stream of Consciousness</h2>
+                <p class="card-description">Brain dump capture → categorize into notes & tasks → review → route to destination dashboards.</p>
+                <span class="card-status status-live"><span class="status-dot"></span> Live</span>
+            </a>
+
+            <!-- Daily Standup -->
+            <a href="standup.html" class="dashboard-card card-standup" style="--accent-start: #fbbf24; --accent-end: #10b981;">
+                <div class="card-icon">🤝</div>
+                <h2 class="card-title">Daily Standup</h2>
+                <p class="card-description">Tony + Greg — Three questions every day: Yesterday? Today? Blockers?</p>
+                <span class="card-status status-live"><span class="status-dot"></span> Live</span>
+            </a>
+
+            <!-- Products Dashboard -->
+            <a href="products.html" class="dashboard-card" style="--accent-start: #a78bfa; --accent-end: #667eea;">
+                <div class="card-icon">📦</div>
+                <h2 class="card-title">Products</h2>
+                <p class="card-description">Track Exec.AI, Akira PMO, and other products in development.</p>
+                <span class="card-status status-live"><span class="status-dot"></span> Live</span>
+            </a>
+
+            <!-- Multi-City Living -->
+            <a href="multi-city-living.html" class="dashboard-card" style="--accent-start: #f093fb; --accent-end: #f5576c;">
+                <div class="card-icon">🌏</div>
+                <h2 class="card-title">Multi-City Living</h2>
+                <p class="card-description">Executive Nomad housing strategy, Deep Work immersions, tax optimization, and property listings.</p>
+                <span class="card-status status-live"><span class="status-dot"></span> Live</span>
+            </a>
+        </div>
+
+        <p class="section-header">Phase 2 — Requires Additional Integration</p>
+        <div class="dashboard-grid">
+            <!-- Financial -->
+            <a href="finance.html" class="dashboard-card card-financial">
+                <div class="card-icon">💰</div>
+                <h2 class="card-title">Financial Dashboard</h2>
+                <p class="card-description">Crypto holdings, equities, and portfolio tracking.</p>
+                <span class="card-status status-live"><span class="status-dot"></span> Live</span>
+            </a>
+        </div>
+
+        <footer>
+            <p>Greg Tasker (AI Assistant) • Built with OpenClaw • <a href="https://docs.openclaw.ai" target="_blank">docs.openclaw.ai</a></p>
+        </footer>
+    </div>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long',
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric', 
+                hour: 'numeric', 
+                minute: '2-digit', 
+                hour12: true,
+                timeZoneName: 'short'
+            };
+            document.getElementById('current-time').textContent = now.toLocaleDateString('en-US', options);
+        }
+        updateTime();
+        setInterval(updateTime, 60000);
+    </script>
+</body>
+</html>

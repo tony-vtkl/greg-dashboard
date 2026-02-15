@@ -7,22 +7,12 @@ const USERS = {
   tony: {
     password: 'vtkl2026',
     access: 'all',  // Full access
-    hub: '/hub-tony.html'
+    hub: '/hub.html'
   },
   dukane: {
     password: 'wong2026',
     access: ['/hub-dukane.html', '/family.html', '/meals.html'],
     hub: '/hub-dukane.html'
-  },
-  joana: {
-    password: 'akira-joana-2026',
-    access: ['/products.html', '/product-creation.html', '/Akira-PMO-SeeItCycle-Org.html', '/aipmo-process-flow.html', '/research-multi-city.html', '/research-gartner.html', '/sprint-pulse.html', '/sprint-audit.html'],
-    hub: '/products.html'
-  },
-  victor: {
-    password: 'akira-victor-2026',
-    access: ['/products.html', '/product-creation.html', '/Akira-PMO-SeeItCycle-Org.html', '/aipmo-process-flow.html', '/research-multi-city.html', '/research-gartner.html', '/sprint-pulse.html', '/sprint-audit.html'],
-    hub: '/products.html'
   }
 };
 

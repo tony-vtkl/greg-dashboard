@@ -450,61 +450,22 @@
         // Supabase config
         const SUPABASE_URL = 'https://mmwbiogqmgmtxboipyko.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_r6q0-iEnygKZiZkaOuY-hg_Tvlb-66U';
-        const db = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+        const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
         let standups = [];
 
-        // Load data from Supabase (primary) with localStorage fallback
-        async function loadData() {
-            if (db) {
-                try {
-                    const { data, error } = await db
-                        .from('standups')
-                        .select('*')
-                        .order('date', { ascending: false })
-                        .limit(30);
-                    if (!error && data && data.length > 0) {
-                        standups = data.map(row => ({
-                            date: row.date,
-                            timestamp: row.data?.timestamp || row.created_at,
-                            tony: row.data?.tony || { yesterday: '', today: '', blockers: '' },
-                            greg: row.data?.greg || { yesterday: '', today: '', blockers: '' },
-                            _id: row.id
-                        }));
-                    } else {
-                        // Fallback: load from localStorage and migrate
-                        const saved = localStorage.getItem('daily-standups');
-                        if (saved) {
-                            standups = JSON.parse(saved);
-                            // Migrate localStorage data to Supabase
-                            for (const s of standups) {
-                                const { data: exists } = await db.from('standups').select('id').eq('date', s.date).maybeSingle();
-                                if (!exists) {
-                                    await db.from('standups').insert({
-                                        date: s.date,
-                                        data: { timestamp: s.timestamp, tony: s.tony, greg: s.greg }
-                                    });
-                                }
-                            }
-                            console.log('Migrated', standups.length, 'standups to Supabase');
-                        }
-                    }
-                } catch (e) {
-                    console.error('Supabase load failed, using localStorage:', e);
-                    const saved = localStorage.getItem('daily-standups');
-                    if (saved) standups = JSON.parse(saved);
-                }
-            } else {
-                const saved = localStorage.getItem('daily-standups');
-                if (saved) standups = JSON.parse(saved);
+        // Load data
+        function loadData() {
+            const saved = localStorage.getItem('daily-standups');
+            if (saved) {
+                standups = JSON.parse(saved);
             }
             renderHistory();
             setCurrentDate();
             loadTodayIfExists();
         }
 
-        async function saveData() {
-            // Always save to localStorage as backup
+        function saveData() {
             localStorage.setItem('daily-standups', JSON.stringify(standups));
         }
 
@@ -531,7 +492,7 @@
             }
         }
 
-        async function saveStandup() {
+        function saveStandup() {
             const today = getTodayKey();
             const standup = {
                 date: today,
@@ -548,7 +509,7 @@
                 }
             };
 
-            // Update or add in local array
+            // Update or add
             const existingIndex = standups.findIndex(s => s.date === today);
             if (existingIndex >= 0) {
                 standups[existingIndex] = standup;
@@ -556,26 +517,7 @@
                 standups.unshift(standup);
             }
 
-            // Save to Supabase (primary)
-            if (db) {
-                try {
-                    const payload = { date: today, data: { timestamp: standup.timestamp, tony: standup.tony, greg: standup.greg } };
-                    // Try update first (existing row), then insert if not found
-                    const { data: existing } = await db.from('standups').select('id').eq('date', today).maybeSingle();
-                    if (existing) {
-                        const { error } = await db.from('standups').update({ data: payload.data }).eq('id', existing.id);
-                        if (error) console.error('Supabase update error:', error);
-                    } else {
-                        const { error } = await db.from('standups').insert(payload);
-                        if (error) console.error('Supabase insert error:', error);
-                    }
-                } catch (e) {
-                    console.error('Supabase save failed:', e);
-                }
-            }
-
-            // Backup to localStorage
-            await saveData();
+            saveData();
             renderHistory();
             alert('Standup saved!');
         }
@@ -739,22 +681,20 @@
         };
 
         // Auto-populate today if no data exists
-        async function autoPopulateToday() {
+        function autoPopulateToday() {
             const today = getTodayKey();
             if (today === '2026-02-07' && !standups.find(s => s.date === today)) {
                 standups.unshift(DEFAULT_STANDUP_2026_02_07);
-                await saveData();
+                saveData();
             }
         }
 
         // Init
-        (async () => {
-            await loadData();
-            await autoPopulateToday();
-            renderHistory();
-            loadTodayIfExists();
-            checkForInjection();
-        })();
+        loadData();
+        autoPopulateToday();
+        renderHistory();
+        loadTodayIfExists();
+        checkForInjection();
     </script>
 </body>
 </html>

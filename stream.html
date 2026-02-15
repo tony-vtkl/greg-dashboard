@@ -716,7 +716,7 @@
         // Supabase config
         const SUPABASE_URL = 'https://mmwbiogqmgmtxboipyko.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_r6q0-iEnygKZiZkaOuY-hg_Tvlb-66U';
-        const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let items = [];
         let selectedIds = new Set();
@@ -726,7 +726,7 @@
         // Load items from Supabase (fallback to EMBEDDED_DATA)
         async function loadItems() {
             try {
-                const { data: streamItems, error } = await db
+                const { data: streamItems, error } = await supabase
                     .from('stream_items')
                     .select('*')
                     .order('created_at', { ascending: false });

@@ -1,7 +1,433 @@
 <!DOCTYPE html>
-<html><head>
-<meta http-equiv="refresh" content="0;url=hub-tony.html">
-<title>Redirecting...</title>
-</head><body>
-<p>This page has moved. <a href="hub-tony.html">Go to Dashboard Hub</a></p>
-</body></html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greg's Email Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            color: #888;
+            font-size: 1.1rem;
+        }
+        .email-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        .email-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .email-title {
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
+        .email-meta {
+            color: #888;
+            font-size: 0.9rem;
+        }
+        .email-date {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+        .summary {
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #667eea;
+        }
+        .summary h3 {
+            color: #667eea;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .summary p, .summary ul {
+            line-height: 1.7;
+            color: #ccc;
+        }
+        .summary ul {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        .summary li {
+            margin-bottom: 0.5rem;
+        }
+        .attachments {
+            margin-top: 1.5rem;
+        }
+        .attachments h3 {
+            color: #888;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        .image-item {
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .image-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.2);
+        }
+        .image-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .image-caption {
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
+            color: #888;
+            text-align: center;
+        }
+        .collapsible {
+            margin-top: 1rem;
+        }
+        .collapsible-header {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+        .collapsible-header:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+        .collapsible-header h4 {
+            color: #667eea;
+        }
+        .collapsible-content {
+            display: none;
+            padding: 1.5rem 0;
+        }
+        .collapsible-content.active {
+            display: block;
+        }
+        .arrow {
+            transition: transform 0.2s;
+            color: #667eea;
+        }
+        .arrow.rotated {
+            transform: rotate(180deg);
+        }
+        .full-width-image {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .pdf-pages {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        .pdf-page {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .pdf-page img {
+            width: 100%;
+            height: auto;
+        }
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        .lightbox.active {
+            display: flex;
+        }
+        .lightbox img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            .email-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📧 Greg's Email Dashboard</h1>
+            <p class="subtitle">Last 3 emails from Tony Wong to Greg Tasker</p>
+        </header>
+
+        <!-- Email 1: Personal Dashboards -->
+        <div class="email-card">
+            <div class="email-header">
+                <div>
+                    <h2 class="email-title">📊 Here are your dashboards</h2>
+                    <p class="email-meta">From: Tony Wong &lt;tony@vtkl.ai&gt;</p>
+                </div>
+                <span class="email-date">Feb 2, 2026 • 4:11 PM HST</span>
+            </div>
+            
+            <div class="summary">
+                <h3>📋 Summary</h3>
+                <p>Comprehensive specifications for 8 personal dashboards to be built for Greg:</p>
+                <ul>
+                    <li><strong>Dashboard 1 - To Do List:</strong> Integrates Gmail, Calendar/Tasks, and WhatsApp</li>
+                    <li><strong>Dashboard 2 - Notes & Ideas:</strong> Remarkable 2 tablet sync + Calendar integration</li>
+                    <li><strong>Dashboard 3 - Weekly Food Planning:</strong> Calendar, Amazon, Instacart integration</li>
+                    <li><strong>Dashboard 4 - Family To Do List:</strong> Gmail, Calendar/Tasks for family coordination</li>
+                    <li><strong>Dashboard 5 - Marketing:</strong> X.com, LinkedIn, Instagram management</li>
+                    <li><strong>Dashboard 6 - Daily News Aggregator:</strong> YouTube content curation</li>
+                    <li><strong>Dashboard 7 - VtKl Project Portfolio:</strong> Public link, no API integration needed</li>
+                    <li><strong>Dashboard 8 - Financial:</strong> Phase 2 only (bank/investment integration)</li>
+                </ul>
+                <p style="margin-top: 1rem;"><em>Note: Phase 1 dashboards will NOT have VtKl Google Drive access. Dashboard 8 is Phase 2 only.</em></p>
+            </div>
+
+            <div class="collapsible">
+                <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                    <h4>📄 View Full Dashboard Specifications (8 pages)</h4>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <div class="pdf-pages">
+                        <div class="pdf-page"><img src="assets/dashboard-page-1.png" alt="Dashboard Page 1" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/dashboard-page-2.png" alt="Dashboard Page 2" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/dashboard-page-3.png" alt="Dashboard Page 3" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/dashboard-page-4.png" alt="Dashboard Page 4" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/dashboard-page-5.png" alt="Dashboard Page 5" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/dashboard-page-6.png" alt="Dashboard Page 6" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/dashboard-page-7.png" alt="Dashboard Page 7" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/dashboard-page-8.png" alt="Dashboard Page 8" onclick="openLightbox(this.src)"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Email 2: Phase 2 AI PMO -->
+        <div class="email-card">
+            <div class="email-header">
+                <div>
+                    <h2 class="email-title">🤖 Phase 2 of Greg: AI Driven Project Management Office</h2>
+                    <p class="email-meta">From: Tony Wong &lt;tony@vtkl.ai&gt;</p>
+                </div>
+                <span class="email-date">Feb 3, 2026 • 4:49 PM HST</span>
+            </div>
+            
+            <div class="summary">
+                <h3>📋 Summary</h3>
+                <p>Vision for an AI-driven "Vibe Coding" multi-agent software development organization:</p>
+                <ul>
+                    <li><strong>Organizational Structure:</strong> Multi-tier hierarchy with CLIENT at top, human Product Manager, and AI Program Manager coordinating three squads</li>
+                    <li><strong>Three Specialized Squads:</strong>
+                        <ul>
+                            <li>Squad Alpha - Backend + API (Backend Agent, API Agent, Database Agent)</li>
+                            <li>Squad Beta - Frontend + UX (Frontend Agent, UX Agent, Style Agent)</li>
+                            <li>Squad Gamma - Integration + QA (Integration Agent, QA Agent, Deploy Agent)</li>
+                        </ul>
+                    </li>
+                    <li><strong>AI Portfolio Manager:</strong> Handles project-business alignment, milestone payments, human resource tracking, token usage & cost</li>
+                    <li><strong>Requirements Verifier:</strong> Video-to-video comparison, prototype vs output alignment</li>
+                    <li><strong>Results Dashboard:</strong> Shows sprint progress, alignment status (5/5 sprints complete, 4 aligned, 1 misaligned, 94% promise progress)</li>
+                </ul>
+            </div>
+
+            <div class="attachments">
+                <h3>📎 Attachments</h3>
+                <div class="image-grid">
+                    <div class="image-item" onclick="openLightbox('assets/org-chart.png')">
+                        <img src="assets/org-chart.png" alt="Vibe Coding Multi-Agent Org Chart">
+                        <p class="image-caption">Vibe Coding Multi-Agent Org Chart</p>
+                    </div>
+                    <div class="image-item" onclick="openLightbox('assets/results-dashboard.png')">
+                        <img src="assets/results-dashboard.png" alt="Vibe Coding Results Dashboard">
+                        <p class="image-caption">Vibe Coding Results Dashboard</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Email 3: QEEG Report -->
+        <div class="email-card">
+            <div class="email-header">
+                <div>
+                    <h2 class="email-title">🧠 My QEEG</h2>
+                    <p class="email-meta">From: Tony Wong &lt;tony@vtkl.ai&gt;</p>
+                </div>
+                <span class="email-date">Feb 3, 2026 • 4:32 PM HST</span>
+            </div>
+            
+            <div class="summary">
+                <h3>📋 Summary</h3>
+                <p>Tony's Quantitative Electroencephalogram (QEEG) Final Report - a comprehensive brain mapping assessment showing:</p>
+                <ul>
+                    <li><strong>Document Type:</strong> 22-page clinical QEEG analysis report</li>
+                    <li><strong>Purpose:</strong> Brain wave pattern analysis for personalized insights</li>
+                    <li><strong>Contents:</strong> Includes brain maps, frequency analysis, coherence patterns, and clinical interpretations</li>
+                </ul>
+                <p style="margin-top: 1rem;"><em>This is personal health data shared for reference/context.</em></p>
+            </div>
+
+            <div class="collapsible">
+                <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                    <h4>📄 View QEEG Report (22 pages)</h4>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <div class="pdf-pages">
+                        <div class="pdf-page"><img src="assets/qeeg-page-01.png" alt="QEEG Page 1" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/qeeg-page-02.png" alt="QEEG Page 2" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/qeeg-page-03.png" alt="QEEG Page 3" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/qeeg-page-04.png" alt="QEEG Page 4" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/qeeg-page-05.png" alt="QEEG Page 5" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/qeeg-page-06.png" alt="QEEG Page 6" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/qeeg-page-07.png" alt="QEEG Page 7" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/qeeg-page-08.png" alt="QEEG Page 8" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/qeeg-page-09.png" alt="QEEG Page 9" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/qeeg-page-10.png" alt="QEEG Page 10" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/qeeg-page-11.png" alt="QEEG Page 11" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/qeeg-page-12.png" alt="QEEG Page 12" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/qeeg-page-13.png" alt="QEEG Page 13" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/qeeg-page-14.png" alt="QEEG Page 14" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/qeeg-page-15.png" alt="QEEG Page 15" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/qeeg-page-16.png" alt="QEEG Page 16" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/qeeg-page-17.png" alt="QEEG Page 17" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/qeeg-page-18.png" alt="QEEG Page 18" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/qeeg-page-19.png" alt="QEEG Page 19" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/qeeg-page-20.png" alt="QEEG Page 20" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/qeeg-page-21.png" alt="QEEG Page 21" onclick="openLightbox(this.src)"></div>
+                        <div class="pdf-page"><img src="assets/qeeg-page-22.png" alt="QEEG Page 22" onclick="openLightbox(this.src)"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Generated by Greg Tasker (AI Assistant) • February 5, 2026</p>
+        </footer>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img id="lightbox-img" src="" alt="Full size image">
+    </div>
+
+    <script>
+        function toggleCollapsible(header) {
+            const content = header.nextElementSibling;
+            const arrow = header.querySelector('.arrow');
+            content.classList.toggle('active');
+            arrow.classList.toggle('rotated');
+        }
+
+        function openLightbox(src) {
+            event.stopPropagation();
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+    </script>
+</body>
+</html>

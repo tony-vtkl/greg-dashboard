@@ -312,7 +312,7 @@
 <body>
     <div class="container">
         <div class="top-bar">
-            <a href="hub-tony.html" class="back-link">← Back to Dashboard Hub</a>
+            <a href="hub.html" class="back-link">← Back to Dashboard Hub</a>
             <button class="refresh-btn" onclick="hardRefresh()">
                 <span class="icon">🔄</span> Refresh
             </button>
@@ -374,7 +374,7 @@
         // Supabase config
         const SUPABASE_URL = 'https://mmwbiogqmgmtxboipyko.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_r6q0-iEnygKZiZkaOuY-hg_Tvlb-66U';
-        const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let todosData = null;
         let completedTasks = {}; // {id: completedTimestamp}
@@ -383,7 +383,7 @@
         async function loadTodos() {
             try {
                 // Load from Supabase
-                const { data: todos, error } = await db
+                const { data: todos, error } = await supabase
                     .from('todos')
                     .select('*')
                     .order('created_at', { ascending: false });

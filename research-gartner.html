@@ -19,150 +19,19 @@
         .back-link { color: #667eea; text-decoration: none; font-size: 0.9rem; }
         .back-link:hover { text-decoration: underline; }
         h1 { font-size: 1.8rem; margin: 0.5rem 0; color: #fff; }
-        h2 { font-size: 1.3rem; margin: 0 0 1rem; color: #fff; }
-        h3 { font-size: 1rem; color: #ccc; margin-bottom: 0.5rem; }
         .subtitle { color: #888; font-size: 0.9rem; }
         .source-note { color: #666; font-size: 0.8rem; margin-top: 0.25rem; }
-
-        /* Navigation tabs */
-        .nav-tabs {
-            display: flex; gap: 0.25rem; margin-bottom: 1.5rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0;
-        }
-        .nav-tab {
-            padding: 0.6rem 1.2rem; border: none; background: none;
-            color: #888; cursor: pointer; font-size: 0.9rem; font-weight: 500;
-            border-bottom: 2px solid transparent; transition: all 0.2s;
-        }
-        .nav-tab:hover { color: #ccc; }
-        .nav-tab.active { color: #f5576c; border-bottom-color: #f5576c; }
-
-        .section { display: none; }
-        .section.active { display: block; }
-
-        /* ── Research Results Links ── */
-        .results-list { margin-top: 0.75rem; padding-top: 0.6rem; border-top: 1px solid rgba(255,255,255,0.08); }
-        .result-link {
-            display: block; padding: 0.35rem 0; font-size: 0.8rem; color: #667eea;
-            text-decoration: none; line-height: 1.4;
-        }
-        .result-link:hover { color: #a8b4f0; text-decoration: underline; }
-        .result-link .result-label { color: #f5576c; font-weight: 600; margin-right: 0.3rem; }
-        .no-results { font-size: 0.78rem; color: #555; font-style: italic; margin-top: 0.5rem; }
-
-        /* ── Key Requirements ── */
-        .requirements-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 1rem; margin-bottom: 1.5rem;
-        }
-        .req-card {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 12px; padding: 1.25rem;
-            border-left: 4px solid;
-        }
-        .req-card.storage { border-left-color: #667eea; }
-        .req-card.retrieval { border-left-color: #2ed573; }
-        .req-card.structure { border-left-color: #ffa502; }
-        .req-card.scale { border-left-color: #f5576c; }
-        .req-card.integration { border-left-color: #a29bfe; }
-        .req-card.governance { border-left-color: #00cec9; }
-        .req-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #888; margin-bottom: 0.4rem; }
-        .req-title { font-weight: 600; color: #fff; margin-bottom: 0.5rem; font-size: 1rem; }
-        .req-body { color: #aaa; font-size: 0.85rem; line-height: 1.6; }
-        .req-body ul { margin: 0.4rem 0 0 1.2rem; }
-        .req-body li { margin-bottom: 0.25rem; }
-
-        .comparison-table {
-            width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem;
-            font-size: 0.85rem;
-        }
-        .comparison-table th {
-            text-align: left; padding: 0.75rem 1rem;
-            background: rgba(255,255,255,0.06);
-            color: #fff; font-weight: 600;
-            border-bottom: 2px solid rgba(255,255,255,0.1);
-        }
-        .comparison-table td {
-            padding: 0.6rem 1rem; color: #bbb;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .comparison-table tr:hover td { background: rgba(255,255,255,0.03); }
-        .verdict { color: #2ed573; font-weight: 600; }
-        .partial { color: #ffa502; }
-        .weak { color: #f5576c; }
-
-        .recommendation-box {
-            background: rgba(46, 213, 115, 0.08);
-            border-left: 4px solid #2ed573;
-            padding: 1.25rem; border-radius: 0 10px 10px 0;
-            margin: 1.5rem 0;
-        }
-        .recommendation-box strong { color: #fff; }
-        .recommendation-box p { color: #aaa; margin-top: 0.5rem; font-size: 0.9rem; line-height: 1.6; }
-
-        /* ── Research Analysis ── */
-        .analysis-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
-            gap: 1rem; margin-bottom: 1.5rem;
-        }
-        .analysis-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 12px; padding: 1.25rem;
-        }
-        .analysis-card h3 { display: flex; align-items: center; gap: 0.5rem; }
-        .analysis-body { color: #aaa; font-size: 0.85rem; line-height: 1.7; }
-        .analysis-body ul { margin: 0.5rem 0 0 1.2rem; }
-        .analysis-body li { margin-bottom: 0.35rem; }
-        .highlight { color: #f5576c; font-weight: 600; }
-        .callout {
-            background: rgba(245, 87, 108, 0.1);
-            border-left: 4px solid #f5576c;
-            padding: 1rem; border-radius: 0 8px 8px 0;
-            margin: 1rem 0; font-size: 0.85rem; color: #ccc;
-        }
-        .callout strong { color: #fff; }
-
-        /* ── Talking Points ── */
-        .tp-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
-            gap: 1rem; margin-bottom: 1.5rem;
-        }
-        .tp-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 12px; padding: 1.25rem;
-            position: relative;
-        }
-        .tp-number {
-            position: absolute; top: -0.5rem; left: -0.5rem;
-            width: 2rem; height: 2rem; background: #f5576c;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-weight: 700; font-size: 0.85rem; color: #fff;
-        }
-        .tp-card h3 { margin-left: 1.5rem; }
-        .tp-body { color: #aaa; font-size: 0.85rem; line-height: 1.7; margin-top: 0.5rem; }
-        .tp-body ul { margin: 0.4rem 0 0 1.2rem; }
-        .tp-body li { margin-bottom: 0.3rem; }
-        .tp-question {
-            background: rgba(102, 126, 234, 0.12);
-            border-radius: 8px; padding: 0.6rem 0.8rem;
-            font-size: 0.82rem; color: #a8b4f0; margin-top: 0.75rem;
-            font-style: italic;
-        }
-        .tp-question::before { content: '💡 Ask: '; font-style: normal; font-weight: 600; }
-
-        /* ── Kanban (existing) ── */
+        
         .toolbar { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: center; }
         .btn { padding: 0.5rem 1rem; border-radius: 8px; border: none; cursor: pointer; font-size: 0.85rem; }
         .btn-primary { background: #f5576c; color: white; }
         .btn-secondary { background: rgba(255,255,255,0.1); color: #ccc; }
-
+        
         .board { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1rem; }
         .column {
             background: rgba(255,255,255,0.03);
-            border-radius: 12px; padding: 1rem;
+            border-radius: 12px;
+            padding: 1rem;
             border: 1px solid rgba(255,255,255,0.08);
         }
         .column-header {
@@ -173,12 +42,16 @@
         .column-title { font-weight: 600; color: #fff; display: flex; align-items: center; gap: 0.5rem; }
         .column-count { background: rgba(255,255,255,0.1); padding: 0.15rem 0.5rem; border-radius: 10px; font-size: 0.75rem; }
         .add-btn { background: none; border: none; color: #f5576c; cursor: pointer; font-size: 1.2rem; }
-
+        
         .card-list { min-height: 100px; }
         .item-card {
-            background: rgba(0,0,0,0.3); border-radius: 8px; padding: 1rem;
-            margin-bottom: 0.75rem; border: 1px solid rgba(255,255,255,0.05);
-            cursor: pointer; transition: transform 0.1s, box-shadow 0.1s;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s;
         }
         .item-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
         .card-title { font-weight: 600; color: #fff; margin-bottom: 0.5rem; }
@@ -189,15 +62,16 @@
         .tag-trends { background: rgba(46, 213, 115, 0.3); color: #7ee8a8; }
         .tag-culture { background: rgba(245, 87, 108, 0.3); color: #f8a8b6; }
         .tag-strategy { background: rgba(255, 184, 108, 0.3); color: #ffd093; }
-
+        
         .insight-box {
             background: rgba(245, 87, 108, 0.1);
             border-left: 4px solid #f5576c;
-            padding: 1rem; border-radius: 0 8px 8px 0;
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
             margin-bottom: 1.5rem;
         }
         .insight-box strong { color: #fff; }
-
+        
         /* Modal */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
         .modal.visible { display: flex; }
@@ -211,7 +85,7 @@
         }
         .form-group textarea { min-height: 100px; resize: vertical; }
         .modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1rem; }
-
+        
         footer { text-align: center; padding: 2rem 0 1rem; color: #555; font-size: 0.8rem; }
     </style>
 </head>
@@ -220,541 +94,51 @@
         <a href="hub-tony.html" class="back-link">← Back to Dashboard Hub</a>
         <header>
             <h1>📊 Gartner Research & AI Trends</h1>
-            <p class="subtitle">Kindo Requirements • Research Analysis • Analyst Talking Points • Working Board • Bus Analyst Requirements</p>
-            <p class="source-note">Source: Gartner reports & analysis • Business Analyst Agent</p>
+            <p class="subtitle">Distribution Channels • Market Intelligence • Culture-Tech Overlap</p>
+            <p class="source-note">Source: Grok conversation analysis • Business Analyst Agent</p>
         </header>
-
-        <nav class="nav-tabs">
-            <button class="nav-tab active" onclick="showSection('kindo')">🎯 Kindo Key Requirements</button>
-            <button class="nav-tab" onclick="showSection('analysis')">🔬 Research Analysis</button>
-            <button class="nav-tab" onclick="showSection('talking-points')">🎙️ Talking Points</button>
-            <button class="nav-tab" onclick="showSection('board')">📋 Working Board</button>
-            <button class="nav-tab" onclick="showSection('requirements')">📊 Bus Analyst Requirements</button>
-        </nav>
-
-        <!-- ═══════════════════════════════════════════ -->
-        <!-- SECTION 0: KINDO KEY REQUIREMENTS          -->
-        <!-- ═══════════════════════════════════════════ -->
-        <div class="section active" id="sec-kindo">
-            <h2>🎯 Kindo Key Requirements</h2>
-            <p style="color:#888; font-size:0.85rem; margin-bottom:1.25rem;">From Feb 3 call with Jake Whitten (Gartner Account Manager) — what each stakeholder needs from Gartner engagement</p>
-
-            <div class="callout" style="margin-bottom:1.5rem;">
-                <strong>⏰ Timeline:</strong> Get on analyst radar in Feb–March, before RSA.
-            </div>
-
-            <!-- Ron -->
-            <div style="margin-bottom:1.5rem;">
-                <h3 style="color:#fff; font-size:1.1rem; margin-bottom:0.75rem;">🔴 Ron — CEO</h3>
-                <div class="requirements-grid">
-                    <div class="req-card" style="border-left-color:#f5576c;">
-                        <div class="req-label">Requirement 1</div>
-                        <div class="req-title">AI Adoption Successes in Enterprise Security</div>
-                        <div class="req-body">
-                            <p style="color:#999; font-size:0.85rem; margin-bottom:0.6rem; font-style:italic;">Where AI adoption in enterprise security is actually succeeding — specific use cases, companies, concrete details</p>
-                            <div class="results-list" style="border-top:none; margin-top:0; padding-top:0;">
-                                <p style="color:#e4e4e4; margin-bottom:0.5rem;"><strong>Palo Alto Networks' Cortex XSIAM</strong> uses graded autonomy for SOC playbooks — teams start with AI-generated recommendations, graduate to supervised remediation, then full auto-remediation once precision thresholds are met. This "earned autonomy" model is the leading example of AI succeeding in enterprise security.</p>
-                                <a class="result-link" href="https://drive.google.com/file/d/1wM3qHfrm5-GVv6qMxzvCbjCQtEa334ar/view" target="_blank"><span class="result-label">↗</span> 5 Agentic AI Capabilities (G00844741), p.4</a>
-                                <p style="color:#e4e4e4; margin-bottom:0.5rem; margin-top:0.6rem;"><strong>74% of CFOs report productivity gains</strong> from AI in the form of time saved — but only <strong>11% have seen actual financial value</strong> from AI in 2025. The wins are real but narrow: search, content generation and summarization are ready; autonomous decision-making is still nascent (only 15% of IT leaders piloting autonomous agents).</p>
-                                <a class="result-link" href="https://drive.google.com/file/d/1Jmf9FrCjCSqX2DKgOKsAFGsf7CRxwcnW/view" target="_blank"><span class="result-label">↗</span> 1Q26 Business Quarterly — "Walking the Golden Path to AI Value"</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="req-card" style="border-left-color:#f5576c;">
-                        <div class="req-label">Requirement 2</div>
-                        <div class="req-title">AI Adoption Failures & Root Causes</div>
-                        <div class="req-body">
-                            <p style="color:#999; font-size:0.85rem; margin-bottom:0.6rem; font-style:italic;">Where AI adoption is failing and WHY — detailed failure modes, struggles</p>
-                            <div class="results-list" style="border-top:none; margin-top:0; padding-top:0;">
-                                <p style="color:#e4e4e4; margin-bottom:0.5rem;"><strong>75% of GenAI vendors</strong> cite customer awareness as the #1 adoption blocker. Enterprises have unrealistic expectations, lack quality data, and face unpredictable costs — leading to long sales cycles, low POC-to-production conversion, and "successful" pilots that stall. <strong>62% of organizations say neither AI tech nor their people are ready.</strong></p>
-                                <a class="result-link" href="https://drive.google.com/file/d/1d8JX7UuSJxsHDMTWwjfbSGX6dS6tpxP8/view" target="_blank"><span class="result-label">↗</span> Emerging Tech Roadblocks (G00809520), CBR of 52 vendors, 181 use cases</a>
-                                <p style="color:#e4e4e4; margin-bottom:0.5rem; margin-top:0.6rem;"><strong>74% of CIOs are losing money or breaking even</strong> on AI investments. GenAI error rates range from 3% to 25%. For every 100 days implementing AI, expect 25 more for training and 100–200 for change management. Enterprises lack single decision-making authority — adoption becomes "everyone's problem and no one's problem."</p>
-                                <a class="result-link" href="https://drive.google.com/file/d/1Jmf9FrCjCSqX2DKgOKsAFGsf7CRxwcnW/view" target="_blank"><span class="result-label">↗</span> 1Q26 Business Quarterly — "Where's the AI Value?"</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="req-card" style="border-left-color:#f5576c;">
-                        <div class="req-label">Requirement 3</div>
-                        <div class="req-title">AI in Security Beyond SOC</div>
-                        <div class="req-body">
-                            <p style="color:#999; font-size:0.85rem; margin-bottom:0.6rem; font-style:italic;">IAM, XDR, MDR, incident response, security engineering — AI applications across the full security stack</p>
-                            <div class="results-list" style="border-top:none; margin-top:0; padding-top:0;">
-                                <p style="color:#e4e4e4; margin-bottom:0.5rem;"><strong>Agentic AI is rated a top-5 emerging risk</strong> by senior risk leaders (4Q25 survey). Beyond SOC, the shift is toward "systems of action" where AI handles multi-step execution across security domains — supervised remediation in IAM, automated triage in XDR, and continuous compliance monitoring. The key: autonomy must be governable and graduated.</p>
-                                <a class="result-link" href="https://drive.google.com/file/d/1wM3qHfrm5-GVv6qMxzvCbjCQtEa334ar/view" target="_blank"><span class="result-label">↗</span> 5 Agentic AI Capabilities (G00844741)</a>
-                                <a class="result-link" href="https://drive.google.com/file/d/1Jmf9FrCjCSqX2DKgOKsAFGsf7CRxwcnW/view" target="_blank"><span class="result-label">↗</span> 1Q26 BQ — Emerging Risks Survey (agentic AI #4 risk)</a>
-                                <p class="no-results">⚠️ Deeper IAM/XDR/MDR-specific research not in current library — request via analyst inquiry</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="req-card" style="border-left-color:#f5576c;">
-                        <div class="req-label">Requirement 4</div>
-                        <div class="req-title">Rapid AI Capability Change Tracking</div>
-                        <div class="req-body">
-                            <p style="color:#999; font-size:0.85rem; margin-bottom:0.6rem; font-style:italic;">Analysts tracking Claude co-work, AI swarms, distributed AI, multi-agent systems — the cutting edge of AI capabilities</p>
-                            <div class="results-list" style="border-top:none; margin-top:0; padding-top:0;">
-                                <p style="color:#e4e4e4; margin-bottom:0.5rem;">Agentic AI is replacing command-and-control with <strong>"systems of action"</strong> — humans and autonomous agents jointly plan, execute, and verify work. By 2028, services-led adoption will be a competitive disadvantage. Key examples: <strong>Palantir's AIP Evals</strong> (drift detection, real-time performance monitoring), <strong>Ema's Universal AI Employee</strong> (real-time decision checkpoints), and <strong>Celonis</strong> (process-intelligence dashboards for agent optimization).</p>
-                                <a class="result-link" href="https://drive.google.com/file/d/1wM3qHfrm5-GVv6qMxzvCbjCQtEa334ar/view" target="_blank"><span class="result-label">↗</span> 5 Agentic AI Capabilities (G00844741)</a>
-                                <p style="color:#e4e4e4; margin-bottom:0.5rem; margin-top:0.6rem;">By 2030, Gartner expects <strong>0% of IT work will be done by humans without AI</strong> — 75% human-augmented, 25% AI-alone. Only 15% of IT leaders currently focus on autonomous multi-agent systems. The shift from conversational AI to autonomous decision-making agents is the key capability change to track.</p>
-                                <a class="result-link" href="https://drive.google.com/file/d/1Jmf9FrCjCSqX2DKgOKsAFGsf7CRxwcnW/view" target="_blank"><span class="result-label">↗</span> 1Q26 Business Quarterly — AI agents, workforce impact</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="req-card" style="border-left-color:#f5576c;">
-                        <div class="req-label">Requirement 5</div>
-                        <div class="req-title">AI Governance & Enterprise Deployment</div>
-                        <div class="req-body">
-                            <p style="color:#999; font-size:0.85rem; margin-bottom:0.6rem; font-style:italic;">AI governance & enterprise deployment solutions — frameworks, tools, and best practices</p>
-                            <div class="results-list" style="border-top:none; margin-top:0; padding-top:0;">
-                                <p style="color:#e4e4e4; margin-bottom:0.5rem;">Governance must be <strong>built into the product, not bolted on as services</strong>. Winning vendors productize autonomy levels with configurable controls — what agents may do, under what conditions, at what confidence thresholds. <strong>Palo Alto</strong> lets teams "earn" autonomy; <strong>Palantir</strong> embeds health checks, value verification, and risk management as automated product capabilities.</p>
-                                <a class="result-link" href="https://drive.google.com/file/d/1wM3qHfrm5-GVv6qMxzvCbjCQtEa334ar/view" target="_blank"><span class="result-label">↗</span> 5 Agentic AI Capabilities (G00844741) — "Productize Levels of Autonomy"</a>
-                                <p style="color:#e4e4e4; margin-bottom:0.5rem; margin-top:0.6rem;">AI sovereignty is critical: by 2027, <strong>35% of countries will be locked into region-specific AI platforms</strong>. CIOs must protect the model, the data, and the results. Techniques: digital tokenization, model distillation, and avoiding vendor lock-in across "digital nation-state" providers.</p>
-                                <a class="result-link" href="https://drive.google.com/file/d/1Jmf9FrCjCSqX2DKgOKsAFGsf7CRxwcnW/view" target="_blank"><span class="result-label">↗</span> 1Q26 BQ — "Navigate the Vendor Landscape" / AI sovereignty</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="req-card" style="border-left-color:#f5576c;">
-                        <div class="req-label">Requirement 6</div>
-                        <div class="req-title">Magic Quadrant / Hype Cycle Positioning</div>
-                        <div class="req-body">
-                            <p style="color:#999; font-size:0.85rem; margin-bottom:0.6rem; font-style:italic;">Wants Kindo mentioned in AI security analyst reports — MQ and Hype Cycle placement strategy</p>
-                            <div class="results-list" style="border-top:none; margin-top:0; padding-top:0;">
-                                <p style="color:#e4e4e4; margin-bottom:0.5rem;">AI is currently in the <strong>Trough of Disillusionment</strong> per Gartner's Chief of Research. This is where "the hard work begins and heroes are made." Vendors who demonstrate concrete ROI now — not just productivity gains — will emerge as leaders when the Hype Cycle climbs toward the Plateau. <strong>67% of orgs have deployed AI; 54% have deployed GenAI</strong> — the market is active but disillusioned.</p>
-                                <a class="result-link" href="https://drive.google.com/file/d/1Jmf9FrCjCSqX2DKgOKsAFGsf7CRxwcnW/view" target="_blank"><span class="result-label">↗</span> 1Q26 BQ — "Where's the AI Value?" by Chris Howard</a>
-                                <p class="no-results">⚠️ AI security-specific MQ/Hype Cycle reports not in current library — request from Jake Whitten for Kindo inclusion</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="req-card" style="border-left-color:#f5576c;">
-                        <div class="req-label">Requirement 7</div>
-                        <div class="req-title">Emerging CISOs Community</div>
-                        <div class="req-body">
-                            <p style="color:#999; font-size:0.85rem; margin-bottom:0.6rem; font-style:italic;">CISOs who want to figure out AI adoption faster — community access and engagement opportunities</p>
-                            <div class="results-list" style="border-top:none; margin-top:0; padding-top:0;">
-                                <p style="color:#e4e4e4; margin-bottom:0.5rem;">Gartner highlights an <strong>"emerging CISOs" cohort</strong> actively seeking AI adoption strategies. The 1Q26 BQ promotes Gartner's 2026 global conference series as the primary venue for executive peer networking. These conferences explicitly target connecting "emerging solution providers with cutting-edge buyers."</p>
-                                <a class="result-link" href="https://drive.google.com/file/d/1Jmf9FrCjCSqX2DKgOKsAFGsf7CRxwcnW/view" target="_blank"><span class="result-label">↗</span> 1Q26 BQ — 2026 Gartner Conferences promotion</a>
-                                <p class="no-results">⚠️ Request CISO-specific peer community details and event calendar from Jake Whitten</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="req-card" style="border-left-color:#f5576c;">
-                        <div class="req-label">Requirement 8</div>
-                        <div class="req-title">Gartner Conferences & Buyer Access</div>
-                        <div class="req-body">
-                            <p style="color:#999; font-size:0.85rem; margin-bottom:0.6rem; font-style:italic;">Conferences where emerging solution providers meet cutting-edge buyers — event strategy</p>
-                            <div class="results-list" style="border-top:none; margin-top:0; padding-top:0;">
-                                <p style="color:#e4e4e4; margin-bottom:0.5rem;">The 1Q26 BQ features a full-page ad for the <strong>2026 Gartner Conference Calendar</strong> — positioned as the venue to "exchange actionable strategies," "gain fresh insights from Gartner experts," and "build valuable connections that drive growth and innovation." Gartner IT Symposium/Xpo is the flagship event referenced throughout the research.</p>
-                                <a class="result-link" href="https://drive.google.com/file/d/1Jmf9FrCjCSqX2DKgOKsAFGsf7CRxwcnW/view" target="_blank"><span class="result-label">↗</span> 1Q26 BQ — Conference calendar page</a>
-                                <p class="no-results">⚠️ Request specific security-focused event dates and emerging vendor showcase opportunities from Jake Whitten</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tony -->
-            <div style="margin-bottom:1.5rem;">
-                <h3 style="color:#fff; font-size:1.1rem; margin-bottom:0.75rem;">🔴 Tony — SVP Services</h3>
-                <div class="requirements-grid">
-                    <div class="req-card" style="border-left-color:#ffa502;">
-                        <div class="req-label">Requirement 9</div>
-                        <div class="req-title">AI Adoption Rate vs. Workflow Adaptation Willingness</div>
-                        <div class="req-body">
-                            <p style="color:#999; font-size:0.85rem; margin-bottom:0.6rem; font-style:italic;">Are enterprises expecting AI to match human workflows? Is that mismatch why adoption fails?</p>
-                            <div class="results-list" style="border-top:none; margin-top:0; padding-top:0;">
-                                <p style="color:#e4e4e4; margin-bottom:0.5rem;"><strong>Yes — the mismatch is the primary failure mode.</strong> Traditional change management assumes tools are static and users adapt. Agentic AI breaks this: agents replan at runtime, requiring entirely new behavioral norms. Gartner says enterprises that don't redesign workflows will see "successful" pilots stall in production under low trust and executive skepticism about ROI.</p>
-                                <a class="result-link" href="https://drive.google.com/file/d/1wM3qHfrm5-GVv6qMxzvCbjCQtEa334ar/view" target="_blank"><span class="result-label">↗</span> 5 Agentic AI Capabilities (G00844741) — "Issue Context"</a>
-                                <p style="color:#e4e4e4; margin-bottom:0.5rem; margin-top:0.6rem;"><strong>25% of vendors</strong> in Gartner's CBR report change management as a top blocker. Stakeholders at different levels have conflicting visions. Enterprises lack a single decision-making authority for AI, so adoption becomes "everyone's problem and no one's problem." Only <strong>23% of CIOs say managers are ready</strong> to help employees navigate tech changes.</p>
-                                <a class="result-link" href="https://drive.google.com/file/d/1d8JX7UuSJxsHDMTWwjfbSGX6dS6tpxP8/view" target="_blank"><span class="result-label">↗</span> Emerging Tech Roadblocks (G00809520) — Critical Insight 3</a>
-                                <a class="result-link" href="https://drive.google.com/file/d/1Jmf9FrCjCSqX2DKgOKsAFGsf7CRxwcnW/view" target="_blank"><span class="result-label">↗</span> 1Q26 BQ — "Capture and Sustain AI Value" / change management costs</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Ken -->
-            <div style="margin-bottom:1.5rem;">
-                <h3 style="color:#fff; font-size:1.1rem; margin-bottom:0.75rem;">🔴 Ken — CSO</h3>
-                <div class="requirements-grid">
-                    <div class="req-card" style="border-left-color:#2ed573;">
-                        <div class="req-label">Requirement 10</div>
-                        <div class="req-title">AI Knowledge Depth Questionnaire</div>
-                        <div class="req-body">
-                            <p style="color:#999; font-size:0.85rem; margin-bottom:0.6rem; font-style:italic;">How to gauge a prospect's AI education level before sales conversations — assessment tool for pre-engagement</p>
-                            <div class="results-list" style="border-top:none; margin-top:0; padding-top:0;">
-                                <p style="color:#e4e4e4; margin-bottom:0.5rem;">Gartner's <strong>"You Are Here" GPS framework</strong> assesses AI readiness on two axes: AI technology readiness vs. human readiness. Only 11% of orgs score high on both. Use this as the basis for a pre-sales questionnaire — prospects who score low on both axes need education first, not a product demo.</p>
-                                <a class="result-link" href="https://drive.google.com/file/d/1DKUnGrsBI3KNvu_DGDnx4hkkUvDbx26i/view" target="_blank"><span class="result-label">↗</span> Walking the Golden Path (G00841075) — GPS framework</a>
-                                <p style="color:#e4e4e4; margin-bottom:0.5rem; margin-top:0.6rem;">Gartner's CBR found prospects fall into distinct readiness tiers: some are "nonimmediate buyers" still in education mode, while others are ready but lack data infrastructure. <strong>75% of vendors struggle with customer awareness gaps</strong> — a questionnaire that segments these tiers before the first call would cut wasted sales cycles.</p>
-                                <a class="result-link" href="https://drive.google.com/file/d/1d8JX7UuSJxsHDMTWwjfbSGX6dS6tpxP8/view" target="_blank"><span class="result-label">↗</span> Emerging Tech Roadblocks (G00809520) — "Near-Term Implications"</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="req-card" style="border-left-color:#2ed573;">
-                        <div class="req-label">Requirement 11</div>
-                        <div class="req-title">Adoption Failure Data for Product Design</div>
-                        <div class="req-body">
-                            <p style="color:#999; font-size:0.85rem; margin-bottom:0.6rem; font-style:italic;">Concrete data on adoption failure details — to design Kindo's product to overcome those harms</p>
-                            <div class="results-list" style="border-top:none; margin-top:0; padding-top:0;">
-                                <p style="color:#e4e4e4; margin-bottom:0.5rem;"><strong>Top failure modes from 181 use cases:</strong> (1) High compute costs + unpredictable pricing deter adoption, (2) lack of quality data means POCs don't convert to production, (3) no single decision-making authority creates organizational paralysis, (4) stakeholders at different levels have conflicting visions of AI's role.</p>
-                                <a class="result-link" href="https://drive.google.com/file/d/1d8JX7UuSJxsHDMTWwjfbSGX6dS6tpxP8/view" target="_blank"><span class="result-label">↗</span> Emerging Tech Roadblocks (G00809520) — CBR of 52 vendors</a>
-                                <p style="color:#e4e4e4; margin-bottom:0.5rem; margin-top:0.6rem;"><strong>Product design implication:</strong> Gartner says products that don't embed change management into the UX will see "weak renewals and rising operational risk." Winners build <strong>graduated autonomy</strong> (start small, prove value, expand) and <strong>low cognitive load</strong> (meet users where they work, reduce decisions). Time saved ≠ money saved — the product must help convert productivity into financial value.</p>
-                                <a class="result-link" href="https://drive.google.com/file/d/1wM3qHfrm5-GVv6qMxzvCbjCQtEa334ar/view" target="_blank"><span class="result-label">↗</span> 5 Agentic AI Capabilities (G00844741) — 5 product principles</a>
-                                <a class="result-link" href="https://drive.google.com/file/d/1Jmf9FrCjCSqX2DKgOKsAFGsf7CRxwcnW/view" target="_blank"><span class="result-label">↗</span> 1Q26 BQ — "time saved is not money saved"</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        
+        <div class="insight-box">
+            <strong>Key Insight:</strong> Gartner emphasizes AI's shift to "composable" ecosystems via modular integrations. Map VtKl's AI modules to Gartner's "Magic Quadrant" for faster channel entry—partner with hyperscalers like AWS for distribution.
         </div>
-
-        <!-- ═══════════════════════════════════════════ -->
-        <!-- SECTION 1: BUS ANALYST REQUIREMENTS        -->
-        <!-- ═══════════════════════════════════════════ -->
-        <div class="section" id="sec-requirements">
-            <h2>📊 Bus Analyst Requirements — Gartner Research Storage & Retrieval</h2>
-
-            <div class="requirements-grid">
-                <div class="req-card storage">
-                    <div class="req-label">Requirement 1</div>
-                    <div class="req-title">📦 Structured Storage with Full Fidelity</div>
-                    <div class="req-body">
-                        Gartner reports contain highly structured content — Magic Quadrants, vendor ratings, numbered recommendations, comparative tables. The storage approach must:
-                        <ul>
-                            <li>Preserve document hierarchy (sections, sub-sections, headers)</li>
-                            <li>Retain tabular data and ranked lists without flattening</li>
-                            <li>Maintain cross-references between related findings</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="req-card retrieval">
-                    <div class="req-label">Requirement 2</div>
-                    <div class="req-title">🔍 Semantic + Keyword Retrieval</div>
-                    <div class="req-body">
-                        Users need both precise lookups ("What did Gartner rate Vendor X?") and fuzzy discovery ("insights about composable architecture"). Requires:
-                        <ul>
-                            <li>Full-text search for exact terms and quotes</li>
-                            <li>Semantic similarity for conceptual queries</li>
-                            <li>Filtering by report date, category, and vendor</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="req-card structure">
-                    <div class="req-label">Requirement 3</div>
-                    <div class="req-title">📐 Human-Readable & Auditable</div>
-                    <div class="req-body">
-                        Team members must be able to browse, verify, and cite findings directly — not just via AI-generated summaries:
-                        <ul>
-                            <li>Content viewable without specialized tools</li>
-                            <li>Clear provenance (report title, date, page/section)</li>
-                            <li>Version tracking when reports are updated</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="req-card scale">
-                    <div class="req-label">Requirement 4</div>
-                    <div class="req-title">📈 Scale & Maintainability</div>
-                    <div class="req-body">
-                        The system must handle growing report volume without manual overhead:
-                        <ul>
-                            <li>Easy ingestion pipeline (PDF → stored format)</li>
-                            <li>Low operational cost (minimal infrastructure)</li>
-                            <li>Works with existing VtKl tooling and Supabase stack</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="req-card integration">
-                    <div class="req-label">Requirement 5</div>
-                    <div class="req-title">🔗 LLM & Agent Integration</div>
-                    <div class="req-body">
-                        Content must be consumable by AI agents for RAG workflows:
-                        <ul>
-                            <li>Chunk-friendly format for context windows</li>
-                            <li>Metadata-rich for targeted retrieval</li>
-                            <li>Compatible with embedding models and vector stores</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="req-card governance">
-                    <div class="req-label">Requirement 6</div>
-                    <div class="req-title">🛡️ Governance & Access Control</div>
-                    <div class="req-body">
-                        Gartner content is licensed and sensitive:
-                        <ul>
-                            <li>Access restricted to authorized team members</li>
-                            <li>No public exposure of licensed material</li>
-                            <li>Audit trail for who accessed what</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <h3>Vector DB vs. Markdown DB — Comparison</h3>
-            <table class="comparison-table">
-                <thead>
-                    <tr>
-                        <th>Dimension</th>
-                        <th>Vector Database</th>
-                        <th>Markdown Database</th>
-                        <th>Hybrid (Recommended)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Semantic Search</strong></td>
-                        <td class="verdict">★★★ Excellent</td>
-                        <td class="weak">★☆☆ Keyword only</td>
-                        <td class="verdict">★★★ Best of both</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Structure Preservation</strong></td>
-                        <td class="weak">★☆☆ Lost in chunking</td>
-                        <td class="verdict">★★★ Fully preserved</td>
-                        <td class="verdict">★★★ Markdown source</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Human Readability</strong></td>
-                        <td class="weak">★☆☆ Opaque vectors</td>
-                        <td class="verdict">★★★ Directly readable</td>
-                        <td class="verdict">★★★ Browse markdown</td>
-                    </tr>
-                    <tr>
-                        <td><strong>LLM/RAG Compatibility</strong></td>
-                        <td class="verdict">★★★ Native</td>
-                        <td class="partial">★★☆ Needs chunking layer</td>
-                        <td class="verdict">★★★ Vectors → markdown chunks</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Operational Simplicity</strong></td>
-                        <td class="partial">★★☆ Extra infra</td>
-                        <td class="verdict">★★★ Files or simple DB</td>
-                        <td class="partial">★★☆ Two systems</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Table/Chart Fidelity</strong></td>
-                        <td class="weak">★☆☆ Flattened</td>
-                        <td class="verdict">★★★ Markdown tables</td>
-                        <td class="verdict">★★★ Markdown source</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Versioning & Diffs</strong></td>
-                        <td class="weak">★☆☆ Not practical</td>
-                        <td class="verdict">★★★ Git-native</td>
-                        <td class="verdict">★★★ Git on markdown</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Cost at Scale</strong></td>
-                        <td class="partial">★★☆ Embedding + hosting</td>
-                        <td class="verdict">★★★ Minimal</td>
-                        <td class="partial">★★☆ Combined</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <div class="recommendation-box">
-                <strong>⚡ Recommendation: Hybrid Approach — Markdown as Source of Truth, Vectors as Search Layer</strong>
-                <p>Convert Gartner PDFs to structured markdown (preserving headers, tables, lists). Store as canonical files. Then embed the same markdown chunks into pgvector (Supabase-native) for semantic retrieval. When the LLM retrieves a chunk, it pulls structured markdown — preserving the structure Gartner reports depend on. If forced to pick one: <strong>markdown first</strong>. You can always add vector search later; you can't reconstruct structure from flattened embeddings.</p>
-            </div>
+        
+        <div class="toolbar">
+            <button class="btn btn-primary" onclick="openAddModal()">+ Add Item</button>
+            <button class="btn btn-secondary" onclick="exportData()">📤 Export</button>
         </div>
-
-        <!-- ═══════════════════════════════════════════ -->
-        <!-- SECTION 2: RESEARCH ANALYSIS               -->
-        <!-- ═══════════════════════════════════════════ -->
-        <div class="section" id="sec-analysis">
-            <h2>🔬 Gartner Research Analysis</h2>
-
-            <div class="callout">
-                <strong>Key Insight:</strong> Gartner emphasizes AI's shift to "composable" ecosystems via modular integrations. Map VtKl's AI modules to Gartner's "Magic Quadrant" for faster channel entry — partner with hyperscalers like AWS for distribution.
+        
+        <div class="board">
+            <div class="column">
+                <div class="column-header">
+                    <span class="column-title">📡 Distribution Channels <span class="column-count" id="count-channels">0</span></span>
+                    <button class="add-btn" onclick="openAddModal('channels')">+</button>
+                </div>
+                <div class="card-list" id="list-channels"></div>
             </div>
-
-            <div class="analysis-grid">
-                <div class="analysis-card">
-                    <h3>🏗️ Composable AI Architecture</h3>
-                    <div class="analysis-body">
-                        Gartner's 2025–2026 research consistently advocates for <span class="highlight">composable AI</span> — modular, API-first systems that enterprises can assemble rather than buy monolithically.
-                        <ul>
-                            <li><strong>Implication for VtKl:</strong> Position AI modules as composable building blocks, not all-or-nothing platforms</li>
-                            <li>Gartner predicts 70% of new enterprise AI will be composable by 2027</li>
-                            <li>Key differentiator: interoperability with existing enterprise stacks</li>
-                        </ul>
-                    </div>
+            <div class="column">
+                <div class="column-header">
+                    <span class="column-title">📈 Market Trends <span class="column-count" id="count-trends">0</span></span>
+                    <button class="add-btn" onclick="openAddModal('trends')">+</button>
                 </div>
-                <div class="analysis-card">
-                    <h3>📊 Magic Quadrant Positioning</h3>
-                    <div class="analysis-body">
-                        Gartner's Magic Quadrant framework evaluates vendors on <span class="highlight">completeness of vision</span> and <span class="highlight">ability to execute</span>.
-                        <ul>
-                            <li>To enter as a "Visionary," VtKl needs published thought leadership + reference customers</li>
-                            <li>Analyst relations (inquiry calls, briefings) directly influence placement</li>
-                            <li>Distribution partnerships with hyperscalers accelerate "ability to execute" scores</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="analysis-card">
-                    <h3>🌐 Culture-Tech Convergence</h3>
-                    <div class="analysis-body">
-                        Gartner identifies growing demand for <span class="highlight">culturally adaptive AI</span> — systems that understand regional nuance, language, and context.
-                        <ul>
-                            <li>VtKl's culture-tech positioning aligns with this trend</li>
-                            <li>Opportunity: Gartner "Cool Vendor" nomination in cultural AI category</li>
-                            <li>Risk: category may be too niche for dedicated MQ coverage initially</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="analysis-card">
-                    <h3>📡 Distribution Channel Trends</h3>
-                    <div class="analysis-body">
-                        Gartner's channel research shows AI distribution shifting toward:
-                        <ul>
-                            <li><strong>Marketplace-first:</strong> AWS, Azure, GCP marketplaces as primary discovery</li>
-                            <li><strong>Embedded AI:</strong> OEM partnerships where AI runs inside existing platforms</li>
-                            <li><strong>Vertical SaaS:</strong> Industry-specific bundles outperform horizontal plays</li>
-                            <li>VtKl should prioritize 1–2 hyperscaler marketplace listings for credibility</li>
-                        </ul>
-                    </div>
-                </div>
+                <div class="card-list" id="list-trends"></div>
             </div>
-        </div>
-
-        <!-- ═══════════════════════════════════════════ -->
-        <!-- SECTION 3: ANALYST TALKING POINTS          -->
-        <!-- ═══════════════════════════════════════════ -->
-        <div class="section" id="sec-talking-points">
-            <h2>🎙️ Recommended Talking Points for Analyst Calls</h2>
-
-            <div class="callout">
-                <strong>Prep Note:</strong> Gartner analyst calls (inquiries and briefings) are 30 minutes max. Lead with your strongest differentiator, bring data, and always end with a specific ask. Analysts remember companies that are prepared and concise.
+            <div class="column">
+                <div class="column-header">
+                    <span class="column-title">🌐 Culture-Tech Overlap <span class="column-count" id="count-culture">0</span></span>
+                    <button class="add-btn" onclick="openAddModal('culture')">+</button>
+                </div>
+                <div class="card-list" id="list-culture"></div>
             </div>
-
-            <div class="tp-grid">
-                <div class="tp-card">
-                    <div class="tp-number">1</div>
-                    <h3>Composable AI Alignment</h3>
-                    <div class="tp-body">
-                        Position VtKl as a composable AI platform that fits Gartner's predicted architecture shift:
-                        <ul>
-                            <li>"Our platform is modular by design — enterprises plug in the AI capabilities they need without rip-and-replace"</li>
-                            <li>Reference Gartner's composable enterprise framework by name</li>
-                            <li>Bring a diagram showing integration points with 3+ enterprise stacks</li>
-                        </ul>
-                        <div class="tp-question">Where do you see composable AI vendors fitting in future Magic Quadrant evaluations?</div>
-                    </div>
+            <div class="column">
+                <div class="column-header">
+                    <span class="column-title">🎯 VtKl Strategy <span class="column-count" id="count-strategy">0</span></span>
+                    <button class="add-btn" onclick="openAddModal('strategy')">+</button>
                 </div>
-                <div class="tp-card">
-                    <div class="tp-number">2</div>
-                    <h3>Culture-Tech Differentiation</h3>
-                    <div class="tp-body">
-                        Lead with the unique value prop — culturally adaptive AI is underserved:
-                        <ul>
-                            <li>"We're the only vendor purpose-built for cultural context in AI — not just translation, but meaning"</li>
-                            <li>Cite specific use cases: Pacific Islander communities, multilingual enterprise</li>
-                            <li>Position as a "Cool Vendor" candidate — Gartner actively looks for novel approaches</li>
-                        </ul>
-                        <div class="tp-question">Is Gartner tracking culturally adaptive AI as a distinct category? What would it take to be featured?</div>
-                    </div>
-                </div>
-                <div class="tp-card">
-                    <div class="tp-number">3</div>
-                    <h3>Distribution & GTM Strategy</h3>
-                    <div class="tp-body">
-                        Show you understand the channel landscape Gartner tracks:
-                        <ul>
-                            <li>"We're pursuing a marketplace-first distribution strategy aligned with your channel research"</li>
-                            <li>Mention specific hyperscaler partnerships in progress</li>
-                            <li>Discuss OEM / embedded AI partnerships as secondary channel</li>
-                        </ul>
-                        <div class="tp-question">Which marketplace (AWS/Azure/GCP) is showing the strongest traction for AI-native vendors in your research?</div>
-                    </div>
-                </div>
-                <div class="tp-card">
-                    <div class="tp-number">4</div>
-                    <h3>Customer Evidence & Traction</h3>
-                    <div class="tp-body">
-                        Analysts weigh customer proof heavily — bring specifics:
-                        <ul>
-                            <li>Name 2–3 reference customers (with permission) and their outcomes</li>
-                            <li>Share metrics: adoption rate, retention, time-to-value</li>
-                            <li>"We've seen X% improvement in [metric] across Y deployments"</li>
-                        </ul>
-                        <div class="tp-question">What customer evidence benchmarks do you look for when evaluating emerging AI vendors?</div>
-                    </div>
-                </div>
-                <div class="tp-card">
-                    <div class="tp-number">5</div>
-                    <h3>Roadmap & Vision</h3>
-                    <div class="tp-body">
-                        Gartner rewards "completeness of vision" — share what's next:
-                        <ul>
-                            <li>12-month product roadmap highlights (keep high-level)</li>
-                            <li>Ecosystem expansion plans (integrations, partnerships)</li>
-                            <li>Research investment and IP strategy</li>
-                        </ul>
-                        <div class="tp-question">What capabilities are you seeing enterprise buyers prioritize for 2027 AI budgets?</div>
-                    </div>
-                </div>
-                <div class="tp-card">
-                    <div class="tp-number">6</div>
-                    <h3>The Ask</h3>
-                    <div class="tp-body">
-                        Always end with a concrete next step:
-                        <ul>
-                            <li>Request inclusion in relevant research (Hype Cycle, MQ, Cool Vendors)</li>
-                            <li>Ask for introductions to other analysts covering adjacent categories</li>
-                            <li>Schedule a follow-up briefing after a key milestone</li>
-                        </ul>
-                        <div class="tp-question">Can we schedule a briefing when we launch [specific milestone]? Which of your colleagues covers [adjacent area]?</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ═══════════════════════════════════════════ -->
-        <!-- SECTION 4: WORKING BOARD (existing kanban) -->
-        <!-- ═══════════════════════════════════════════ -->
-        <div class="section" id="sec-board">
-            <h2>📋 Working Board</h2>
-
-            <div class="insight-box">
-                <strong>Key Insight:</strong> Gartner emphasizes AI's shift to "composable" ecosystems via modular integrations. Map VtKl's AI modules to Gartner's "Magic Quadrant" for faster channel entry — partner with hyperscalers like AWS for distribution.
-            </div>
-
-            <div class="toolbar">
-                <button class="btn btn-primary" onclick="openAddModal()">+ Add Item</button>
-                <button class="btn btn-secondary" onclick="exportData()">📤 Export</button>
-            </div>
-
-            <div class="board">
-                <div class="column">
-                    <div class="column-header">
-                        <span class="column-title">📡 Distribution Channels <span class="column-count" id="count-channels">0</span></span>
-                        <button class="add-btn" onclick="openAddModal('channels')">+</button>
-                    </div>
-                    <div class="card-list" id="list-channels"></div>
-                </div>
-                <div class="column">
-                    <div class="column-header">
-                        <span class="column-title">📈 Market Trends <span class="column-count" id="count-trends">0</span></span>
-                        <button class="add-btn" onclick="openAddModal('trends')">+</button>
-                    </div>
-                    <div class="card-list" id="list-trends"></div>
-                </div>
-                <div class="column">
-                    <div class="column-header">
-                        <span class="column-title">🌐 Culture-Tech Overlap <span class="column-count" id="count-culture">0</span></span>
-                        <button class="add-btn" onclick="openAddModal('culture')">+</button>
-                    </div>
-                    <div class="card-list" id="list-culture"></div>
-                </div>
-                <div class="column">
-                    <div class="column-header">
-                        <span class="column-title">🎯 VtKl Strategy <span class="column-count" id="count-strategy">0</span></span>
-                        <button class="add-btn" onclick="openAddModal('strategy')">+</button>
-                    </div>
-                    <div class="card-list" id="list-strategy"></div>
-                </div>
+                <div class="card-list" id="list-strategy"></div>
             </div>
         </div>
     </div>
-
+    
     <div class="modal" id="item-modal">
         <div class="modal-content">
             <h2 class="modal-title" id="modal-title">Add Item</h2>
@@ -786,34 +170,25 @@
             </div>
         </div>
     </div>
-
+    
     <footer>Gartner Research • Business Analyst Agent • Tony's Dashboard</footer>
-
+    
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script>
-        // ── Tab navigation ──
-        function showSection(name) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-            document.getElementById('sec-' + name).classList.add('active');
-            event.target.classList.add('active');
-        }
-
-        // ── Supabase / Kanban ──
         const SUPABASE_URL = 'https://mmwbiogqmgmtxboipyko.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_r6q0-iEnygKZiZkaOuY-hg_Tvlb-66U';
         const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         const BOARD_NAME = 'gartner';
-
+        
         let items = [];
         const CATEGORIES = ['channels', 'trends', 'culture', 'strategy'];
-
+        
         async function init() {
             await loadData();
             renderBoard();
             initSortable();
         }
-
+        
         async function loadData() {
             try {
                 const { data, error } = await db
@@ -821,7 +196,9 @@
                     .select('*')
                     .eq('board', BOARD_NAME)
                     .order('position', { ascending: true });
+                
                 if (error) throw error;
+                
                 items = data.map(item => ({
                     id: item.item_id || item.id,
                     supabaseId: item.id,
@@ -829,13 +206,14 @@
                     position: item.position,
                     ...(typeof item.data === 'string' ? JSON.parse(item.data) : item.data)
                 }));
+                
                 console.log(`Loaded ${items.length} items from Supabase`);
             } catch (e) {
                 console.error('Failed to load:', e);
                 items = [];
             }
         }
-
+        
         async function saveItemToSupabase(item, isNew = false) {
             const itemData = { title: item.title, content: item.content, source: item.source };
             try {
@@ -853,7 +231,7 @@
                 }
             } catch (e) { console.error('Save failed:', e); }
         }
-
+        
         async function updateItemCategory(itemId, newCategory) {
             try {
                 const { error } = await db.from('kanban_items').update({ column_id: newCategory })
@@ -861,11 +239,12 @@
                 if (error) throw error;
             } catch (e) { console.error('Update failed:', e); }
         }
-
+        
         function renderBoard() {
             CATEGORIES.forEach(cat => {
                 const list = document.getElementById(`list-${cat}`);
                 const catItems = items.filter(i => i.category === cat);
+                
                 list.innerHTML = catItems.map(item => `
                     <div class="item-card" data-id="${item.id}" onclick="openEditModal('${item.id}')">
                         <div class="card-title">${escapeHtml(item.title || '')}</div>
@@ -876,14 +255,17 @@
                         </div>
                     </div>
                 `).join('');
+                
                 document.getElementById(`count-${cat}`).textContent = catItems.length;
             });
         }
-
+        
         function initSortable() {
             document.querySelectorAll('.card-list').forEach(list => {
                 new Sortable(list, {
-                    group: 'research', animation: 150, ghostClass: 'sortable-ghost',
+                    group: 'research',
+                    animation: 150,
+                    ghostClass: 'sortable-ghost',
                     onEnd: async function(evt) {
                         const itemId = evt.item.dataset.id;
                         const newCategory = evt.to.id.replace('list-', '');
@@ -897,7 +279,7 @@
                 });
             });
         }
-
+        
         function openAddModal(category = 'channels') {
             document.getElementById('modal-title').textContent = 'Add Item';
             document.getElementById('item-id').value = '';
@@ -907,7 +289,7 @@
             document.getElementById('item-source').value = '';
             document.getElementById('item-modal').classList.add('visible');
         }
-
+        
         function openEditModal(id) {
             const item = items.find(i => String(i.id) === String(id));
             if (!item) return;
@@ -919,19 +301,21 @@
             document.getElementById('item-source').value = item.source || '';
             document.getElementById('item-modal').classList.add('visible');
         }
-
+        
         function closeModal() { document.getElementById('item-modal').classList.remove('visible'); }
-
+        
         async function saveItem() {
             const id = document.getElementById('item-id').value;
             const title = document.getElementById('item-title').value.trim();
             if (!title) { alert('Title required'); return; }
+            
             const itemData = {
                 title,
                 content: document.getElementById('item-content').value.trim(),
                 category: document.getElementById('item-category').value,
                 source: document.getElementById('item-source').value.trim()
             };
+            
             if (id) {
                 const item = items.find(i => String(i.id) === String(id));
                 if (item) { Object.assign(item, itemData); await saveItemToSupabase(item, false); }
@@ -940,10 +324,11 @@
                 items.push(itemData);
                 await saveItemToSupabase(itemData, true);
             }
+            
             renderBoard();
             closeModal();
         }
-
+        
         function exportData() {
             const blob = new Blob([JSON.stringify(items, null, 2)], { type: 'application/json' });
             const a = document.createElement('a');
@@ -951,13 +336,13 @@
             a.download = `gartner-${new Date().toISOString().split('T')[0]}.json`;
             a.click();
         }
-
+        
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
         }
-
+        
         document.getElementById('item-modal').addEventListener('click', e => { if (e.target.id === 'item-modal') closeModal(); });
         init();
     </script>
