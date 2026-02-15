@@ -396,7 +396,7 @@
 
 <h1>📋 AIPMO Business Process Flow</h1>
 <p class="subtitle">Client Intake → Profiling → Estimation → Execution → Retrospective</p>
-<p class="version">v4.0 — Feb 14, 2026</p>
+<p class="version">v2.0 — Feb 15, 2026 (Joana Sprint Process Spec)</p>
 
 <!-- Greg vs Akira distinction -->
 <div class="architect-note">
@@ -498,7 +498,7 @@
     <div class="arrow">→</div>
     <div class="n n-process">
       <div class="n-label">Estimate</div>
-      <div class="n-detail">SP × 2 × 1.7 drag</div>
+      <div class="n-detail">SP × 2 × drag (Startup 1.9, Enterprise 1.5)</div>
     </div>
     <div class="arrow">→</div>
     <div class="n n-process">
@@ -560,27 +560,19 @@
 
 <div class="arrow-down cross-lane">↓</div>
 
-<!-- Portfolio Manager lane -->
+<!-- Portfolio Manager lane - 3 Gates -->
 <div class="swimlane lane-portmgr">
   <div class="swimlane-label">
     <div class="lane-icon">📊</div>
     AI Portfolio Mgr
     <div class="lane-type">Strategic AI</div>
   </div>
+  
+  <!-- Gate 1: Budget -->
   <div class="flow-row">
     <div class="n n-process">
-      <div class="n-label">Validate Budget</div>
-      <div class="n-detail">Alignment · Margin</div>
-    </div>
-    <div class="arrow">→</div>
-    <div class="n n-process">
-      <div class="n-label">Token Cost Projection</div>
-      <div class="n-detail">Tokens × model rate</div>
-    </div>
-    <div class="arrow">→</div>
-    <div class="n n-process">
-      <div class="n-label">Milestone Check</div>
-      <div class="n-detail">Payment alignment</div>
+      <div class="n-label">Gate 1: Budget</div>
+      <div class="n-detail">If >$100K/month: assess cash flow</div>
     </div>
     <div class="arrow">→</div>
     <div class="n n-decision">
@@ -589,11 +581,55 @@
   </div>
   <div class="branch">
     <div class="branch-path branch-yes">
-      <div class="branch-label" style="color:#00e676;">✅ YES → BUDGET_APPROVED</div>
+      <div class="branch-label" style="color:#00e676;">✅ BUDGET_APPROVED</div>
     </div>
     <div class="branch-path branch-no">
-      <div class="branch-label" style="color:#ff6b6b;">❌ NO → Return to PM</div>
-      Scope too expensive or margin too thin
+      <div class="branch-label" style="color:#ff6b6b;">❌ Return to PM</div>
+    </div>
+  </div>
+  
+  <div class="arrow-down">↓</div>
+  
+  <!-- Gate 2: Resources -->
+  <div class="flow-row">
+    <div class="n n-process">
+      <div class="n-label">Gate 2: Resources</div>
+      <div class="n-detail">Portfolio availability check</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-decision">
+      <div class="n-inner">Available?</div>
+    </div>
+  </div>
+  <div class="branch">
+    <div class="branch-path branch-yes">
+      <div class="branch-label" style="color:#00e676;">✅ RESOURCES_APPROVED</div>
+    </div>
+    <div class="branch-path branch-no">
+      <div class="branch-label" style="color:#ff6b6b;">❌ Return to PM</div>
+    </div>
+  </div>
+  
+  <div class="arrow-down">↓</div>
+  
+  <!-- Gate 3: Schedule -->
+  <div class="flow-row">
+    <div class="n n-process">
+      <div class="n-label">Gate 3: Schedule</div>
+      <div class="n-detail">Human oversight availability</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-decision">
+      <div class="n-inner">Feasible?</div>
+    </div>
+  </div>
+  <div class="branch">
+    <div class="branch-path branch-yes">
+      <div class="branch-label" style="color:#00e676;">✅ SCHEDULE_APPROVED</div>
+      All 3 gates must pass before Human Review
+    </div>
+    <div class="branch-path branch-no">
+      <div class="branch-label" style="color:#ff6b6b;">❌ Return to PM</div>
     </div>
   </div>
 </div>
@@ -612,7 +648,7 @@
   <div class="flow-row">
     <div class="n n-event" style="min-width:140px;">
       <div class="n-label">Trigger</div>
-      <div class="n-detail">BUDGET_APPROVED</div>
+      <div class="n-detail">SCHEDULE_APPROVED<br>(All 3 Portfolio gates ✓)</div>
     </div>
     <div class="arrow">→</div>
     <div class="n n-gate">
@@ -662,17 +698,22 @@
   </div>
   <div class="flow-row">
     <div class="n n-process">
-      <div class="n-label">Generate Contract</div>
-      <div class="n-detail">Promise + Stretch + Acceptance Criteria</div>
+      <div class="n-label">Generate Commitments</div>
+      <div class="n-detail">Promise/Stretch + AC + Customer scope</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-process">
+      <div class="n-label">Record "Before" State</div>
+      <div class="n-detail">Video/screenshots before changes</div>
     </div>
     <div class="arrow">→</div>
     <div class="n n-data">
-      <div class="n-label">Contract</div>
-      <div class="n-detail">GitHub markdown + commit SHA</div>
+      <div class="n-label">Commitment Package</div>
+      <div class="n-detail">GitHub + hash + before recording</div>
     </div>
     <div class="arrow">→</div>
     <div class="n n-event">
-      <div class="n-label" style="font-size:0.68rem;">CONTRACT_<br>GENERATED</div>
+      <div class="n-label" style="font-size:0.68rem;">COMMITMENT_<br>GENERATED</div>
     </div>
   </div>
 </div>
@@ -699,15 +740,15 @@
   <div class="branch">
     <div class="branch-path branch-yes">
       <div class="branch-label" style="color:#00e676;">✅ ACCEPT</div>
-      Write signature: commitment + hash + ETA → CONTRACT_SIGNED
+      Write signature: commitment + hash + ETA → COMMITMENT_SIGNED
     </div>
     <div class="branch-path branch-mod">
       <div class="branch-label" style="color:#ffc107;">🔄 MODIFY</div>
-      Propose changes → Renegotiate
+      Propose changes → Renegotiate → 30min timeout
     </div>
     <div class="branch-path branch-no">
       <div class="branch-label" style="color:#ff6b6b;">❌ DECLINE</div>
-      Cannot commit → Reassign
+      Program Manager reassigns → 30min to resolve
     </div>
   </div>
 </div>
@@ -753,7 +794,7 @@
         <div class="n n-process"><div class="n-label">Squad Beta</div><div class="n-detail">Frontend · UX · Style</div></div>
         <div class="n n-process"><div class="n-label">Squad Gamma</div><div class="n-detail">Integration · QA · Deploy</div></div>
       </div>
-      <div class="note">Signed items only · 60-min sprints · Reality Check at 30-min midpoint</div>
+      <div class="note">Signed items only · 60-min execution + ~45min overhead = ~105min cycle · Reality Check at 30-min midpoint</div>
       <div class="flow-row" style="margin-top:4px;">
         <div class="n n-event" style="width:70px;height:70px;">
           <div class="n-label" style="font-size:0.65rem;">TASK_<br>COMPLETE</div>
@@ -942,13 +983,13 @@
   </div>
   <div class="flow-row">
     <div class="n n-timer" style="width:70px;height:70px;">
-      <div class="n-label" style="font-size:0.6rem;">Exec<br>60m</div>
+      <div class="n-label" style="font-size:0.6rem;">Exec<br>45m</div>
     </div>
     <div class="n n-timer" style="width:70px;height:70px;">
       <div class="n-label" style="font-size:0.6rem;">FC<br>2h</div>
     </div>
     <div class="n n-timer" style="width:70px;height:70px;">
-      <div class="n-label" style="font-size:0.6rem;">Strategic<br>~90m</div>
+      <div class="n-label" style="font-size:0.6rem;">Strategic<br>90m</div>
     </div>
     <div class="n n-timer" style="width:70px;height:70px;">
       <div class="n-label" style="font-size:0.55rem;">Verifier<br>30m</div>
@@ -966,7 +1007,7 @@
     <div class="branch-path branch-yes"><div class="branch-label" style="color:#00e676;">✅ YES</div>Resume</div>
     <div class="branch-path branch-no"><div class="branch-label" style="color:#ff6b6b;">❌ +15m</div>Escalate → +30m → Restart + notify human</div>
   </div>
-  <div class="note">Strategic AI alarm: 3h silence = 2 missed Checkpoint Gates. Verifier: event-driven, 15min expected, 30min alarm.</div>
+  <div class="note">Updated: Exec 45min, Strategic 90min (NOT 3h), FC 2h, Verifier 30min. Verifier: event-driven, 15min expected response.</div>
 </div>
 
 <!-- ===== PHASE 7: RETROSPECTIVE ===== -->
@@ -978,7 +1019,7 @@
     Flow Coordinators
     <div class="lane-type">Coordination</div>
   </div>
-  <div class="cycle-label cycle-timer">⏱️ After each release (~6 hours)</div>
+  <div class="cycle-label cycle-timer">⏱️ Every 2 sprints (~3.5 hours) + After each release</div>
   <div class="flow-row">
     <div class="n n-timer">
       <div class="n-label" style="font-size:0.6rem;">~6 hours</div>
@@ -1137,11 +1178,27 @@
   <div style="color:#8892a4; line-height:1.5;">
     <strong>File access rules per agent type:</strong><br>
     • <strong>Flow Coordinators:</strong> soul.md, working-styles.md, key-people.md (NEVER heartbeat.md)<br>
-    • <strong>Squad Agents:</strong> soul.md ONLY + assigned contract file<br>
+    • <strong>Squad Agents:</strong> soul.md ONLY + assigned commitment file<br>
     • <strong>AI Estimator:</strong> memory.md, key-people.md, pareto-rules.md<br>
     • <strong>AI Program Manager:</strong> heartbeat.md, soul.md (PM only)<br>
     • <strong>AI Portfolio Manager:</strong> budget-models.md, heartbeat.md<br>
-    • <strong>Requirements Verifier:</strong> contract-templates.md, acceptance-criteria.md
+    • <strong>Requirements Verifier:</strong> commitment-templates.md, acceptance-criteria.md
+  </div>
+</div>
+
+<!-- Anti-Fabrication Protocol -->
+<div style="background:rgba(255,107,107,0.05); border:1px solid rgba(255,107,107,0.2); border-radius:10px; padding:16px; margin:20px 0; font-size:0.8rem;">
+  <div style="color:#ff6b6b; font-weight:700; margin-bottom:12px;">🛡️ Anti-Fabrication Protocol (Section 10)</div>
+  <div style="color:#8892a4; line-height:1.5;">
+    <strong>Core Principles:</strong><br>
+    1. <strong>Strict Evidence:</strong> Claims based only on execution context (code output, test results, logs)<br>
+    2. <strong>Source Citation:</strong> Every status must reference Git SHA, deployment URL, or test output<br>
+    3. <strong>Missing Info:</strong> "Evidence not available for [item]. Cannot verify." Never fabricate.<br>
+    4. <strong>No Inference:</strong> "Code compiles" ≠ "feature works". Each AC requires specific evidence.<br>
+    5. <strong>Verification Traceability:</strong> Every PASS/FAIL links to artifact. No pass without evidence.
+  </div>
+  <div style="margin-top:12px; padding:10px; background:rgba(255,107,107,0.1); border-radius:6px; font-size:0.75rem; color:#ff6b6b;">
+    <strong>Checkpoint Gate Check:</strong> Does every "COMPLETE" claim have linked evidence? VERIFICATION_SUSPECT flags require FC review.
   </div>
 </div>
 
@@ -1227,10 +1284,10 @@
   <div style="margin-top:14px; padding:16px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); font-family:monospace; font-size:0.73rem; line-height:1.7;">
     <span style="color:#ff6b6b;">INTAKE_RECEIVED</span> <span style="color:#445;">(PM → Estimator)</span><br>
     &nbsp;&nbsp;→ <span style="color:#7b61ff;">ESTIMATES_COMPLETE</span> <span style="color:#445;">(decompose + Pareto + size)</span><br>
-    &nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#0096ff;">BACKLOG_READY</span> <span style="color:#445;">(squad assignment)</span><br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#00d4c8;">BUDGET_APPROVED</span> <span style="color:#445;">(portfolio validation)</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#0096ff;">BACKLOG_READY</span> <span style="color:#445;">(squad assignment + scope validation)</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#00d4c8;">BUDGET_APPROVED</span> → <span style="color:#00d4c8;">RESOURCES_APPROVED</span> → <span style="color:#00d4c8;">SCHEDULE_APPROVED</span><br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#ff6b6b;">HUMAN_APPROVED</span><br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#ffc107;">CONTRACT_GENERATED</span> → <span style="color:#00e676;">CONTRACT_SIGNED</span> → <span style="color:#00e676;">BEGIN_WORK</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#ffc107;">COMMITMENT_GENERATED</span> → <span style="color:#00e676;">COMMITMENT_SIGNED</span> → <span style="color:#00e676;">BEGIN_WORK</span><br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#ff9800;">REALITY_CHECK_COMPLETE</span> <span style="color:#445;">(30min midpoint)</span><br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#00e676;">TASK_COMPLETE</span> · <span style="color:#ff6b6b;">BLOCKER_RAISED</span><br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#ffc107;">BATCH_VERIFIED</span> · <span style="color:#ff6b6b;">VERIFICATION_FAILED</span> · <span style="color:#ff3c3c;">VERIFICATION_ESCALATED</span><br>
@@ -1245,7 +1302,7 @@
 </div>
 
 <footer>
-  AIPMO Business Process Flow v4.0 · VtKl · Feb 14, 2026<br>
+  AIPMO Business Process Flow v2.0 · VtKl · Feb 15, 2026 (Joana Sprint Process Spec)<br>
   INTERNAL — NOT FOR PUBLIC DISTRIBUTION
 </footer>
 

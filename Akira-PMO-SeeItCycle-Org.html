@@ -460,7 +460,7 @@
   <div class="board">
     <div class="title">🤖 Akira PMO — See It Cycle Organization Design</div>
     <div class="subtitle">Every agent runs the See It Cycle at its appropriate frequency. Information flows up on drift, down on goal changes.</div>
-    <div class="version-badge"><span>v3.0 — Updated Feb 14, 2026 — Sprint Process v4.0</span></div>
+    <div class="version-badge"><span>v2.0 — Updated Feb 15, 2026 — Sprint Process v2.0 (Joana)</span></div>
     
     <!-- Greg vs Akira distinction -->
     <div class="architect-note">
@@ -560,15 +560,15 @@
           </div>
           <div class="cycle-badge"><span class="icon">🔄</span> Every Checkpoint Gate + Per-release retrospective</div>
           <div class="agent-focus">
-            <strong>Business Alignment</strong><br>
-            Budget, milestones, token costs
+            <strong>3 Gates: Budget → Resources → Schedule</strong><br>
+            All must pass before Human Review
           </div>
           <div class="see-it-box">
             <div class="label">See It Cycle Focus:</div>
             <ul>
-              <li>Profit margin healthy?</li>
-              <li>Token burn acceptable?</li>
-              <li>Payment milestones aligned?</li>
+              <li>Budget: >$100K/month cash flow check</li>
+              <li>Resources: Portfolio availability</li>
+              <li>Schedule: Human oversight feasible?</li>
             </ul>
           </div>
         </div>
@@ -640,8 +640,8 @@
           </div>
           <div class="cycle-badge"><span class="icon">📝</span> Event-driven</div>
           <div class="agent-focus">
-            <strong>Contract & Verification</strong><br>
-            Generates contracts, validates signatures, drift detection
+            <strong>Expanded Role: Commitments + Verification</strong><br>
+            Generates commitments + customer scope + "before" recordings, validates before/after demos
           </div>
         </div>
       </div>
@@ -780,25 +780,25 @@
           </tr>
           <tr>
             <td class="highlight">Checkpoint Gate</td>
-            <td>Sprint review</td>
-            <td class="highlight">End of 60-min sprint</td>
-            <td>Verify evidence, publish</td>
+            <td>Sprint review + demo</td>
+            <td class="highlight">60min + ~45min overhead</td>
+            <td>Verify evidence, before/after compare</td>
           </tr>
           <tr>
             <td class="highlight">Human Review</td>
             <td>Release review</td>
-            <td class="highlight">Every 4-5 sprints (~6 hours)</td>
+            <td class="highlight">Every 4-5 sprints (~7 hours)</td>
             <td>PM validates release quality</td>
           </tr>
           <tr>
             <td class="highlight">Retrospective</td>
             <td>Sprint retro</td>
-            <td class="highlight">After each release cycle (~6 hours)</td>
-            <td>Learnings integration</td>
+            <td class="highlight">Every 2 sprints (~3.5 hours)</td>
+            <td>Automated learning integration</td>
           </tr>
         </table>
         <div style="margin-top: 12px; padding: 10px; background: rgba(78,205,196,0.1); border-radius: 6px; font-size: 11px; color: #4ecdc4; text-align: center;">
-          <strong>Updated: 60-minute sprints with Reality Check at 30-minute midpoint</strong>
+          <strong>Updated v2.0: 60-min execution + ~45min overhead = ~105min total. Retrospective every 2 sprints.</strong>
         </div>
       </div>
       
@@ -930,7 +930,7 @@
         </div>
         <div class="flow-arrow">→</div>
         <div class="flow-step" style="border-color: #10b981;">
-          <div class="time" style="color: #10b981;">30m / 60m + Gate</div>
+          <div class="time" style="color: #10b981;">~105m total cycle</div>
           <div class="label">Flow Coordinators</div>
         </div>
         <div class="flow-arrow">→</div>
@@ -940,7 +940,7 @@
         </div>
       </div>
       <div style="text-align: center; margin-top: 16px; font-size: 12px; color: #666;">
-        Updated v3.0: Flow Coordinators run 30-min Reality Check + 60-min Sprint + Checkpoint Gate pattern
+        Updated v2.0: 60min execution + ~45min overhead = ~105min total cycle. 30-min Reality Check at sprint midpoint.
       </div>
     </div>
     
@@ -957,7 +957,7 @@
         <tr>
           <td>Execution Agent</td>
           <td>Every 30 min</td>
-          <td style="color: #f87171;">60 min silence</td>
+          <td style="color: #f87171;">45 min silence</td>
           <td>FC pings → 15min timeout → escalate to PM</td>
         </tr>
         <tr>
@@ -968,8 +968,8 @@
         </tr>
         <tr>
           <td>Strategic AI</td>
-          <td>Every ~90 min (each Checkpoint Gate)</td>
-          <td style="color: #f87171;">3 hour silence (2 missed gates)</td>
+          <td>Every ~105 min (each Checkpoint Gate)</td>
+          <td style="color: #f87171;">90 min silence</td>
           <td>Human PM notified → diagnostic</td>
         </tr>
         <tr>
@@ -980,7 +980,7 @@
         </tr>
       </table>
       <div style="margin-top: 12px; padding: 10px; background: rgba(248,113,113,0.1); border-radius: 6px; font-size: 11px; color: #f87171; text-align: center;">
-        <strong>NEW:</strong> Requirements Verifier added with event-driven monitoring (15min expected, 30min alarm)
+        <strong>UPDATED v2.0:</strong> Exec 45min (not 60min), Strategic 90min (not 3h), Verifier 30min alarm. Requirements Verifier: event-driven monitoring.
       </div>
     </div>
 
@@ -1086,7 +1086,7 @@
     <div style="text-align: center; margin-top: 30px; padding: 20px; background: rgba(102,126,234,0.1); border-radius: 12px;">
       <p style="font-size: 14px; color: #667eea; font-weight: 600; margin-bottom: 8px;">📄 Full Documentation</p>
       <p style="font-size: 12px; color: #888;">
-        AIPMO Sprint Process v4.0 — Complete specification with Feb 13, 2026 meeting updates
+        AIPMO Sprint Process v2.0 — Complete 29-page specification with Joana's Feb 15, 2026 updates
       </p>
     </div>
   </div>
