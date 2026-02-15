@@ -22,6 +22,24 @@
   .subtitle { text-align: center; color: #8892a4; margin-bottom: 12px; font-size: 0.95rem; }
   .version { text-align: center; color: #556; font-size: 0.8rem; margin-bottom: 40px; }
 
+  /* Greg vs Akira distinction */
+  .architect-note {
+    background: rgba(123,97,255,0.08);
+    border: 1px solid rgba(123,97,255,0.25);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 30px;
+    text-align: center;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+  .architect-note .title {
+    color: #7b61ff;
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+
   /* Legend */
   .legend {
     display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;
@@ -235,6 +253,137 @@
     background: repeating-linear-gradient(90deg, #445 0, #445 4px, transparent 4px, transparent 8px);
   }
 
+  /* Communication protocols */
+  .comm-protocols {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 16px;
+    margin: 20px 0;
+    font-size: 0.8rem;
+  }
+  .comm-title {
+    color: #00d4ff;
+    font-weight: 700;
+    margin-bottom: 12px;
+    font-size: 0.85rem;
+  }
+  .comm-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 12px;
+  }
+  .comm-item {
+    background: rgba(255,255,255,0.02);
+    padding: 10px;
+    border-radius: 6px;
+    border-left: 3px solid #00d4ff;
+  }
+  .comm-channel {
+    font-weight: 600;
+    color: #00d4ff;
+    margin-bottom: 4px;
+  }
+  .comm-desc {
+    font-size: 0.75rem;
+    color: #8892a4;
+    line-height: 1.4;
+  }
+
+  /* Verification failure flow */
+  .verification-flow {
+    background: rgba(255,107,107,0.05);
+    border: 1px solid rgba(255,107,107,0.2);
+    border-radius: 10px;
+    padding: 16px;
+    margin: 20px 0;
+  }
+  .verification-title {
+    color: #ff6b6b;
+    font-weight: 700;
+    margin-bottom: 12px;
+    font-size: 0.85rem;
+  }
+  .failure-types {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .failure-type {
+    background: rgba(255,255,255,0.03);
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+  }
+  .failure-minor {
+    border-left: 3px solid #ffc107;
+  }
+  .failure-major {
+    border-left: 3px solid #ff6b6b;
+  }
+  .failure-type-title {
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  /* Dependency resolution */
+  .dependency-flow {
+    background: rgba(0,212,255,0.05);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 10px;
+    padding: 16px;
+    margin: 20px 0;
+  }
+  .dependency-title {
+    color: #00d4ff;
+    font-weight: 700;
+    margin-bottom: 12px;
+    font-size: 0.85rem;
+  }
+
+  /* Example timeline */
+  .timeline-box {
+    background: rgba(123,97,255,0.05);
+    border: 1px solid rgba(123,97,255,0.2);
+    border-radius: 10px;
+    padding: 16px;
+    margin: 20px 0;
+    font-family: monospace;
+    font-size: 0.75rem;
+    line-height: 1.6;
+  }
+  .timeline-title {
+    color: #7b61ff;
+    font-weight: 700;
+    margin-bottom: 12px;
+    font-size: 0.85rem;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+  .timeline-phase {
+    color: #7b61ff;
+    font-weight: 600;
+    margin-top: 12px;
+    margin-bottom: 4px;
+  }
+  .timeline-item {
+    margin: 2px 0;
+    color: #8892a4;
+  }
+  .timeline-parallel {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin: 4px 0;
+    font-size: 0.7rem;
+  }
+  .timeline-squad {
+    background: rgba(255,255,255,0.03);
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-align: center;
+  }
+
   footer {
     text-align: center; color: #445; font-size: 0.72rem;
     margin-top: 40px; padding-top: 20px;
@@ -247,7 +396,14 @@
 
 <h1>📋 AIPMO Business Process Flow</h1>
 <p class="subtitle">Client Intake → Profiling → Estimation → Execution → Retrospective</p>
-<p class="version">v3.0 — Feb 11, 2026</p>
+<p class="version">v4.0 — Feb 14, 2026</p>
+
+<!-- Greg vs Akira distinction -->
+<div class="architect-note">
+  <div class="title">🏗️ Architecture: Greg vs. Akira Agents</div>
+  <strong>GREG (OpenClaw):</strong> BUILDER and ORCHESTRATOR of the AIPMO system. Greg builds the Akira agent system through code and configuration. Greg is NOT an execution agent in the sprint process.<br><br>
+  <strong>AKIRA AGENTS:</strong> Execute the AIPMO sprint methodology. When this document refers to "agents," it means Akira agents executing sprints, not Greg building the system.
+</div>
 
 <div class="legend">
   <div class="legend-item"><div class="legend-box" style="background:rgba(0,230,118,0.3);border:3px solid #00e676;border-radius:50%;width:18px;height:18px;"></div> Start / End Event</div>
@@ -460,7 +616,7 @@
     </div>
     <div class="arrow">→</div>
     <div class="n n-gate">
-      <div class="n-label">Human Review Gate (§5.1.1)</div>
+      <div class="n-label">Human Review Gate</div>
       <div class="n-detail">PM (Joana/Victor) + Client (if large scope)</div>
     </div>
     <div class="arrow">→</div>
@@ -578,8 +734,8 @@
   <div class="note">⛔ No unsigned contracts proceed. Ever.</div>
 </div>
 
-<!-- ===== PHASE 5: EXECUTION ===== -->
-<div class="phase-sep"><span class="phase-label">Phase 5 — Execution (30-min cycles)</span></div>
+<!-- ===== PHASE 5: EXECUTION (60-min sprints) ===== -->
+<div class="phase-sep"><span class="phase-label">Phase 5 — Execution (60-min sprints)</span></div>
 
 <div class="arrow-down cross-lane">↓</div>
 
@@ -597,7 +753,7 @@
         <div class="n n-process"><div class="n-label">Squad Beta</div><div class="n-detail">Frontend · UX · Style</div></div>
         <div class="n n-process"><div class="n-label">Squad Gamma</div><div class="n-detail">Integration · QA · Deploy</div></div>
       </div>
-      <div class="note">Signed items only · 30-min status reports · All commits to GitHub</div>
+      <div class="note">Signed items only · 60-min sprints · Reality Check at 30-min midpoint</div>
       <div class="flow-row" style="margin-top:4px;">
         <div class="n n-event" style="width:70px;height:70px;">
           <div class="n-label" style="font-size:0.65rem;">TASK_<br>COMPLETE</div>
@@ -623,7 +779,7 @@
 <!-- ===== PHASE 6: TIERED CHECKPOINTS ===== -->
 <div class="phase-sep"><span class="phase-label">Phase 6 — Tiered Checkpoints (See It Cycle)</span></div>
 
-<!-- FC lane — micro standup -->
+<!-- FC lane — Reality Check -->
 <div class="swimlane lane-fc">
   <div class="swimlane-label">
     <div class="lane-icon">🌱</div>
@@ -631,49 +787,66 @@
     <div class="lane-type">Coordination</div>
   </div>
 
-  <div class="cycle-label cycle-timer">⏱️ Every 30 min — Micro-Standup</div>
+  <div class="cycle-label cycle-timer">⏱️ 30 min — Reality Check (Sprint Midpoint)</div>
   <div class="flow-row">
     <div class="n n-timer">
       <div class="n-label" style="font-size:0.65rem;">30 min</div>
     </div>
     <div class="arrow">→</div>
     <div class="n n-process">
-      <div class="n-label">Poll Squad</div>
-      <div class="n-detail">Done? Working on? Blockers? Promise on track?</div>
+      <div class="n-label">Progress Evaluation</div>
+      <div class="n-detail">Halfway through time = halfway through scope?</div>
     </div>
     <div class="arrow">→</div>
     <div class="n n-process">
-      <div class="n-label">Resolve / Escalate</div>
-      <div class="n-detail">LOW: resolve · MED/HIGH: escalate</div>
+      <div class="n-label">Course Correct</div>
+      <div class="n-detail">If behind: pivot/replan to meet goal</div>
     </div>
     <div class="arrow">→</div>
     <div class="n n-event">
-      <div class="n-label" style="font-size:0.6rem;">MICRO_<br>STANDUP_<br>COMPLETE</div>
+      <div class="n-label" style="font-size:0.6rem;">REALITY_<br>CHECK_<br>COMPLETE</div>
     </div>
   </div>
 
-  <div class="cycle-label cycle-timer">⏱️ Every 1 hour — Checkpoint Gate</div>
+  <div class="cycle-label cycle-timer">⏱️ 60 min + ~30 min — Checkpoint Gate</div>
   <div class="flow-row">
     <div class="n n-timer">
-      <div class="n-label" style="font-size:0.65rem;">1 hour</div>
+      <div class="n-label" style="font-size:0.65rem;">60 min</div>
     </div>
     <div class="arrow">→</div>
     <div class="n n-process">
-      <div class="n-label">AC Verification</div>
-      <div class="n-detail">Req. Verifier checks batches</div>
-    </div>
-    <div class="arrow">→</div>
-    <div class="n n-event">
-      <div class="n-label" style="font-size:0.65rem;">BATCH_<br>VERIFIED</div>
+      <div class="n-label">Sprint Ends</div>
+      <div class="n-detail">Squads emit TASK_COMPLETE</div>
     </div>
     <div class="arrow">→</div>
     <div class="n n-process">
-      <div class="n-label">Publish to Vercel</div>
-      <div class="n-detail">Velocity · Blockers · Cost</div>
+      <div class="n-label">Verification</div>
+      <div class="n-detail">Req. Verifier validates (~30 min)</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-process">
+      <div class="n-label">Publish Evidence</div>
+      <div class="n-detail">Vercel dashboard · Git commits · Slack</div>
     </div>
     <div class="arrow">→</div>
     <div class="n n-event">
       <div class="n-label" style="font-size:0.6rem;">CHECKPOINT_<br>GATE_<br>COMPLETE</div>
+    </div>
+  </div>
+
+  <div class="cycle-label cycle-timer">⏱️ Every 4-5 sprints — Human Review</div>
+  <div class="flow-row">
+    <div class="n n-timer">
+      <div class="n-label" style="font-size:0.6rem;">~6 hours</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-process">
+      <div class="n-label">Release Review</div>
+      <div class="n-detail">PM validates quality · Token costs</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="n n-event">
+      <div class="n-label" style="font-size:0.6rem;">HUMAN_<br>REVIEW_<br>COMPLETE</div>
     </div>
   </div>
 
@@ -689,7 +862,7 @@
   </div>
   <div class="branch">
     <div class="branch-path branch-yes"><div class="branch-label" style="color:#00e676;">✅ APPROVED</div>Proceed to Stretch</div>
-    <div class="branch-path branch-no"><div class="branch-label" style="color:#ff6b6b;">⏹️ DECLINED</div>Sprint ends → Retro</div>
+    <div class="branch-path branch-no"><div class="branch-label" style="color:#ff6b6b;">⏹️ DECLINED</div>Sprint ends</div>
     <div class="branch-path branch-mod"><div class="branch-label" style="color:#ffc107;">⚠️ INCOMPLETE</div>Finish Promise first</div>
   </div>
 </div>
@@ -702,20 +875,20 @@
     <div class="lane-type">All 3 agents</div>
   </div>
 
-  <div class="cycle-label cycle-see">🔄 Every 4 hours — Reality Check</div>
+  <div class="cycle-label cycle-see">🔄 Every Checkpoint Gate — Strategic Alignment</div>
   <div class="flow-row">
     <div class="n n-timer">
-      <div class="n-label" style="font-size:0.65rem;">4 hours</div>
+      <div class="n-label" style="font-size:0.6rem;">~90 min</div>
     </div>
     <div class="arrow">→</div>
     <div class="n n-process">
       <div class="n-label">Program Mgr</div>
-      <div class="n-detail">Alignment · Blockers</div>
+      <div class="n-detail">Cross-squad alignment</div>
     </div>
     <div class="arrow">→</div>
     <div class="n n-process">
       <div class="n-label">Portfolio Mgr</div>
-      <div class="n-detail">Burn · Budget</div>
+      <div class="n-detail">Token burn · Budget health</div>
     </div>
     <div class="arrow">→</div>
     <div class="n n-process">
@@ -724,36 +897,48 @@
     </div>
     <div class="arrow">→</div>
     <div class="n n-event">
-      <div class="n-label" style="font-size:0.6rem;">REALITY_<br>CHECK_<br>COMPLETE</div>
+      <div class="n-label" style="font-size:0.6rem;">STRATEGIC_<br>ALIGNMENT_<br>COMPLETE</div>
     </div>
   </div>
 </div>
 
-<!-- Audit trail -->
-<div class="swimlane lane-fc" style="border-radius:0;">
-  <div class="swimlane-label">
-    <div class="lane-icon">📤</div>
-    Audit Trail
-    <div class="lane-type">Automated</div>
+<!-- Verification Failure Flow -->
+<div class="verification-flow">
+  <div class="verification-title">❌ Verification Failure Flow (Section 4.6)</div>
+  <div class="failure-types">
+    <div class="failure-type failure-minor">
+      <div class="failure-type-title">🟡 MINOR FAIL</div>
+      Feature works but edge case missing → 15-min Fix Window → Re-verify
+    </div>
+    <div class="failure-type failure-major">
+      <div class="failure-type-title">🔴 MAJOR FAIL</div>
+      Feature broken → 1 Fix Sprint (60 min) → Re-verify
+    </div>
   </div>
-  <div class="flow-row">
-    <div class="n n-data"><div class="n-label">Git Commit</div></div>
-    <div class="arrow">→</div>
-    <div class="n n-data"><div class="n-label">Vercel Dashboard</div><div class="n-detail">Goal · Velocity · Cost</div></div>
-    <div class="arrow">→</div>
-    <div class="n n-data"><div class="n-label">Slack #akira-swarm</div></div>
-    <div class="arrow">→</div>
-    <div class="n n-data"><div class="n-label">GitHub Wiki</div></div>
+  <div style="font-size:0.75rem; color:#8892a4; line-height:1.4;">
+    <strong>Second failure:</strong> EVENT: VERIFICATION_ESCALATED → Posted to #akira-swarm → Human PM review.<br>
+    <strong>Max 1 retry per failed item per release cycle.</strong> Fix sprints consume sprint capacity.
   </div>
-  <div class="note">Non-negotiable for every checkpoint.</div>
 </div>
 
-<!-- Agent 215 -->
+<!-- Cross-Squad Dependency Resolution -->
+<div class="dependency-flow">
+  <div class="dependency-title">🔗 Cross-Squad Dependency Resolution (Section 4.7)</div>
+  <div style="font-size:0.75rem; color:#8892a4; line-height:1.4; margin-bottom:12px;">
+    <strong>Level 1 — Pre-Sprint Planning:</strong> Program Manager sequences work so dependent items are staggered across sprints.<br><br>
+    <strong>Level 2 — Runtime Dependencies:</strong> DEPENDENCY_BLOCKED event → 15-min resolution timeout → RESEQUENCE/MOCK/SWAP/ESCALATE
+  </div>
+  <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:6px; font-size:0.7rem; color:#667;">
+    <strong>Key principle:</strong> Dependencies should be caught in pre-sprint planning. Runtime dependencies indicate a planning gap — logged for retrospective improvement.
+  </div>
+</div>
+
+<!-- Agent 215 Protocol — Updated thresholds -->
 <div class="swimlane lane-fc" style="border-radius: 0 0 12px 12px;">
   <div class="swimlane-label">
     <div class="lane-icon">🚨</div>
-    Idle Detection
-    <div class="lane-type">Agent 215</div>
+    Agent 215
+    <div class="lane-type">Idle Detection</div>
   </div>
   <div class="flow-row">
     <div class="n n-timer" style="width:70px;height:70px;">
@@ -763,7 +948,10 @@
       <div class="n-label" style="font-size:0.6rem;">FC<br>2h</div>
     </div>
     <div class="n n-timer" style="width:70px;height:70px;">
-      <div class="n-label" style="font-size:0.6rem;">Strategic<br>8h</div>
+      <div class="n-label" style="font-size:0.6rem;">Strategic<br>~90m</div>
+    </div>
+    <div class="n n-timer" style="width:70px;height:70px;">
+      <div class="n-label" style="font-size:0.55rem;">Verifier<br>30m</div>
     </div>
     <div class="arrow">→</div>
     <div class="n n-process">
@@ -774,11 +962,11 @@
       <div class="n-inner" style="font-size:0.55rem;">Response?</div>
     </div>
   </div>
-  <div class="branch" style="max-width:500px;">
+  <div class="branch" style="max-width:600px;">
     <div class="branch-path branch-yes"><div class="branch-label" style="color:#00e676;">✅ YES</div>Resume</div>
-    <div class="branch-path branch-no"><div class="branch-label" style="color:#ff6b6b;">❌ +15m</div>Escalate up → +30m → Restart + notify human</div>
+    <div class="branch-path branch-no"><div class="branch-label" style="color:#ff6b6b;">❌ +15m</div>Escalate → +30m → Restart + notify human</div>
   </div>
-  <div class="note">Escalations are always real-time. MED/HIGH blockers → Program Mgr immediately → Human if HIGH.</div>
+  <div class="note">Strategic AI alarm: 3h silence = 2 missed Checkpoint Gates. Verifier: event-driven, 15min expected, 30min alarm.</div>
 </div>
 
 <!-- ===== PHASE 7: RETROSPECTIVE ===== -->
@@ -790,10 +978,10 @@
     Flow Coordinators
     <div class="lane-type">Coordination</div>
   </div>
-  <div class="cycle-label cycle-timer">⏱️ Every 12 hours</div>
+  <div class="cycle-label cycle-timer">⏱️ After each release (~6 hours)</div>
   <div class="flow-row">
     <div class="n n-timer">
-      <div class="n-label" style="font-size:0.65rem;">12 hours</div>
+      <div class="n-label" style="font-size:0.6rem;">~6 hours</div>
     </div>
     <div class="arrow">→</div>
     <div class="n n-process">
@@ -877,7 +1065,7 @@
     <div class="arrow" style="color:#ff3c3c;">→</div>
     <div class="n n-process">
       <div class="n-label">Conditions</div>
-      <div class="n-detail">Client pivot · Budget 100% · All-squad HIGH · PM calls it</div>
+      <div class="n-detail">Client pivot · Budget 100% · Agent 215 all squads · PM calls it</div>
     </div>
   </div>
 </div>
@@ -916,43 +1104,126 @@
   <div class="note">Abort ≠ failure. Controlled stop. All work preserved.</div>
 </div>
 
-<!-- See It Cycle Summary -->
-<div style="margin-top:30px;">
-  <div class="phase-sep"><span class="phase-label">See It Cycle — Nested Frequencies</span></div>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px;">
-    <div style="background:rgba(255,165,0,0.08);border:1px solid rgba(255,165,0,0.25);border-radius:10px;padding:14px;text-align:center;">
-      <div style="font-size:1.2rem;">👤</div>
-      <div style="font-weight:700;color:#ffa500;margin:4px 0;font-size:0.82rem;">Client</div>
-      <div style="font-size:0.72rem;color:#8892a4;">Every 4-5 Sprints</div>
-      <div style="font-size:0.66rem;margin-top:3px;opacity:0.7;">Goals · Market · ROI</div>
+<!-- Communication Protocols -->
+<div class="comm-protocols">
+  <div class="comm-title">📡 Communication Protocols</div>
+  <div class="comm-grid">
+    <div class="comm-item">
+      <div class="comm-channel">#swarm-coordination</div>
+      <div class="comm-desc">Sprint updates, checkpoint gate summaries, human review notifications</div>
     </div>
-    <div style="background:rgba(123,97,255,0.08);border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:14px;text-align:center;">
-      <div style="font-size:1.2rem;">🧠</div>
-      <div style="font-weight:700;color:#7b61ff;margin:4px 0;font-size:0.82rem;">Strategic AI</div>
-      <div style="font-size:0.72rem;color:#8892a4;">Every 12 hours</div>
-      <div style="font-size:0.66rem;margin-top:3px;opacity:0.7;">Alignment · Budget · Estimates</div>
+    <div class="comm-item">
+      <div class="comm-channel">#squad-alpha / #squad-beta / #squad-gamma</div>
+      <div class="comm-desc">Squad-specific execution logs, Reality Check reports, blocker flags</div>
     </div>
-    <div style="background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.25);border-radius:10px;padding:14px;text-align:center;">
-      <div style="font-size:1.2rem;">🌱</div>
-      <div style="font-weight:700;color:#00d4ff;margin:4px 0;font-size:0.82rem;">Flow Coordinators</div>
-      <div style="font-size:0.72rem;color:#8892a4;">30m / 1h / 4h</div>
-      <div style="font-size:0.66rem;margin-top:3px;opacity:0.7;">Standup · Gate · Reality</div>
+    <div class="comm-item">
+      <div class="comm-channel">#akira-swarm</div>
+      <div class="comm-desc">Escalation channel — all MED/HIGH severity alerts with 🚨 ESCALATION tag</div>
     </div>
-    <div style="background:rgba(0,230,118,0.08);border:1px solid rgba(0,230,118,0.25);border-radius:10px;padding:14px;text-align:center;">
-      <div style="font-size:1.2rem;">📁</div>
-      <div style="font-weight:700;color:#00e676;margin:4px 0;font-size:0.82rem;">Execution Agents</div>
-      <div style="font-size:0.72rem;color:#8892a4;">Every 30 min</div>
-      <div style="font-size:0.66rem;margin-top:3px;opacity:0.7;">Status · Contracts · Blockers</div>
+    <div class="comm-item">
+      <div class="comm-channel">GitHub</div>
+      <div class="comm-desc">Source of truth for tasks, specs, contracts, and code</div>
     </div>
-  </div>
-  <div style="text-align:center; margin-top:8px; font-size:0.72rem; color:#667;">
-    Info flows <strong style="color:#00e676;">UP</strong> on drift · <strong style="color:#ff6b6b;">DOWN</strong> on goal changes
+    <div class="comm-item">
+      <div class="comm-channel">Vercel Dashboard</div>
+      <div class="comm-desc">Visual audit trail, checkpoint history, sprint evidence</div>
+    </div>
   </div>
 </div>
 
-<!-- Event Chain -->
+<!-- Agent Memory Protocol -->
+<div style="background:rgba(0,150,255,0.05); border:1px solid rgba(0,150,255,0.2); border-radius:10px; padding:16px; margin:20px 0; font-size:0.8rem;">
+  <div style="color:#0096ff; font-weight:700; margin-bottom:12px;">🧠 Agent Memory Protocol (Section 3.5)</div>
+  <div style="color:#8892a4; line-height:1.5;">
+    <strong>File access rules per agent type:</strong><br>
+    • <strong>Flow Coordinators:</strong> soul.md, working-styles.md, key-people.md (NEVER heartbeat.md)<br>
+    • <strong>Squad Agents:</strong> soul.md ONLY + assigned contract file<br>
+    • <strong>AI Estimator:</strong> memory.md, key-people.md, pareto-rules.md<br>
+    • <strong>AI Program Manager:</strong> heartbeat.md, soul.md (PM only)<br>
+    • <strong>AI Portfolio Manager:</strong> budget-models.md, heartbeat.md<br>
+    • <strong>Requirements Verifier:</strong> contract-templates.md, acceptance-criteria.md
+  </div>
+</div>
+
+<!-- Example Timeline -->
+<div class="timeline-box">
+  <div class="timeline-title">📅 Example Timeline (4 Sprints = 1 Release)</div>
+  
+  <div class="timeline-phase">Pre-Sprint (Before 9:00 AM):</div>
+  <div class="timeline-item">• AI Estimator: Backlog decomposed → ESTIMATES_COMPLETE</div>
+  <div class="timeline-item">• AI Program Manager: Work assigned to squads → BACKLOG_READY</div>
+  <div class="timeline-item">• AI Portfolio Manager: Budget validated → BUDGET_APPROVED</div>
+  <div class="timeline-item">• Human PM: Scope approved → HUMAN_APPROVED</div>
+  <div class="timeline-item">• Requirements Verifier + All Squads: Contracts signed → BEGIN_WORK</div>
+  
+  <div class="timeline-phase">Sprint 1 (9:00 AM - 10:30 AM):</div>
+  <div class="timeline-item">9:00 AM - BEGIN_WORK → All 3 squads start simultaneously</div>
+  <div class="timeline-parallel">
+    <div class="timeline-squad">Squad Alpha (Backend)</div>
+    <div class="timeline-squad">Squad Beta (Frontend)</div>
+    <div class="timeline-squad">Squad Gamma (QA)</div>
+  </div>
+  <div class="timeline-item">9:30 AM - Reality Check — each FC checks their squad</div>
+  <div class="timeline-item">10:00 AM - Sprint execution ends → TASK_COMPLETE</div>
+  <div class="timeline-item">10:00-10:30 AM - Verification (~30 min overhead)</div>
+  <div class="timeline-item">10:30 AM - Checkpoint Gate #1 published</div>
+  
+  <div class="timeline-phase">Sprint 2 (10:30 AM - 12:00 PM):</div>
+  <div class="timeline-item">Similar pattern: BEGIN_WORK → Reality Check @ 11:00 → Complete @ 11:30 → Gate @ 12:00</div>
+  
+  <div class="timeline-phase">Sprint 3 (12:00 PM - 1:30 PM):</div>
+  <div class="timeline-item">Similar pattern: BEGIN_WORK → Reality Check @ 12:30 → Complete @ 1:00 → Gate @ 1:30</div>
+  
+  <div class="timeline-phase">Sprint 4 (1:30 PM - 3:00 PM):</div>
+  <div class="timeline-item">Similar pattern: BEGIN_WORK → Reality Check @ 2:00 → Complete @ 2:30 → Gate @ 3:00</div>
+  
+  <div class="timeline-phase">Post-Release (3:00 PM - 3:30 PM):</div>
+  <div class="timeline-item">3:00-3:15 PM - Strategic Alignment Review</div>
+  <div class="timeline-item">3:15-3:30 PM - Retrospective (automated learning integration)</div>
+  <div class="timeline-item">3:30 PM - Human Review Checkpoint (PM reviews when available)</div>
+  
+  <div style="color:#7b61ff; font-weight:600; margin-top:12px; text-align:center;">
+    Result: 4 sprints × 3 parallel squads = 12 sprint-equivalents in ~6.5 hours
+  </div>
+</div>
+
+<!-- See It Cycle Summary — Updated to 4 stages -->
 <div style="margin-top:30px;">
-  <div class="phase-sep"><span class="phase-label">Complete Event Chain</span></div>
+  <div class="phase-sep"><span class="phase-label">See It Cycle — 4 Stages (Updated v4.0)</span></div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px;">
+    <div style="background:rgba(255,165,0,0.08);border:1px solid rgba(255,165,0,0.25);border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-size:1.2rem;">🎯</div>
+      <div style="font-weight:700;color:#ffa500;margin:4px 0;font-size:0.82rem;">SEE where you want to go</div>
+      <div style="font-size:0.72rem;color:#8892a4;">Intake: PM profiles client priorities</div>
+      <div style="font-size:0.66rem;margin-top:3px;opacity:0.7;">Estimator decomposes scope</div>
+    </div>
+    <div style="background:rgba(123,97,255,0.08);border:1px solid rgba(123,97,255,0.25);border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-size:1.2rem;">📍</div>
+      <div style="font-weight:700;color:#7b61ff;margin:4px 0;font-size:0.82rem;">SEE where you are</div>
+      <div style="font-size:0.72rem;color:#8892a4;">Reality Check: midpoint evaluation</div>
+      <div style="font-size:0.66rem;margin-top:3px;opacity:0.7;">Every 30 min progress check</div>
+    </div>
+    <div style="background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.25);border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-size:1.2rem;">🛤️</div>
+      <div style="font-weight:700;color:#00d4ff;margin:4px 0;font-size:0.82rem;">SEE how to get there</div>
+      <div style="font-size:0.72rem;color:#8892a4;">Checkpoint Gate: verify evidence</div>
+      <div style="font-size:0.66rem;margin-top:3px;opacity:0.7;">Adjust course if needed</div>
+    </div>
+    <div style="background:rgba(0,230,118,0.08);border:1px solid rgba(0,230,118,0.25);border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-size:1.2rem;">✅</div>
+      <div style="font-weight:700;color:#00e676;margin:4px 0;font-size:0.82rem;">SEE what works</div>
+      <div style="font-size:0.72rem;color:#8892a4;">Retrospective: integrate learnings</div>
+      <div style="font-size:0.66rem;margin-top:3px;opacity:0.7;">Recalibrate estimates</div>
+    </div>
+  </div>
+  <div style="text-align:center; margin-top:8px; font-size:0.72rem; color:#667;">
+    Each sprint IS one cycle. Each release IS a cycle of cycles. More cycles = faster, more accurate delivery.
+  </div>
+</div>
+
+<!-- Updated Event Chain -->
+<div style="margin-top:30px;">
+  <div class="phase-sep"><span class="phase-label">Complete Event Chain (Updated v4.0)</span></div>
   <div style="margin-top:14px; padding:16px; border-radius:10px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); font-family:monospace; font-size:0.73rem; line-height:1.7;">
     <span style="color:#ff6b6b;">INTAKE_RECEIVED</span> <span style="color:#445;">(PM → Estimator)</span><br>
     &nbsp;&nbsp;→ <span style="color:#7b61ff;">ESTIMATES_COMPLETE</span> <span style="color:#445;">(decompose + Pareto + size)</span><br>
@@ -960,16 +1231,21 @@
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#00d4c8;">BUDGET_APPROVED</span> <span style="color:#445;">(portfolio validation)</span><br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#ff6b6b;">HUMAN_APPROVED</span><br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#ffc107;">CONTRACT_GENERATED</span> → <span style="color:#00e676;">CONTRACT_SIGNED</span> → <span style="color:#00e676;">BEGIN_WORK</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#ff9800;">REALITY_CHECK_COMPLETE</span> <span style="color:#445;">(30min midpoint)</span><br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#00e676;">TASK_COMPLETE</span> · <span style="color:#ff6b6b;">BLOCKER_RAISED</span><br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#ff9800;">MICRO_STANDUP</span> <span style="color:#445;">(30m)</span> · <span style="color:#ffc107;">CHECKPOINT_GATE</span> <span style="color:#445;">(1h)</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#ffc107;">BATCH_VERIFIED</span> · <span style="color:#ff6b6b;">VERIFICATION_FAILED</span> · <span style="color:#ff3c3c;">VERIFICATION_ESCALATED</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#00e676;">CHECKPOINT_GATE_COMPLETE</span> <span style="color:#445;">(60min + ~30min overhead)</span><br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#00e676;">PROMISE_COMPLETE</span> → STRETCH gate<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#7b61ff;">REALITY_CHECK</span> <span style="color:#445;">(4h)</span> · <span style="color:#7b61ff;">RETRO_COMPLETE</span> <span style="color:#445;">(12h)</span><br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ NEXT_CYCLE · HUMAN_REVIEW · <span style="color:#ff3c3c;">SPRINT_ABORT</span>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#0096ff;">DEPENDENCY_BLOCKED</span> · <span style="color:#00e676;">DEPENDENCY_RESOLVED</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#7b61ff;">STRATEGIC_ALIGNMENT_COMPLETE</span> <span style="color:#445;">(~90min intervals)</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#ff6b6b;">HUMAN_REVIEW_COMPLETE</span> <span style="color:#445;">(every 4-5 sprints)</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span style="color:#7b61ff;">RETRO_COMPLETE</span> <span style="color:#445;">(after each release)</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ NEXT_CYCLE · <span style="color:#ff3c3c;">SPRINT_ABORT</span>
   </div>
 </div>
 
 <footer>
-  AIPMO Business Process Flow v3.0 · VtKl · Feb 11, 2026<br>
+  AIPMO Business Process Flow v4.0 · VtKl · Feb 14, 2026<br>
   INTERNAL — NOT FOR PUBLIC DISTRIBUTION
 </footer>
 

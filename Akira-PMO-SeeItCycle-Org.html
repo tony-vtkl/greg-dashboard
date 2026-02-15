@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Akira PMO - See It Cycle Organization Design v2.0</title>
+  <title>Akira PMO - See It Cycle Organization Design v3.0</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { 
@@ -37,6 +37,25 @@
       font-size: 12px;
       font-weight: 600;
     }
+
+    /* Greg vs Akira distinction */
+    .architect-note {
+      background: rgba(123,97,255,0.08);
+      border: 1px solid rgba(123,97,255,0.25);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 30px;
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .architect-note .title {
+      color: #7b61ff;
+      font-weight: 700;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
     .tier {
       margin-bottom: 24px;
       position: relative;
@@ -257,6 +276,8 @@
     .workflow-card.workaround { border-color: rgba(251,191,36,0.5); }
     .workflow-card.checkpoint { border-color: rgba(78,205,196,0.5); }
     .workflow-card.stretch { border-color: rgba(16,185,129,0.5); }
+    .workflow-card.verification { border-color: rgba(248,113,113,0.5); }
+    .workflow-card.dependency { border-color: rgba(79,195,247,0.5); }
     
     .workflow-header {
       display: flex;
@@ -275,6 +296,8 @@
     .workflow-card.workaround .workflow-title { color: #fbbf24; }
     .workflow-card.checkpoint .workflow-title { color: #4ecdc4; }
     .workflow-card.stretch .workflow-title { color: #10b981; }
+    .workflow-card.verification .workflow-title { color: #f87171; }
+    .workflow-card.dependency .workflow-title { color: #4fc3f7; }
     
     .workflow-steps {
       display: flex;
@@ -301,6 +324,8 @@
     .workflow-card.workaround .step-number { background: rgba(251,191,36,0.3); color: #fbbf24; }
     .workflow-card.checkpoint .step-number { background: rgba(78,205,196,0.3); color: #4ecdc4; }
     .workflow-card.stretch .step-number { background: rgba(16,185,129,0.3); color: #10b981; }
+    .workflow-card.verification .step-number { background: rgba(248,113,113,0.3); color: #f87171; }
+    .workflow-card.dependency .step-number { background: rgba(79,195,247,0.3); color: #4fc3f7; }
     
     .step-content {
       font-size: 12px;
@@ -369,13 +394,80 @@
     }
     .timing-table td { color: #aaa; }
     .timing-table .highlight { color: #4fc3f7; font-weight: 600; }
+
+    /* Escalation Protocol */
+    .escalation-section {
+      background: rgba(248,113,113,0.05);
+      border: 1px solid rgba(248,113,113,0.2);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 30px;
+    }
+    .escalation-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #f87171;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    /* Anti-Patterns */
+    .antipatterns-section {
+      background: rgba(251,191,36,0.05);
+      border: 1px solid rgba(251,191,36,0.2);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 30px;
+    }
+    .antipatterns-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #fbbf24;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .antipattern-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .antipattern-item {
+      background: rgba(255,255,255,0.03);
+      padding: 12px;
+      border-radius: 8px;
+      border-left: 3px solid #fbbf24;
+    }
+    .antipattern-name {
+      font-weight: 600;
+      color: #fbbf24;
+      margin-bottom: 4px;
+      font-size: 12px;
+    }
+    .antipattern-desc {
+      font-size: 11px;
+      color: #888;
+      line-height: 1.4;
+    }
+    .antipattern-prevention {
+      font-size: 10px;
+      color: #aaa;
+      margin-top: 6px;
+      font-style: italic;
+    }
   </style>
 </head>
 <body>
   <div class="board">
     <div class="title">🤖 Akira PMO — See It Cycle Organization Design</div>
     <div class="subtitle">Every agent runs the See It Cycle at its appropriate frequency. Information flows up on drift, down on goal changes.</div>
-    <div class="version-badge"><span>v2.0 — Updated Feb 7, 2026 with 10X Coder Learnings</span></div>
+    <div class="version-badge"><span>v3.0 — Updated Feb 14, 2026 — Sprint Process v4.0</span></div>
+    
+    <!-- Greg vs Akira distinction -->
+    <div class="architect-note">
+      <div class="title">🏗️ Architecture: Greg vs. Akira Agents</div>
+      <strong>GREG (OpenClaw):</strong> BUILDER and ORCHESTRATOR of the AIPMO system. Greg builds the Akira agent system through code and configuration. Greg operates at the meta-level (building the product, not running sprints).<br><br>
+      <strong>AKIRA AGENTS:</strong> The agents below execute the AIPMO sprint methodology. When this document refers to "agents," it means Akira agents executing sprints, not Greg building the system.
+    </div>
     
     <!-- TIER 1: Vision -->
     <div class="tier">
@@ -445,7 +537,7 @@
             <span class="agent-name">AI Program Manager</span>
             <span class="agent-type type-ai">AI</span>
           </div>
-          <div class="cycle-badge"><span class="icon">🔄</span> Every 12 hours</div>
+          <div class="cycle-badge"><span class="icon">🔄</span> Event-driven + Per-release retrospective</div>
           <div class="agent-focus">
             <strong>Multi-Squad Coordination</strong><br>
             Resource allocation, agent orchestration
@@ -466,7 +558,7 @@
             <span class="agent-name">AI Portfolio Manager</span>
             <span class="agent-type type-ai">AI</span>
           </div>
-          <div class="cycle-badge"><span class="icon">🔄</span> Every 12 hours</div>
+          <div class="cycle-badge"><span class="icon">🔄</span> Every Checkpoint Gate + Per-release retrospective</div>
           <div class="agent-focus">
             <strong>Business Alignment</strong><br>
             Budget, milestones, token costs
@@ -487,7 +579,7 @@
             <span class="agent-name">AI Estimator</span>
             <span class="agent-type type-ai">AI</span>
           </div>
-          <div class="cycle-badge"><span class="icon">🔄</span> On-demand + Daily</div>
+          <div class="cycle-badge"><span class="icon">🔄</span> On-demand (INTAKE_RECEIVED) + Per-release retrospective</div>
           <div class="agent-focus">
             <strong>Estimation & Backlogs</strong><br>
             Promise/Stretch, capacity planning
@@ -496,7 +588,7 @@
             <div class="label">See It Cycle Focus:</div>
             <ul>
               <li>Estimates accurate?</li>
-              <li>Promise/Stretch balanced?</li>
+              <li>Pareto ranking correct?</li>
               <li>Drag factor calibrated?</li>
             </ul>
           </div>
@@ -516,7 +608,7 @@
             <span class="agent-name">Flow Coordinator α</span>
             <span class="agent-type type-ai">AI</span>
           </div>
-          <div class="cycle-badge"><span class="icon">🔄</span> 30m micro / 1h gate / 4h reality</div>
+          <div class="cycle-badge"><span class="icon">🔄</span> 30m Reality Check / 60m Sprint + Checkpoint Gate</div>
           <div class="agent-focus"><strong>Squad Alpha</strong> (Backend + API)</div>
         </div>
         
@@ -526,7 +618,7 @@
             <span class="agent-name">Flow Coordinator β</span>
             <span class="agent-type type-ai">AI</span>
           </div>
-          <div class="cycle-badge"><span class="icon">🔄</span> 30m micro / 1h gate / 4h reality</div>
+          <div class="cycle-badge"><span class="icon">🔄</span> 30m Reality Check / 60m Sprint + Checkpoint Gate</div>
           <div class="agent-focus"><strong>Squad Beta</strong> (Frontend + UX)</div>
         </div>
         
@@ -536,7 +628,7 @@
             <span class="agent-name">Flow Coordinator γ</span>
             <span class="agent-type type-ai">AI</span>
           </div>
-          <div class="cycle-badge"><span class="icon">🔄</span> 30m micro / 1h gate / 4h reality</div>
+          <div class="cycle-badge"><span class="icon">🔄</span> 30m Reality Check / 60m Sprint + Checkpoint Gate</div>
           <div class="agent-focus"><strong>Squad Gamma</strong> (Integration + QA)</div>
         </div>
         
@@ -546,7 +638,7 @@
             <span class="agent-name">Requirements Verifier</span>
             <span class="agent-type type-ai">AI</span>
           </div>
-          <div class="cycle-badge"><span class="icon">📝</span> Contract Generator</div>
+          <div class="cycle-badge"><span class="icon">📝</span> Event-driven</div>
           <div class="agent-focus">
             <strong>Contract & Verification</strong><br>
             Generates contracts, validates signatures, drift detection
@@ -568,7 +660,7 @@
             <div class="mini-agent"><span class="emoji">🏷️</span>API</div>
             <div class="mini-agent"><span class="emoji">📑</span>Database</div>
           </div>
-          <div class="cycle-badge"><span class="icon">🔄</span> Every 30 min + Sign Contracts</div>
+          <div class="cycle-badge"><span class="icon">🔄</span> Reality Check @ 30 min + Sign Contracts</div>
         </div>
         
         <div class="squad-group">
@@ -578,7 +670,7 @@
             <div class="mini-agent"><span class="emoji">✏️</span>UX</div>
             <div class="mini-agent"><span class="emoji">🖌️</span>Style</div>
           </div>
-          <div class="cycle-badge"><span class="icon">🔄</span> Every 30 min + Sign Contracts</div>
+          <div class="cycle-badge"><span class="icon">🔄</span> Reality Check @ 30 min + Sign Contracts</div>
         </div>
         
         <div class="squad-group">
@@ -588,7 +680,7 @@
             <div class="mini-agent"><span class="emoji">✅</span>QA</div>
             <div class="mini-agent"><span class="emoji">🚀</span>Deploy</div>
           </div>
-          <div class="cycle-badge"><span class="icon">🔄</span> Every 30 min + Sign Contracts</div>
+          <div class="cycle-badge"><span class="icon">🔄</span> Reality Check @ 30 min + Sign Contracts</div>
         </div>
       </div>
     </div>
@@ -671,7 +763,7 @@
       <div class="workflow-card checkpoint">
         <div class="workflow-header">
           <span class="workflow-icon">⏱️</span>
-          <span class="workflow-title">3. Accelerated Checkpoint Timing</span>
+          <span class="workflow-title">3. Updated Checkpoint Timing (v4.0)</span>
         </div>
         <table class="timing-table">
           <tr>
@@ -681,32 +773,32 @@
             <th>Purpose</th>
           </tr>
           <tr>
-            <td class="highlight">Micro-standup</td>
-            <td>Daily</td>
-            <td class="highlight">30 min</td>
-            <td>Status, workarounds, blockers</td>
+            <td class="highlight">Reality Check</td>
+            <td>Mid-sprint review</td>
+            <td class="highlight">30 min (sprint midpoint)</td>
+            <td>Course-correct if behind</td>
           </tr>
           <tr>
-            <td class="highlight">Checkpoint gate</td>
+            <td class="highlight">Checkpoint Gate</td>
             <td>Sprint review</td>
-            <td class="highlight">1 hour</td>
-            <td>QA approval for batches</td>
+            <td class="highlight">End of 60-min sprint</td>
+            <td>Verify evidence, publish</td>
           </tr>
           <tr>
-            <td class="highlight">Reality check</td>
-            <td>Weekly sync</td>
-            <td class="highlight">4 hours</td>
-            <td>Full See It Cycle</td>
+            <td class="highlight">Human Review</td>
+            <td>Release review</td>
+            <td class="highlight">Every 4-5 sprints (~6 hours)</td>
+            <td>PM validates release quality</td>
           </tr>
           <tr>
             <td class="highlight">Retrospective</td>
             <td>Sprint retro</td>
-            <td class="highlight">12 hours</td>
+            <td class="highlight">After each release cycle (~6 hours)</td>
             <td>Learnings integration</td>
           </tr>
         </table>
         <div style="margin-top: 12px; padding: 10px; background: rgba(78,205,196,0.1); border-radius: 6px; font-size: 11px; color: #4ecdc4; text-align: center;">
-          <strong>AI agents iterate 50-100x faster than humans. The methodology must match.</strong>
+          <strong>Updated: 60-minute sprints with Reality Check at 30-minute midpoint</strong>
         </div>
       </div>
       
@@ -746,11 +838,86 @@
           Stretch failure = documented learning, not failure. Promise is the commitment.
         </div>
       </div>
+
+      <!-- Verification Failure Flow (NEW) -->
+      <div class="workflow-card verification">
+        <div class="workflow-header">
+          <span class="workflow-icon">❌</span>
+          <span class="workflow-title">5. Verification Failure Flow (NEW v4.0)</span>
+        </div>
+        <div class="workflow-steps">
+          <div class="workflow-step">
+            <div class="step-number">1</div>
+            <div class="step-content"><strong>Requirements Verifier</strong> returns FAIL on Promise items</div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">2</div>
+            <div class="step-content"><strong>MINOR FAIL:</strong> 15-min Fix Window within current sprint overhead</div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">3</div>
+            <div class="step-content"><strong>MAJOR FAIL:</strong> 1 Fix Sprint (next 60-min sprint) dedicated to fixing</div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">4</div>
+            <div class="step-content"><strong>Second failure:</strong> VERIFICATION_ESCALATED → Human PM review</div>
+          </div>
+        </div>
+        <div class="workflow-decision">
+          <div class="decision-label">Failure Classification</div>
+          <div class="decision-options">
+            <span class="decision-option modify">MINOR FAIL</span>
+            <span class="decision-option high">MAJOR FAIL</span>
+            <span class="decision-option decline">ESCALATED</span>
+          </div>
+        </div>
+        <div style="margin-top: 12px; font-size: 11px; color: #888; text-align: center;">
+          <strong>Max 1 retry per failed item per release cycle.</strong> Fix sprints consume sprint capacity.
+        </div>
+      </div>
+
+      <!-- Cross-Squad Dependencies (NEW) -->
+      <div class="workflow-card dependency">
+        <div class="workflow-header">
+          <span class="workflow-icon">🔗</span>
+          <span class="workflow-title">6. Cross-Squad Dependency Resolution (NEW v4.0)</span>
+        </div>
+        <div class="workflow-steps">
+          <div class="workflow-step">
+            <div class="step-number">1</div>
+            <div class="step-content"><strong>Level 1 - Pre-Sprint:</strong> Program Manager sequences work to stagger dependencies</div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">2</div>
+            <div class="step-content"><strong>Level 2 - Runtime:</strong> Squad emits DEPENDENCY_BLOCKED event</div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">3</div>
+            <div class="step-content"><strong>15-min timeout</strong> for resolution decision</div>
+          </div>
+          <div class="workflow-step">
+            <div class="step-number">4</div>
+            <div class="step-content"><strong>Resolution:</strong> RESEQUENCE / MOCK & PROCEED / SWAP / ESCALATE</div>
+          </div>
+        </div>
+        <div class="workflow-decision">
+          <div class="decision-label">Resolution Options</div>
+          <div class="decision-options">
+            <span class="decision-option accept">RESEQUENCE</span>
+            <span class="decision-option modify">MOCK & PROCEED</span>
+            <span class="decision-option low">SWAP</span>
+            <span class="decision-option high">ESCALATE</span>
+          </div>
+        </div>
+        <div style="margin-top: 12px; font-size: 11px; color: #888; text-align: center;">
+          Dependencies in pre-sprint planning = good. Runtime dependencies = planning gap for retrospective.
+        </div>
+      </div>
     </div>
     
     <!-- Flow Diagram -->
     <div class="flow-section">
-      <div class="flow-title">⚡ See It Cycle Frequencies — Nested Autopilot (v2.0)</div>
+      <div class="flow-title">⚡ See It Cycle Frequencies — Updated Timing (v3.0)</div>
       <div class="flow-diagram">
         <div class="flow-step">
           <div class="time">4-5 Sprints</div>
@@ -758,28 +925,28 @@
         </div>
         <div class="flow-arrow">→</div>
         <div class="flow-step">
-          <div class="time">12 hours</div>
+          <div class="time">Per-release</div>
           <div class="label">Strategic AI</div>
         </div>
         <div class="flow-arrow">→</div>
         <div class="flow-step" style="border-color: #10b981;">
-          <div class="time" style="color: #10b981;">30m / 1h / 4h</div>
+          <div class="time" style="color: #10b981;">30m / 60m + Gate</div>
           <div class="label">Flow Coordinators</div>
         </div>
         <div class="flow-arrow">→</div>
         <div class="flow-step" style="border-color: #ff9800;">
-          <div class="time" style="color: #ff9800;">30 min</div>
+          <div class="time" style="color: #ff9800;">30 min Reality Check</div>
           <div class="label">Execution Agents</div>
         </div>
       </div>
       <div style="text-align: center; margin-top: 16px; font-size: 12px; color: #666;">
-        Updated: Flow Coordinators now run tiered checkpoints (micro/gate/reality) instead of fixed 2-4hr standups
+        Updated v3.0: Flow Coordinators run 30-min Reality Check + 60-min Sprint + Checkpoint Gate pattern
       </div>
     </div>
     
-    <!-- Agent 215 Protocol -->
+    <!-- Agent 215 Protocol — Updated -->
     <div class="flow-section" style="border: 1px solid rgba(248,113,113,0.3);">
-      <div class="flow-title" style="color: #f87171;">🚨 Agent 215 Protocol — Idle Detection</div>
+      <div class="flow-title" style="color: #f87171;">🚨 Agent 215 Protocol — Updated Thresholds (v3.0)</div>
       <table class="timing-table">
         <tr>
           <th>Agent Type</th>
@@ -801,11 +968,91 @@
         </tr>
         <tr>
           <td>Strategic AI</td>
-          <td>Every 4 hours</td>
-          <td style="color: #f87171;">8 hour silence</td>
+          <td>Every ~90 min (each Checkpoint Gate)</td>
+          <td style="color: #f87171;">3 hour silence (2 missed gates)</td>
           <td>Human PM notified → diagnostic</td>
         </tr>
+        <tr>
+          <td><strong>Requirements Verifier</strong></td>
+          <td><strong>Event-driven (15min expected)</strong></td>
+          <td style="color: #f87171;"><strong>30 min alarm</strong></td>
+          <td><strong>FC escalates to PM → restart or reassign</strong></td>
+        </tr>
       </table>
+      <div style="margin-top: 12px; padding: 10px; background: rgba(248,113,113,0.1); border-radius: 6px; font-size: 11px; color: #f87171; text-align: center;">
+        <strong>NEW:</strong> Requirements Verifier added with event-driven monitoring (15min expected, 30min alarm)
+      </div>
+    </div>
+
+    <!-- Escalation Protocol (Section 9) -->
+    <div class="escalation-section">
+      <div class="escalation-title">🚨 Escalation Protocol (Section 9)</div>
+      <div style="font-size: 12px; color: #aaa; line-height: 1.5; margin-bottom: 16px;">
+        <strong>Real-time escalation triggers (bypass scheduled cadence):</strong>
+        <ul style="margin-top: 8px; padding-left: 20px;">
+          <li>HIGH severity blocker raised</li>
+          <li>Agent 215 alarm (silent agent beyond threshold)</li>
+          <li>Promise items failing verification at Checkpoint Gate</li>
+          <li>Token budget exceeded 80%</li>
+          <li>Agent confidence < 70% on deliverable quality</li>
+          <li>Cross-squad dependency blocking multiple teams</li>
+        </ul>
+      </div>
+      <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; font-size: 11px; color: #888;">
+        <strong>Escalation Flow:</strong><br>
+        1. Agent detects escalation condition<br>
+        2. Post to #akira-swarm with 🚨 ESCALATION tag<br>
+        3. Program Manager responds (first responder)<br>
+        4. If HIGH severity + no resolution → Human PM via Slack DM<br>
+        5. Escalation remains open until resolved and logged
+      </div>
+    </div>
+
+    <!-- Anti-Patterns (Section 10) -->
+    <div class="antipatterns-section">
+      <div class="antipatterns-title">⚠️ Anti-Patterns to Prevent (Section 10)</div>
+      <div class="antipattern-grid">
+        <div class="antipattern-item">
+          <div class="antipattern-name">Silent Failure</div>
+          <div class="antipattern-desc">Agent claims done but broken</div>
+          <div class="antipattern-prevention">Prevention: Requirements Verifier + signed contracts</div>
+        </div>
+        <div class="antipattern-item">
+          <div class="antipattern-name">Sycophantic Completion</div>
+          <div class="antipattern-desc">"100% done!" at 60%</div>
+          <div class="antipattern-prevention">Prevention: Contract signing + evidence verification</div>
+        </div>
+        <div class="antipattern-item">
+          <div class="antipattern-name">Context Amnesia</div>
+          <div class="antipattern-desc">Forgets after restart</div>
+          <div class="antipattern-prevention">Prevention: Persist to files + Supabase + GitHub</div>
+        </div>
+        <div class="antipattern-item">
+          <div class="antipattern-name">Credential Loss</div>
+          <div class="antipattern-desc">Overwrites API keys</div>
+          <div class="antipattern-prevention">Prevention: Credentials outside agent workspace</div>
+        </div>
+        <div class="antipattern-item">
+          <div class="antipattern-name">Scope Creep</div>
+          <div class="antipattern-desc">Works on unsigned items</div>
+          <div class="antipattern-prevention">Prevention: Contract Signing Ritual</div>
+        </div>
+        <div class="antipattern-item">
+          <div class="antipattern-name">Babysitting Trap</div>
+          <div class="antipattern-desc">Human manages all day</div>
+          <div class="antipattern-prevention">Prevention: Tiered checkpoints + batch reviews</div>
+        </div>
+        <div class="antipattern-item">
+          <div class="antipattern-name">Silent Idle</div>
+          <div class="antipattern-desc">Stops without reporting</div>
+          <div class="antipattern-prevention">Prevention: Agent 215 Protocol</div>
+        </div>
+        <div class="antipattern-item">
+          <div class="antipattern-name">Undocumented Workaround</div>
+          <div class="antipattern-desc">Finds alt path without logging</div>
+          <div class="antipattern-prevention">Prevention: Tiered Workaround Response</div>
+        </div>
+      </div>
     </div>
     
     <!-- Legend -->
@@ -839,7 +1086,7 @@
     <div style="text-align: center; margin-top: 30px; padding: 20px; background: rgba(102,126,234,0.1); border-radius: 12px;">
       <p style="font-size: 14px; color: #667eea; font-weight: 600; margin-bottom: 8px;">📄 Full Documentation</p>
       <p style="font-size: 12px; color: #888;">
-        <a href="https://github.com/tony-vtkl/greg-workspace/blob/main/ai-pmo-docs/AKIRA-MULTIAGENT-LEARNINGS.md" style="color: #4fc3f7;">AKIRA-MULTIAGENT-LEARNINGS.md</a> — Complete protocol documentation with implementation checklist
+        AIPMO Sprint Process v4.0 — Complete specification with Feb 13, 2026 meeting updates
       </p>
     </div>
   </div>
