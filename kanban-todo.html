@@ -538,7 +538,6 @@
         async function init() {
             await loadData();
             renderBoard();
-            initSortable();
         }
         
         // Load from Supabase
@@ -658,12 +657,27 @@
                 
                 document.getElementById(`count-${status}`).textContent = statusTasks.length;
             });
+
+            initSortable();
         }
         
+        let sortableInstances = [];
+
+        function updateCounts() {
+            const statuses = ['backlog', 'today', 'progress', 'waiting', 'done'];
+            statuses.forEach(status => {
+                document.getElementById(`count-${status}`).textContent =
+                    tasks.filter(t => t.status === status).length;
+            });
+        }
+
         function initSortable() {
+            sortableInstances.forEach(s => s.destroy());
+            sortableInstances = [];
+
             const lists = document.querySelectorAll('.card-list');
             lists.forEach(list => {
-                new Sortable(list, {
+                const instance = new Sortable(list, {
                     group: 'kanban',
                     animation: 150,
                     handle: '.card-handle',
@@ -677,11 +691,12 @@
                         const task = tasks.find(t => String(t.id) === String(cardId));
                         if (task) {
                             task.status = newStatus;
+                            updateCounts();
                             await updateTaskStatus(cardId, newStatus);
-                            renderBoard();
                         }
                     }
                 });
+                sortableInstances.push(instance);
             });
         }
         
