@@ -519,8 +519,8 @@
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script>
         // Supabase config - DIRECT CONNECTION
-        const SUPABASE_URL = 'https://mmwbiogqmgmtxboipyko.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_r6q0-iEnygKZiZkaOuY-hg_Tvlb-66U';
+        const SUPABASE_URL = 'https://glihiakqispoxwyfzhoi.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdsaWhpYWtxaXNwb3h3eWZ6aG9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzExOTM5NjgsImV4cCI6MjA4Njc2OTk2OH0.vacX_vZebmLF4YTCj8rHfTUCycPjLf7MNKtUPNYTyBQ';
         const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         const BOARD_NAME = 'todos';
 
@@ -538,8 +538,13 @@
         
         // Initialize
         async function init() {
+            console.log('[v0] === INIT START ===');
+            console.log('[v0] Supabase URL:', SUPABASE_URL);
+            console.log('[v0] Board name:', BOARD_NAME);
+            console.log('[v0] Supabase client created:', !!db);
             await loadData();
             renderBoard();
+            console.log('[v0] === INIT COMPLETE === Tasks loaded:', tasks.length);
         }
         
         // Load from Supabase
@@ -557,13 +562,18 @@
                 console.log('[v0] Raw data from Supabase:', data);
                 
                 // Map Supabase data to task format
-                tasks = data.map(item => ({
-                    id: item.item_id || item.id,
-                    supabaseId: item.id,
-                    status: item.column_id,
-                    position: item.position ?? 0,
-                    ...(typeof item.data === 'string' ? JSON.parse(item.data) : item.data)
-                }));
+                // IMPORTANT: spread data FIRST, then override id/status/position
+                // so that data.id (numeric) doesn't overwrite item_id (string like "task-10")
+                tasks = data.map(item => {
+                    const parsed = typeof item.data === 'string' ? JSON.parse(item.data) : (item.data || {});
+                    return {
+                        ...parsed,
+                        id: item.item_id || item.id,
+                        supabaseId: item.id,
+                        status: item.column_id,
+                        position: item.position ?? 0,
+                    };
+                });
                 
                 console.log(`[v0] Loaded ${tasks.length} tasks from Supabase:`, tasks.map(t => ({ id: t.id, status: t.status, position: t.position })));
             } catch (e) {
@@ -627,35 +637,59 @@
         
         // Save all changes (positions and statuses)
         async function saveAllChanges() {
+            console.log('[v0] === SAVE ALL CHANGES START ===');
+            console.log('[v0] SUPABASE_URL:', SUPABASE_URL);
+            console.log('[v0] BOARD_NAME:', BOARD_NAME);
+            console.log('[v0] db client exists:', !!db);
+            console.log('[v0] Tasks count:', tasks.length);
+            console.log('[v0] Tasks to save:', JSON.stringify(tasks.map(t => ({ id: t.id, type: typeof t.id, status: t.status, position: t.position }))));
+            
             const saveBtn = document.getElementById('save-changes-btn');
             const originalText = saveBtn.textContent;
-            saveBtn.textContent = '⏳ Saving...';
+            saveBtn.textContent = '... Saving...';
             saveBtn.disabled = true;
             
             try {
                 let savedCount = 0;
-                
-                // Build batch updates
-                const updates = tasks.map(task => ({
-                    id: task.id,
-                    title: task.title,
-                    status: task.status,
-                    position: task.position
-                }));
+                let zeroRowsCount = 0;
+                let errors = [];
                 
                 // Update each task
                 for (const task of tasks) {
-                    const { error } = await db
+                    const itemId = String(task.id);
+                    console.log(`[v0] Saving task: item_id="${itemId}", column_id="${task.status}", position=${task.position}`);
+                    
+                    const { data, error, count, status, statusText } = await db
                         .from('kanban_items')
                         .update({ 
                             column_id: task.status,
-                            position: task.position 
+                            position: task.position,
+                            updated_at: new Date().toISOString()
                         })
                         .eq('board', BOARD_NAME)
-                        .eq('item_id', String(task.id));
+                        .eq('item_id', itemId)
+                        .select();
                     
-                    if (!error) savedCount++;
+                    console.log(`[v0] Response for ${itemId}: status=${status}, rows=${data?.length}, error=${error?.message || 'none'}, data=`, data);
+                    
+                    if (error) {
+                        console.error(`[v0] SAVE ERROR for ${itemId}:`, JSON.stringify(error));
+                        errors.push({ taskId: itemId, error: error.message, code: error.code });
+                    } else if (!data || data.length === 0) {
+                        console.warn(`[v0] ZERO ROWS updated for ${itemId} - item_id not found in DB!`);
+                        zeroRowsCount++;
+                    } else {
+                        console.log(`[v0] SAVE OK for ${itemId}, updated row:`, JSON.stringify(data[0]));
+                        savedCount++;
+                    }
                 }
+                
+                console.log(`[v0] === SAVE COMPLETE: ${savedCount} ok, ${zeroRowsCount} zero-rows, ${errors.length} errors (total: ${tasks.length}) ===`);
+                if (zeroRowsCount > 0) console.error(`[v0] WARNING: ${zeroRowsCount} tasks had no matching row in DB. Check item_id format.`);
+                if (errors.length > 0) console.error('[v0] Save errors:', JSON.stringify(errors));
+                
+                // Show result in alert so user sees it without dev tools
+                alert(`Save result: ${savedCount} saved, ${zeroRowsCount} not found, ${errors.length} errors`);
                 
                 hasUnsavedChanges = false;
                 saveBtn.style.display = 'none';
