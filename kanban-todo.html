@@ -360,6 +360,7 @@
     <div class="top-bar">
         <a href="hub-tony.html" class="back-link">← Back to Tony's Dashboard Hub</a>
         <div class="top-actions">
+            <button class="btn btn-secondary" id="save-changes-btn" onclick="saveAllChanges()" style="display:none; background:#10b981;">💾 Save Changes</button>
             <button class="btn btn-secondary" onclick="exportData()">📥 Export</button>
             <button class="btn btn-secondary" onclick="importData()">📤 Import</button>
             <button class="btn btn-primary" onclick="openAddModal()">+ Add Task</button>
@@ -525,6 +526,7 @@
 
         // Data
         let tasks = [];
+        let hasUnsavedChanges = false;
         
         const AGENT_LABELS = {
             'greg': 'Greg',
@@ -620,28 +622,47 @@
             }
         }
         
-        // Update all positions for a specific column
-        async function updateColumnPositions(status) {
-            const columnTasks = tasks.filter(t => t.status === status);
+        // Save all changes (positions and statuses)
+        async function saveAllChanges() {
+            const saveBtn = document.getElementById('save-changes-btn');
+            saveBtn.textContent = '⏳ Saving...';
+            saveBtn.disabled = true;
             
             try {
-                // Update each task's position in the database
-                for (let i = 0; i < columnTasks.length; i++) {
-                    const task = columnTasks[i];
-                    task.position = i;
-                    
+                // Update all tasks with their current position and status
+                for (let i = 0; i < tasks.length; i++) {
+                    const task = tasks[i];
                     const { error } = await db
                         .from('kanban_items')
-                        .update({ position: i })
+                        .update({ 
+                            column_id: task.status,
+                            position: task.position 
+                        })
                         .eq('board', BOARD_NAME)
                         .eq('item_id', String(task.id));
                     
-                    if (error) console.error(`Failed to update position for task ${task.id}:`, error);
+                    if (error) console.error(`Failed to save task ${task.id}:`, error);
                 }
-                console.log(`[v0] Updated positions for ${columnTasks.length} tasks in ${status}`);
+                
+                hasUnsavedChanges = false;
+                saveBtn.style.display = 'none';
+                saveBtn.textContent = '💾 Save Changes';
+                saveBtn.disabled = false;
+                
+                console.log('[v0] All changes saved successfully');
             } catch (e) {
-                console.error('Failed to update positions:', e);
+                console.error('Failed to save changes:', e);
+                alert('Failed to save changes. Please try again.');
+                saveBtn.textContent = '💾 Save Changes';
+                saveBtn.disabled = false;
             }
+        }
+        
+        // Mark that changes need to be saved
+        function markUnsavedChanges() {
+            hasUnsavedChanges = true;
+            const saveBtn = document.getElementById('save-changes-btn');
+            saveBtn.style.display = 'inline-block';
         }
         
         function renderBoard() {
@@ -710,41 +731,32 @@
                     ghostClass: 'sortable-ghost',
                     chosenClass: 'sortable-chosen',
                     filter: '.filtered',
-                    onEnd: async function(evt) {
+                    onEnd: function(evt) {
                         const cardId = evt.item.dataset.id;
                         const newStatus = evt.to.id.replace('list-', '');
-                        const oldStatus = evt.from.id.replace('list-', '');
                         
-                        console.log('[v0] Card moved:', { cardId, from: oldStatus, to: newStatus, newIndex: evt.newIndex });
+                        console.log('[v0] Card moved:', { cardId, to: newStatus, newIndex: evt.newIndex });
                         
                         const task = tasks.find(t => String(t.id) === String(cardId));
                         if (task) {
-                            const oldTaskStatus = task.status;
                             task.status = newStatus;
                             
-                            // Reorder tasks array based on new DOM order
-                            const newStatusTasks = Array.from(evt.to.children).map(card => {
-                                const id = card.dataset.id;
-                                return tasks.find(t => String(t.id) === String(id));
-                            }).filter(Boolean);
-                            
-                            // Remove tasks with newStatus from tasks array
-                            tasks = tasks.filter(t => t.status !== newStatus);
-                            // Add them back in the new order
-                            tasks.push(...newStatusTasks);
+                            // Update positions based on DOM order for both columns
+                            ['backlog', 'today', 'progress', 'waiting', 'done'].forEach(status => {
+                                const listEl = document.getElementById(`list-${status}`);
+                                const cards = Array.from(listEl.children);
+                                cards.forEach((card, index) => {
+                                    const cardTask = tasks.find(t => String(t.id) === String(card.dataset.id));
+                                    if (cardTask) {
+                                        cardTask.position = index;
+                                    }
+                                });
+                            });
                             
                             updateCounts();
+                            markUnsavedChanges();
                             
-                            // Save to database
-                            await updateTaskStatus(cardId, newStatus);
-                            await updateColumnPositions(newStatus);
-                            
-                            // If moved between columns, update old column positions too
-                            if (oldTaskStatus !== newStatus) {
-                                await updateColumnPositions(oldTaskStatus);
-                            }
-                            
-                            console.log('[v0] Positions saved to database');
+                            console.log('[v0] Changes marked - click Save Changes to persist');
                         }
                     }
                 });
