@@ -628,44 +628,56 @@
         // Save all changes (positions and statuses)
         async function saveAllChanges() {
             const saveBtn = document.getElementById('save-changes-btn');
+            const originalText = saveBtn.textContent;
             saveBtn.textContent = '⏳ Saving...';
             saveBtn.disabled = true;
             
-            console.log('[v0] Saving tasks:', tasks.map(t => ({ id: t.id, status: t.status, position: t.position })));
-            
             try {
-                // Update all tasks with their current position and status
-                for (let i = 0; i < tasks.length; i++) {
-                    const task = tasks[i];
-                    console.log(`[v0] Updating task ${task.id}: status=${task.status}, position=${task.position}`);
-                    
-                    const { data, error } = await db
+                let savedCount = 0;
+                
+                // Build batch updates
+                const updates = tasks.map(task => ({
+                    id: task.id,
+                    title: task.title,
+                    status: task.status,
+                    position: task.position
+                }));
+                
+                // Update each task
+                for (const task of tasks) {
+                    const { error } = await db
                         .from('kanban_items')
                         .update({ 
                             column_id: task.status,
                             position: task.position 
                         })
                         .eq('board', BOARD_NAME)
-                        .eq('item_id', String(task.id))
-                        .select();
+                        .eq('item_id', String(task.id));
                     
-                    if (error) {
-                        console.error(`[v0] Failed to save task ${task.id}:`, error);
-                    } else {
-                        console.log(`[v0] Task ${task.id} saved:`, data);
-                    }
+                    if (!error) savedCount++;
                 }
                 
                 hasUnsavedChanges = false;
                 saveBtn.style.display = 'none';
-                saveBtn.textContent = '💾 Save Changes';
+                saveBtn.textContent = originalText;
                 saveBtn.disabled = false;
                 
-                console.log('[v0] All changes saved successfully');
+                // Show summary in alert
+                const summary = ['Saved positions:', ''];
+                ['backlog', 'today', 'progress', 'waiting', 'done'].forEach(status => {
+                    const columnTasks = tasks.filter(t => t.status === status);
+                    if (columnTasks.length > 0) {
+                        summary.push(`${status.toUpperCase()}:`);
+                        columnTasks.forEach(t => summary.push(`  ${t.position}: ${t.title}`));
+                        summary.push('');
+                    }
+                });
+                summary.push(`Total: ${savedCount}/${tasks.length} tasks saved`);
+                alert(summary.join('\n'));
+                
             } catch (e) {
-                console.error('[v0] Failed to save changes:', e);
-                alert('Failed to save changes. Please try again.');
-                saveBtn.textContent = '💾 Save Changes';
+                alert('Error saving: ' + e.message);
+                saveBtn.textContent = originalText;
                 saveBtn.disabled = false;
             }
         }
