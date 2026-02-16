@@ -562,13 +562,18 @@
                 console.log('[v0] Raw data from Supabase:', data);
                 
                 // Map Supabase data to task format
-                tasks = data.map(item => ({
-                    id: item.item_id || item.id,
-                    supabaseId: item.id,
-                    status: item.column_id,
-                    position: item.position ?? 0,
-                    ...(typeof item.data === 'string' ? JSON.parse(item.data) : item.data)
-                }));
+                // IMPORTANT: spread data FIRST, then override id/status/position
+                // so that data.id (numeric) doesn't overwrite item_id (string like "task-10")
+                tasks = data.map(item => {
+                    const parsed = typeof item.data === 'string' ? JSON.parse(item.data) : (item.data || {});
+                    return {
+                        ...parsed,
+                        id: item.item_id || item.id,
+                        supabaseId: item.id,
+                        status: item.column_id,
+                        position: item.position ?? 0,
+                    };
+                });
                 
                 console.log(`[v0] Loaded ${tasks.length} tasks from Supabase:`, tasks.map(t => ({ id: t.id, status: t.status, position: t.position })));
             } catch (e) {

@@ -433,13 +433,16 @@
                 
                 if (error) throw error;
                 
-                workouts = data.map(item => ({
-                    id: parseInt(item.item_id) || item.id,
-                    supabaseId: item.id,
-                    day: item.column_id,
-                    position: item.position,
-                    ...(typeof item.data === 'string' ? JSON.parse(item.data) : item.data)
-                }));
+                workouts = data.map(item => {
+                    const parsed = typeof item.data === 'string' ? JSON.parse(item.data) : (item.data || {});
+                    return {
+                        ...parsed,
+                        id: item.item_id || item.id,
+                        supabaseId: item.id,
+                        day: item.column_id,
+                        position: item.position,
+                    };
+                });
                 
                 console.log(`Loaded ${workouts.length} workouts from Supabase`);
             } catch (e) {
